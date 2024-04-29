@@ -2,22 +2,19 @@
 const express = require("express");
 const app = express();
 const sql = require('mssql');
-const config = {
-    user: 'NutriTracker@nutritracker12',
-    password: 'Gruppe5!',
-    server: 'nutritracker12.database.windows.net',
-    database: 'EksamensOpgaveNT',
-    options: {
-        encrypt: true, // Enable encryption
-        trustServerCertificate: false, // Do not trust the server certificate
-        enableArithAbort: true // Enable ArithAbort option
-    }
-}; 
+const session = require('express-session');
+require('dotenv').config();
+const config = require('./config');
 
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json()); // For parsing application/json
+app.use(session({
+  secret: 'secret', 
+  resave: false,
+  saveUninitialized: true})
+);
 
-//Specifying the port
-const port = process.env.PORT || 3300;
-
+const port = 3000;
 
 //Routes
 const indexRoutes = require("./routes/indexRoutes");

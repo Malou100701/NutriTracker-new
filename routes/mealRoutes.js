@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const totalEnergy = require('../controllers/mealController')
+const getTotalNutrient = require("../controllers/mealController");
 
-router.get('/:mealID/totalEnergy', totalEnergy);
+router.get('/:mealID/totalNutrient', getTotalNutrient);
 /*
 router.post('/register', registerUser);
 router.post('/login', loginUser);
