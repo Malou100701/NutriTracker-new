@@ -15,3 +15,5 @@ router.delete("/:id", verifyUserRoles(ROLES_LIST.ADMIN, ROLES_LIST.USER), softDe
 
 
 module.exports = router;
+
+// Path: controllers/inspectorController.js
