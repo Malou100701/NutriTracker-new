@@ -28,7 +28,7 @@ class User {
         return 'User registered successfully!';
     };
 
-static async getUserByUsername(username) {
+    static async getUserByUsername(username) {
         await sql.connect(config);
         const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
         console.log("logging in")
@@ -54,8 +54,34 @@ static async getUserByUsername(username) {
         console.log("Password Match:", match); // Log the result of the comparison
         return match;
     }
+
+    static async deleteUserByUsername(username) {
+        await sql.connect(config);
+        const result = await sql.query`DELETE FROM Users WHERE Username = ${username}`;
+        if (result.rowsAffected[0] > 0) {
+            return true; // User deleted successfully
+        }
+        return false; // No user found with that username
+    }
     
+
+    static async updateUserDetails(username, newDetails) {
+        const { age, weight, gender } = newDetails;
+        await sql.connect(config);
+        const result = await sql.query`
+            UPDATE Users 
+            SET Age = ${age}, Weight = ${weight}, Gender = ${gender}
+            WHERE Username = ${username}`;
+        if (result.rowsAffected[0] > 0) {
+            return true; // User details updated successfully
+        }
+        return false; // No user found with that username
+    }
+
 }
+
+
+
 
 
 
