@@ -14,8 +14,9 @@ app.use(express.json()); // For parsing application/json
 app.use(session({
   secret: 'secret', 
   resave: false,
-  saveUninitialized: true})
-);
+  saveUninitialized: true,
+  cookie: { secure: 'auto' } //You need to use a secure cookie in production with HTTPS
+}));
 
 const port = 3000;
 

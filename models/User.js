@@ -26,83 +26,41 @@ class User {
         VALUES 
                 (${this.username}, ${hashedPassword}, ${this.email}, ${this.age}, ${this.weight}, ${this.gender})`;
         return 'User registered successfully!';
-
-
     };
 
-    async loginUser(){
+static async getUserByUsername(username) {
+        await sql.connect(config);
+        const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
+        console.log("logging in")
+        console.log(result.recordset)
+        if (result.recordset.length > 0) {
+            console.log("User found")
+            return new User(
+                result.recordset[0].Username,
+                result.recordset[0].Password,  // Stored as a hash
+                result.recordset[0].Email,
+                result.recordset[0].Age,
+                result.recordset[0].Weight,
+                result.recordset[0].Gender
+            );
+        }
+        return null;
+    }
 
-    };
-
-
+    async validatePassword(password) {
+        console.log("Stored Hash:", this.password); // Log the stored hash
+        console.log("Provided Password:", password); // Log the password to compare
+        const match = await bcrypt.compare(password, this.password);
+        console.log("Password Match:", match); // Log the result of the comparison
+        return match;
+    }
     
 }
 
 
-// Dette er register funktionen, som virkede inden MVC blev implementeret
-    // app.post('/register.html', async (req, res) => {
-    //     const { username, password, email, age, weight, gender } = req.body;
-    //     try {
-    //         const hashedPassword = await bcrypt.hash(password, 10);
-    //         await sql.connect(config);
-    //         const result = await sql.query(`INSERT INTO Users (username, password, email, age, weight, gender) VALUES ('${username}', '${hashedPassword}', '${email}', ${age || null}, ${weight || null}, '${gender || null}')`);
-    //         res.redirect('/login.html'); // Redirect to login page after successful registration
-    //     } catch (error) {
-    //         res.status(500).send('Error creating user');
-    //     }
-    // });
 
 
+//         const validPassword = await bcrypt.compare(password, user.password);
 
-// Dette er login funktionen, som drengene arbejder på
-/*
-app.post('/login.html', async (req, res) => {
-    const { username, password } = req.body;
-    const user = users.find(u => u.username === username);
-
-    if (user) {
-        // Compare hashed password
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (validPassword) {
-            res.status(200).send('Login successful');
-        } else {
-            res.status(400).send('Invalid username or password');
-        }
-    } else {
-        res.status(400).send('Invalid username or password');
-    }
-});
-*/
-
-/*
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    console.log("Received:", req.body);  // Log what is received
-    try {
-        await sql.connect(config);
-        const request = new sql.Request();
-        request.input('username', sql.VarChar, username);
-        const result = await request.query('SELECT * FROM Users WHERE username = @username');
-
-        if (result.recordset.length > 0) {
-            const user = result.recordset[0];
-            const validPassword = await bcrypt.compare(password, user.password);
-            if (validPassword) {
-                res.status(200).send('Login successful');
-            } else {
-                console.log("Password mismatch");
-                res.status(400).send('Invalid username or password');
-            }
-        } else {
-            console.log("User not found");
-            res.status(400).send('Invalid username or password');
-        }
-    } catch (error) {
-        console.error("Error during login:", error);
-        res.status(500).send('Error during login: ' + error.message);
-    }
-});
-
-*/
 
 module.exports = User;
