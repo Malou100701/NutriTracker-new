@@ -5,7 +5,7 @@ const asyncHandler = require("../middlewares/asyncHandler");
 const registerUser = asyncHandler(async (req, res, next) => {
 
     let user = new User(req.body.Username, req.body.Password, req.body.Email, req.body.Age, req.body.Weight, req.body.Gender);
-    // let registerUser = user.registerUser();
+    let registerUser = user.registerUser();
 
     res.status(201).json({
       success: true,
@@ -42,13 +42,22 @@ const logoutUser = asyncHandler(async (req, res) => {
   });
 });
 
-//Lige nu kan alle delete alles user ved deres username /user/delete/:username uden at være logget ind
+//Man skal være logged in for at kunne delete sin account, dette sørger if statement for
 const deleteUser = asyncHandler(async (req, res) => {
+  
   try {
+    const loggedInUser = req.session.user; // Get the logged-in user from the session
     const { username } = req.params; // Assuming username is passed as a URL parameter
+
+    // Check if the logged-in user is the same as the user being deleted
+    if (loggedInUser.username !== username) {
+        return res.status(403).json({ success: false, message: "Unauthorized. You can only delete your own account." });
+    }
+
+    // Proceed with deletion
     const deleted = await User.deleteUserByUsername(username);
     if (deleted) {
-        res.status(200).json({ success: true, message: "User deleted successfully." });
+        res.status(200).json({ success: true, message: `${username} deleted successfully.` });
     } else {
         res.status(404).json({ success: false, message: "User not found." });
     }
@@ -56,21 +65,30 @@ const deleteUser = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, message: "Error deleting user." });
 }
 });
+  
 
-
+//Man skal være logged in for at kunne update sin account, dette sørger if statement for
 const updateUser = asyncHandler(async (req, res) => {
-    try {
-      const { username } = req.params; // Assuming username is passed as a URL parameter
-      const newDetails = req.body; // Assuming new details are passed in the request body
-      const updated = await User.updateUserDetails(username, newDetails);
-      if (updated) {
+  try {
+    const loggedInUser = req.session.user; // Get the logged-in user from the session
+    const { username } = req.params; // Assuming username is passed as a URL parameter
+
+    // Check if the logged-in user is the same as the user being updated
+    if (loggedInUser.username !== username) {
+        return res.status(403).json({ success: false, message: "Unauthorized. You can only edit your own details." });
+    }
+
+    // Proceed with updating details
+    const newDetails = req.body; // Assuming new details are passed in the request body
+    const updated = await User.updateUserDetails(username, newDetails);
+    if (updated) {
         res.status(200).json({ success: true, message: "User details updated successfully." });
     } else {
         res.status(404).json({ success: false, message: "User not found." });
     }
-  }  catch (error) {
+} catch (error) {
     res.status(500).json({ success: false, message: "Error updating user details." });
-  }
+}
 });
 
 
