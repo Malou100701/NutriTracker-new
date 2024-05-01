@@ -9,18 +9,18 @@ class User {
         this.password = password;
     }
 
-    async registerUser() {
-        if (!username || !password) {
+    async registerUser(res) {
+        if (!this.username || !this.password) {
         return res.status(400).send('Username and password are required.');
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(this.password, 10);
         await sql.connect(config);
         const result = await sql.query`
         INSERT INTO 
             Users (Username, Password)
         VALUES 
-                (${username}, ${hashedPassword})`;
+                (${this.username}, ${hashedPassword})`;
         res.send('User registered successfully!');
         console.log('User registered successfully!');
 

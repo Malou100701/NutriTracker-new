@@ -6,8 +6,11 @@ const session = require('express-session');
 require('dotenv').config();
 const config = require('./config');
 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json()); // For parsing application/json
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // For parsing application/json
+
 app.use(session({
   secret: 'secret', 
   resave: false,

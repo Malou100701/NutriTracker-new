@@ -3,7 +3,8 @@ const asyncHandler = require("../middlewares/asyncHandler");
 
 // Controller for user registration
 const registerUser = asyncHandler(async (req, res, next) => {
-    
+  console.log(req.body.Username, req.body.Password)
+  console.log(req.body)
     let user = new User(req.body.Username, req.body.Password);
     let registerUser = user.registerUser();
 
