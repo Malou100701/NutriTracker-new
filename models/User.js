@@ -4,9 +4,13 @@ const bcrypt = require('bcrypt')
 
 
 class User {
-    constructor(username, password) {
+    constructor(username, password, email, age, weight, gender) {
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.age = age;
+        this.weight = weight;
+        this.gender = gender;
     }
 
     async registerUser(res) {
@@ -18,11 +22,11 @@ class User {
         await sql.connect(config);
         const result = await sql.query`
         INSERT INTO 
-            Users (Username, Password)
+            Users (Username, Password, Email, Age, Weight, Gender)
         VALUES 
-                (${this.username}, ${hashedPassword})`;
-        res.send('User registered successfully!');
-        console.log('User registered successfully!');
+                (${this.username}, ${hashedPassword}, ${this.email}, ${this.age}, ${this.weight}, ${this.gender})`;
+        return 'User registered successfully!';
+
 
     };
 
