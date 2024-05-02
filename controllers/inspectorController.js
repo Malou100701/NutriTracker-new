@@ -3,7 +3,7 @@ const asyncHandler = require("../middlewares/asyncHandler");
 
 // Controller for user registration
 const inspectIngredient = asyncHandler(async (req, res, next) => {
-    
+    console.log(req.session.user)
     let Name = new Inspector(req.params.Name);
     let inspectIngredient = Name.inspectIngredient();
 

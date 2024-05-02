@@ -10,6 +10,9 @@ router.use("/inspector", inspectorRoutes);
 const userRoutes = require("./userRoutes");
 router.use("/user", userRoutes);
 
+const activityRoutes = require("./activityRoutes");
+router.use("/activity", activityRoutes);
+
 module.exports = router;
 
 // Path: routes/mealRoutes.js

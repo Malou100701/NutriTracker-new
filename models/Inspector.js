@@ -16,7 +16,7 @@ class Inspector {
         // Create SQL request object
         const request = new sql.Request();
         // Parameterized query for safety
-        request.input('IngredientName', sql.VarChar, this.Name);
+        request.input('IngredientName', sql.VarChar, this.Name); //Fjern denne linje og indsæt ${IngredientName} i linje 26
         const query = `
             SELECT 
                 Name, Calories, Protein, Fat, Fiber

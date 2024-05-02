@@ -2,7 +2,7 @@ const User = require("../models/User");
 const asyncHandler = require("../middlewares/asyncHandler");
 
 // Controller for user registration
-const registerUser = asyncHandler(async (req, res, next) => {
+const registerUser = asyncHandler(async (req, res) => {
 
     let user = new User(req.body.Username, req.body.Password, req.body.Email, req.body.Age, req.body.Weight, req.body.Gender);
     let registerUser = user.registerUser();
@@ -18,6 +18,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { Username, Password } = req.body;
     const user = await User.getUserByUsername(Username);
+    console.log(user);
     if (!user) {
         return res.status(401).json({ success: false, message: 'Authentication failed, user not found.' });
     }
@@ -25,6 +26,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const isMatch = await user.validatePassword(Password);
     if (isMatch) {
         req.session.user = { username: user.username }; // Store user details in session
+        console.log(req.session.user);
         res.json({ success: true, message: `${Username} logged in successfully` });
     } else {
         res.status(401).json({ success: false, message: 'Authentication failed, wrong password.' });
