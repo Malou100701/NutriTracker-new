@@ -1,8 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const getTotalNutrient = require("../controllers/mealController");
+const {getTotalNutrient, createMeal} = require("../controllers/mealController");
 
 router.get('/:mealID/totalNutrient', getTotalNutrient);
+
+// Route for creating a new meal
+router.post('/create', createMeal);
+
+
 /*
 router.post('/register', registerUser);
 router.post('/login', loginUser);
@@ -15,3 +20,4 @@ router.delete("/:id", verifyUserRoles(ROLES_LIST.ADMIN, ROLES_LIST.USER), softDe
 
 
 module.exports = router;
+
