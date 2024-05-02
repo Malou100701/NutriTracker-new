@@ -1,20 +1,30 @@
 const Meal = require("../models/Meal");
 const asyncHandler = require("../middlewares/asyncHandler");
-
+const { VarChar } = require("mssql");
 
 
 // Controller for creating a new meal
-const createMeal = asyncHandler(async(req, res, next) => {
-  const {name} = req.body; //Ved ikke hvorfor dette, men google sagde det var nødvendigt
+const createMeal = asyncHandler(async (req, res, next) => {
+  let { Name } = req.body;
 
-  let meal1 = new Meal(null,name);
-  await meal1.insertMealIntoDatabase();
+  let meal = new Meal(null, Name);
+  await meal.insertMealIntoDatabase();
 
   res.status(201).json({
     success: true,
-    data: {message: `Meal "${name}" created succesfully.`,}
-})
+    data: { message: `Meal "${Name}" created successfully.` }
+  });
+});
 
+
+const deleteMeal = asyncHandler(async (req, res, next) => {
+  let meal = new Meal(req.params.mealID);
+  await meal.deleteMealFromDatabase();
+
+  res.status(200).json({
+    success: true,
+    data: { message: `Meal with ID "${req.params.mealID}" deleted successfully.` }
+  });
 });
 
 
@@ -37,5 +47,6 @@ const getTotalNutrient = asyncHandler(async (req, res, next) => {
   module.exports = {
     getTotalNutrient,
     createMeal,
+    deleteMeal,
   };
   

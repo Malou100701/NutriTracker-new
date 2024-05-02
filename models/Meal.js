@@ -2,9 +2,9 @@ const sql = require('mssql');
 const config = require('../config');
 
 class Meal {
-    constructor(mealID, name) {
+    constructor(mealID, Name) {
         this.mealID = mealID;
-        this.name = name;
+        this.Name = Name;
     }
         //Method to insert name into database
         async insertMealIntoDatabase() {
@@ -17,17 +17,38 @@ class Meal {
     
             //Query to insert meal into database
                 const query = 
-                `INSERT INTO Meals (Name)
-                VALUES ('${this.name}');`
+                `INSERT INTO Meal (Name)
+                VALUES ('${this.Name}');`
              ;
             await request.query(query);
     
-            console.log(`Meal with "${this.name}" inserted into database.`);
+            console.log(`Meal with "${this.Name}" inserted into database.`);
             } catch (error) {
                 console.error('Error inserting meal into database.', error);
                 throw error;
             }
         }
+    
+
+    //method to delete a meal from database
+    async deleteMealFromDatabase() {
+        try {
+            // Connect SQL Server Database
+            await sql.connect(config);
+
+            // Create SQL request object
+            const request = new sql.Request();
+
+            // Query to delete meal from database
+            const query = `DELETE FROM Meal WHERE ID = ${this.mealID};`;
+            await request.query(query);
+
+            console.log(`Meal with ID "${this.mealID}" deleted from database.`);
+        } catch (error) {
+            console.error('Error deleting meal from database.', error);
+            throw error;
+        }
+    }
     
 
     // Method to get total nutrient of meal
