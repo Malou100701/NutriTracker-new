@@ -18,12 +18,12 @@ const createMeal = asyncHandler(async (req, res, next) => {
 
 
 const deleteMeal = asyncHandler(async (req, res, next) => {
-  let meal = new Meal(req.params.mealID);
+  let meal = new Meal(req.params.ID);
   await meal.deleteMealFromDatabase();
 
   res.status(200).json({
     success: true,
-    data: { message: `Meal with ID "${req.params.mealID}" deleted successfully.` }
+    data: { message: `Meal with ID "${req.params.ID}" deleted successfully.` }
   });
 });
 

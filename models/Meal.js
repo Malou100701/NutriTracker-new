@@ -35,14 +35,16 @@ class Meal {
         try {
             // Connect SQL Server Database
             await sql.connect(config);
-
+    
             // Create SQL request object
             const request = new sql.Request();
-
-            // Query to delete meal from database
-            const query = `DELETE FROM Meal WHERE ID = ${this.mealID};`;
-            await request.query(query);
-
+    
+            // Query to delete meal from database using the primary key column named "ID"
+            const query = `DELETE FROM Meal WHERE ID = @ID;`;
+    
+            // Execute the query with the ID parameter
+            await request.input('id', this.mealID).query(query);
+    
             console.log(`Meal with ID "${this.mealID}" deleted from database.`);
         } catch (error) {
             console.error('Error deleting meal from database.', error);

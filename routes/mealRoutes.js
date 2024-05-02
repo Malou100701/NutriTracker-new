@@ -8,7 +8,7 @@ router.get('/:mealID/totalNutrient', getTotalNutrient);
 router.post('/create', createMeal);
 
 // Route for deleting a meal
-router.delete('/:mealID/delete', deleteMeal);
+router.delete('/:ID/delete', deleteMeal);
 
 /*
 router.post('/register', registerUser);
