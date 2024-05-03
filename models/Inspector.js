@@ -26,52 +26,9 @@ class Inspector {
                 Ingredients.Name = @IngredientName;
         `;
         const result = await request.query(query);
-        console.log(result.recordset[0]);
+        return result.recordset; // Ensure data is returned
     }
 }
-
-
-// class Inspector {
-//     constructor(Name) {
-//         this.Name = Name;
-        
-//     }
-//     async inspectIngredient() {
-
-//         // Connect to SQL Server database
-//         await sql.connect(config);
-
-//         // Create SQL request object
-//         const request = new sql.Request();
-
-//         // Query to get total energy of meal
-//         const query = 
-//         `SELECT 
-//             Name
-//         FROM 
-//             Ingredients
-//         WHERE Ingredients.Name = ${this.Name};`;
-        
-//         const result = await request.query(query);
-
-//         console.log(result.recordset[0]);
-//         // Return total energy
-//         return result.recordset[0].inspectIngredient;
-        
-//     }
-// }
-// app.get('/inspector/:Name', async (req, res) => {
-//     const { Name } = req.params;
-//     try {
-//         await sql.connect(config);
-//         const request = new sql.Request();
-//         request.input('Name', sql.NVarChar, `${Name}%`); //% = er et wildcard, og hvis det matcher med det der bliver søgt på, så kommer ingrediensen frem
-//         const result = await request.query('SELECT * FROM Ingredients WHERE Name LIKE @Name');
-//         res.json(result.recordset);
-//     } catch (err) {
-//         res.status(500).send(err.message);
-//     }
-// });
 
 
 module.exports = Inspector;

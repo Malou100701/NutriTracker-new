@@ -3,16 +3,23 @@
   <head>
     <%- include('../partials/head'); %>
   </head>
-  <body class="container">
+  <body>
     <header><%- include('../partials/headerLoggedin'); %></header>
+    <div class="container">
+      <div class="content">
+        <div class="box">
+          <h1>Food Inspector</h1>
+          <form class="search" id="searchForm" action="/inspector" method="GET">
+            <input type="search" name="Name" placeholder="Søg efter..." />
+            <button type="submit">Søg</button>
+          </form>
+        </div>
 
-    <main>
-      <div class="jumbotron">
-        <h1>This is great</h1>
-        <p>Welcome to templating using EJS</p>
+        <div class="box">
+          <img src="/images/start.png" alt="start image" />
+        </div>
       </div>
-    </main>
-
+    </div>
     <footer><%- include('../partials/footer'); %></footer>
   </body>
 </html>

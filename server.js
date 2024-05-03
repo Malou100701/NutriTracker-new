@@ -57,7 +57,14 @@ app.get('/profile', function(req, res) {
     res.render('pages/profile', { user });
 });
 
-
+// Foodinspector page
+app.get('/inspector', function(req, res) {
+  
+  /*if (!req.session.user) {
+    return res.redirect('/login');  // Redirect to login if not logged in
+} */
+  res.render('pages/inspector');
+});
 
 //Routes
 const indexRoutes = require("./routes/indexRoutes");

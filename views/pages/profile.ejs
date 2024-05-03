@@ -11,7 +11,7 @@
           <h1>Hej <%- user.username %></h1>
           <p>Opdater dine informationer</p>
           <form action="/user/update" method="POST">
-            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="_method" value="PUT" />
             <div class="labelPair">
               <label for="Age">Alder</label>
               <input
@@ -33,8 +33,8 @@
             <div class="labelPair">
               <label for="Gender">Køn</label>
               <select class="select" name="Gender" id="gender">
-                <option value="Kvinde" <%= user.gender === 'Female' ? 'selected' : '' %>>Kvinde</option>
-                <option value="Mand" <%= user.gender === 'Male' ? 'selected' : '' %>>Mand</option>
+                <option value="Kvinde">Kvinde</option>
+                <option value="Mand">Mand</option>
               </select>
             </div>
             <button type="submit">Opdater profil</button>
@@ -42,12 +42,11 @@
           <form action="/user/logout" method="POST">
             <button type="submit" class="logout">Log ud</button>
           </form>
-          
+
           <form action="/user/delete" method="POST">
-            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_method" value="DELETE" />
             <button type="submit" class="delete">Slet profil</button>
           </form>
-          
         </div>
 
         <div class="box">
