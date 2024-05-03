@@ -7,17 +7,24 @@ const registerUser = asyncHandler(async (req, res) => {
     let user = new User(req.body.Username, req.body.Password, req.body.Email, req.body.Age, req.body.Weight, req.body.Gender);
     let registerUser = user.registerUser();
 
-    res.status(201).json({
-      success: true,
+  if(registerUser){
+    res.redirect('/login');
+  } else{
+    res.status(401).json({
+      success: false,
       data: {
-        message: registerUser.toString()
+        message: "failed to register user"
       }
     });
+  }
+    
+    
   });
 
 const loginUser = asyncHandler(async (req, res) => {
     const { Username, Password } = req.body;
     const user = await User.getUserByUsername(Username);
+    console.log("Retrieved user data:", user); // Add this line to check the retrieved user data
     console.log(user);
     if (!user) {
         return res.status(401).json({ success: false, message: 'Authentication failed, user not found.' });
@@ -26,8 +33,9 @@ const loginUser = asyncHandler(async (req, res) => {
     const isMatch = await user.validatePassword(Password);
     if (isMatch) {
         req.session.user = { username: user.username }; // Store user details in session
-        console.log(req.session.user);
-        res.json({ success: true, message: `${Username} logged in successfully` });
+        console.log("Session data after login:", req.session.user); // Add this line to check the session data
+        // res.json({ success: true, message: `${Username} logged in successfully` });
+        res.redirect('/');
     } else {
         res.status(401).json({ success: false, message: 'Authentication failed, wrong password.' });
     }
@@ -39,67 +47,67 @@ const logoutUser = asyncHandler(async (req, res) => {
   req.session.destroy(err => {
     if (err) {
         return res.status(500).json({ success: false, message: 'Failed to logout' });
+    } else {
+      res.redirect('/');  // Redirect or handle as needed
     }
-    res.json({ success: true, message: `${Username} logged out successfully` })
+
   });
 });
 
 //Man skal være logged in for at kunne delete sin account, dette sørger if statement for
 const deleteUser = asyncHandler(async (req, res) => {
-  
-  try {
-    const loggedInUser = req.session.user; // Get the logged-in user from the session
-    const { username } = req.params; // Assuming username is passed as a URL parameter
-
-    // Check if the logged-in user is the same as the user being deleted
-    if (loggedInUser.username !== username) {
-        return res.status(403).json({ success: false, message: "Unauthorized. You can only delete your own account." });
+  const loggedInUser = req.session.user; // Get the logged-in user from the session
+    if (!loggedInUser) {
+        return res.status(401).json({ success: false, message: "Unauthorized. You must be logged in to delete an account." });
     }
 
-    // Proceed with deletion
-    const deleted = await User.deleteUserByUsername(username);
+    // Use the username from the session to delete the user
+    const deleted = await User.deleteUserByUsername(loggedInUser.username);
     if (deleted) {
-        res.status(200).json({ success: true, message: `${username} deleted successfully.` });
+        // Destroy the session after deleting the user
+        req.session.destroy(err => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Failed to logout after deleting user.' });
+            }
+            res.redirect('/');  // Redirect or handle as needed
+        });
     } else {
         res.status(404).json({ success: false, message: "User not found." });
     }
-} catch (error) {
-    res.status(500).json({ success: false, message: "Error deleting user." });
-}
 });
   
 
 //Man skal være logged in for at kunne update sin account, dette sørger if statement for
 const updateUser = asyncHandler(async (req, res) => {
-  try {
-    const loggedInUser = req.session.user; // Get the logged-in user from the session
-    const { username } = req.params; // Assuming username is passed as a URL parameter
-
-    // Check if the logged-in user is the same as the user being updated
-    if (loggedInUser.username !== username) {
-        return res.status(403).json({ success: false, message: "Unauthorized. You can only edit your own details." });
+    const loggedInUser = req.session.user;
+    if (!loggedInUser) {
+        return res.status(401).json({ success: false, message: "Unauthorized. You must be logged in to update details." });
     }
 
-    // Proceed with updating details
-    const newDetails = req.body; // Assuming new details are passed in the request body
-    const updated = await User.updateUserDetails(username, newDetails);
+    const { Age, Weight, Gender } = req.body;
+
+    console.log("Request Data:", { Age, Weight, Gender });
+
+    const newDetails = { Age, Weight, Gender };
+    const updated = await User.updateUserDetails(loggedInUser.username, newDetails);
+    console.log("Updated:", updated); // Add this line to check if the update was successful
+
     if (updated) {
-        res.status(200).json({ success: true, message: "User details updated successfully." });
+      const updatedUser = await User.getUserByUsername(loggedInUser.username);
+      console.log("Updated User:", updatedUser); // Add this line to check the updated user data
+
+      res.render('pages/profile', { user: updatedUser });
     } else {
         res.status(404).json({ success: false, message: "User not found." });
     }
-} catch (error) {
-    res.status(500).json({ success: false, message: "Error updating user details." });
-}
 });
-
 
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
   deleteUser,
-  updateUser
+  updateUser,
 }
 // module.exports = registerUser, loginUser, logoutUser;
 // module.exports = registerUser;

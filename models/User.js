@@ -31,13 +31,12 @@ class User {
     static async getUserByUsername(username) {
         await sql.connect(config);
         const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
-        console.log("logging in")
-        console.log(result.recordset)
+        console.log("User found:", result.recordset);
         if (result.recordset.length > 0) {
-            console.log("User found")
+            console.log("User found:", result.recordset[0]);
             return new User(
                 result.recordset[0].Username,
-                result.recordset[0].Password,  // Stored as a hash
+                result.recordset[0].Password,  
                 result.recordset[0].Email,
                 result.recordset[0].Age,
                 result.recordset[0].Weight,
@@ -46,10 +45,9 @@ class User {
         }
         return null;
     }
+    
 
     async validatePassword(password) {
-        console.log("Stored Hash:", this.password); // Log the stored hash
-        console.log("Provided Password:", password); // Log the password to compare
         const match = await bcrypt.compare(password, this.password);
         console.log("Password Match:", match); // Log the result of the comparison
         return match;
@@ -66,17 +64,23 @@ class User {
     
 
     static async updateUserDetails(username, newDetails) {
-        const { age, weight, gender } = newDetails;
+        const { Age, Weight, Gender } = newDetails;
         await sql.connect(config);
+        
+        console.log("SQL Query:", `UPDATE Users SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender} WHERE Username = ${username}`);
+
+
         const result = await sql.query`
             UPDATE Users 
-            SET Age = ${age}, Weight = ${weight}, Gender = ${gender}
+            SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
             WHERE Username = ${username}`;
+        console.log("Update result:", result);
         if (result.rowsAffected[0] > 0) {
             return true; // User details updated successfully
         }
         return false; // No user found with that username
     }
+    
 
 }
 
