@@ -14,6 +14,7 @@ const createMeal = asyncHandler(async (req, res, next) => {
   });
 });
 
+//når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
 
 const deleteMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
@@ -30,7 +31,7 @@ const deleteMeal = asyncHandler(async (req, res, next) => {
 const getTotalNutrient = asyncHandler(async (req, res, next) => {
     
     let mealID = req.params.mealID;
-    let totalNutrient = Meal.getTotalNutrient(mealID);
+    let totalNutrient = Meal.getTotalNutrient();
 
     res.status(201).json({
       success: true,

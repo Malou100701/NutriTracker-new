@@ -5,10 +5,8 @@ const { VarChar } = require("mssql");
 
 const addMealIngredient = asyncHandler(async (req, res, next) => {
 
-    const { mealID, ingredientID, amount } = req.body;
-
-    const mealIngredient = new MealIngredient(mealID, ingredientID, amount);
-    await mealIngredient.insertMealIngredientIntoDatabase();
+    let { mealID, ingredientID, amount } = req.body;
+    await MealIngredient.insertMealIngredientIntoDatabase(mealID, ingredientID, amount);
 
     res.status(201).json({
         success: true,
@@ -17,12 +15,12 @@ const addMealIngredient = asyncHandler(async (req, res, next) => {
 });
 
 const deleteMealIngredient = asyncHandler(async (req, res, next) => {
-    let mealIngredient = new MealIngredient(req.params.ID);
-    await mealIngredient.deleteMealIngredientFromDatabase();
+    let ID = req.params.ID;
+    await MealIngredient.deleteMealIngredientFromDatabase(ID);
 
     res.status(200).json({
         success: true,
-        data: { message: `Meal ingredient with ID "${req.params.ID}" deleted successfully.` }
+        data: { message: `Meal ingredient with ID "${ID}" deleted successfully.` }
     });
 
 //vi skal undersøge nærmere om det kan blive et problem, hvis delete fejler, med et id der fx ikke findes.

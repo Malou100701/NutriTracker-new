@@ -1,16 +1,7 @@
 const sql = require('mssql');
 const config = require('../config');
 
-
-class MealIngredient {
-    constructor(mealID, ingredientID, amount) {
-        this.mealID = mealID;
-        this.ingredientID = ingredientID;
-        this.amount = amount;
-    }
-
-
-    async insertMealIngredientIntoDatabase() {
+async function insertMealIngredientIntoDatabase(mealID, ingredientID, amount) {
         try {
             // Connect SQL Server Database
             await sql.connect(config);
@@ -21,7 +12,7 @@ class MealIngredient {
             // Query to insert meal ingredient into database
             const query = `
                 INSERT INTO MealIngredient (MealID, IngredientsID, Amount)
-                VALUES (${this.mealID}, ${this.ingredientID}, ${this.amount});
+                VALUES (${mealID}, ${ingredientID}, ${amount});
             `;
             await sql.query(query);
             console.log(`Meal ingredient inserted into database.`);
@@ -31,8 +22,9 @@ class MealIngredient {
             throw error;
         }
     }
+module.exports.insertMealIngredientIntoDatabase = insertMealIngredientIntoDatabase;
 
-    async deleteMealIngredientFromDatabase() {
+async function deleteMealIngredientFromDatabase(ID) {
         try {
             // Connect SQL Server Database
             await sql.connect(config);
@@ -43,21 +35,20 @@ class MealIngredient {
             // Query to delete meal ingredient from database
             const query = `
                 DELETE FROM MealIngredient
-                WHERE ID = ${this.ingredientID};
+                WHERE ID = ${ID};
             `;
             await sql.query(query);
-            console.log(`Meal ingredient with ID "${this.ingredientID}" deleted from database.`);
+            console.log(`Meal ingredient with ID "${ID}" deleted from database.`);
 
         } catch (error) {
             console.error('Error deleting meal ingredient from database.', error);
             throw error;
         }
     }
-}
+module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDatabase;
  
 //ændre navnene til disse funktioner, så vi skjuler hvor det gemmes. så det er nemmere at ændre i fremtiden. ændre fx til savemealingredient
 
-module.exports = MealIngredient;
 
 
 
