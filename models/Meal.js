@@ -76,7 +76,7 @@ async function deleteMealFromDatabase(ID) {
         WHERE
             mi.MealID = ${mealID};`;
 
-        const result = await request.query(query);
+        const result = await request.query(query); //
 
         console.log(result.recordset[0]);
         // Return total nutrient
