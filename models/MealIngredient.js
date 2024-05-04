@@ -47,6 +47,10 @@ async function deleteMealIngredientFromDatabase(ID) {
     }
 module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDatabase;
  
+//edit/opdater funktion 
+
+//
+
 //ændre navnene til disse funktioner, så vi skjuler hvor det gemmes. så det er nemmere at ændre i fremtiden. ændre fx til savemealingredient
 
 

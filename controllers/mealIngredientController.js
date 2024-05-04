@@ -26,6 +26,9 @@ const deleteMealIngredient = asyncHandler(async (req, res, next) => {
 //vi skal undersøge nærmere om det kan blive et problem, hvis delete fejler, med et id der fx ikke findes.
 });
 
+
+
+
 module.exports = {
     addMealIngredient,
     deleteMealIngredient,
