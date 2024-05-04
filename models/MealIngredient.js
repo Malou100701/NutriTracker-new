@@ -9,6 +9,7 @@ class MealIngredient {
         this.amount = amount;
     }
 
+
     async insertMealIngredientIntoDatabase() {
         try {
             // Connect SQL Server Database
@@ -30,10 +31,34 @@ class MealIngredient {
             throw error;
         }
     }
+
+    async deleteMealIngredientFromDatabase() {
+        try {
+            // Connect SQL Server Database
+            await sql.connect(config);
+
+            // Create SQL request object
+            const request = new sql.Request();
+
+            // Query to delete meal ingredient from database
+            const query = `
+                DELETE FROM MealIngredient
+                WHERE ID = ${this.ingredientID};
+            `;
+            await sql.query(query);
+            console.log(`Meal ingredient with ID "${this.ingredientID}" deleted from database.`);
+
+        } catch (error) {
+            console.error('Error deleting meal ingredient from database.', error);
+            throw error;
+        }
+    }
 }
-    
+ 
+//ændre navnene til disse funktioner, så vi skjuler hvor det gemmes. så det er nemmere at ændre i fremtiden. ændre fx til savemealingredient
 
 module.exports = MealIngredient;
+
 
 
 

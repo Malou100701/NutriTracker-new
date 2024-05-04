@@ -1,13 +1,8 @@
 const sql = require('mssql');
 const config = require('../config');
 
-class Meal {
-    constructor(mealID, Name) {
-        this.mealID = mealID;
-        this.Name = Name;
-    }
-        //Method to insert name into database
-        async insertMealIntoDatabase() {
+//den skal have et bedre navn, så det er nemmere at ændre i fremtiden.
+async function insertMealIntoDatabase(name) {
             try {
             // Connect SQL Server Database
                 await sql.connect(config);
@@ -18,20 +13,24 @@ class Meal {
             //Query to insert meal into database
                 const query = 
                 `INSERT INTO Meal (Name)
-                VALUES ('${this.Name}');`
+                 VALUES ('${name}'); SELECT SCOPE_IDENTITY() AS id;` //det id der gemmes i databasen bliver også gemt i objektet ved scope identity. 
              ;
-            await request.query(query);
+            let queryResult = await request.query(query);
+            mealID = queryResult.recordset[0].id;
     
-            console.log(`Meal with "${this.Name}" inserted into database.`);
+            console.dir(queryResult)
+            console.log(`Meal with name "${name}" inserted into database with id: ${mealID}`);
             } catch (error) {
                 console.error('Error inserting meal into database.', error);
                 throw error;
             }
         }
-    
 
-    //method to delete a meal from database
-    async deleteMealFromDatabase() {
+        module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
+
+
+//nyt navn, så det er nemmere at ændre i fremtiden.
+async function deleteMealFromDatabase(ID) {
         try {
             // Connect SQL Server Database
             await sql.connect(config);
@@ -40,21 +39,23 @@ class Meal {
             const request = new sql.Request();
     
             // Query to delete meal from database using the primary key column named "ID"
-            const query = `DELETE FROM Meal WHERE ID = @ID;`;
+            const query = `DELETE FROM Meal WHERE ID = ${ID};`;
     
             // Execute the query with the ID parameter
-            await request.input('id', this.mealID).query(query);
+            await request.input('id', ID).query(query);
     
-            console.log(`Meal with ID "${this.mealID}" deleted from database.`);
+            console.log(`Meal with ID "${ID}" deleted from database.`);
         } catch (error) {
             console.error('Error deleting meal from database.', error);
             throw error;
         }
     }
     
+    module.exports.deleteMealFromDatabase = deleteMealFromDatabase;
+
 
     // Method to get total nutrient of meal
-    async getTotalNutrient() {
+    async function getTotalNutrient(mealID) {
         // Connect to SQL Server database
         await sql.connect(config);
 
@@ -71,9 +72,9 @@ class Meal {
         FROM
             MealIngredient mi
         JOIN
-            Ingredients i ON mi.IngredientsID = i.IngredientID
+            Ingredient i ON mi.IngredientsID = i.IngredientID
         WHERE
-            mi.MealID = ${this.mealID};`;
+            mi.MealID = ${mealID};`;
 
         const result = await request.query(query);
 
@@ -83,7 +84,7 @@ class Meal {
         
     }
 
-};
+    module.exports.getTotalNutrient = getTotalNutrient;
 
 
 
@@ -109,5 +110,4 @@ class Meal {
 // }
 
 
-module.exports = Meal;
 

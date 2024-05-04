@@ -5,10 +5,10 @@ const {getTotalNutrient, createMeal, deleteMeal} = require("../controllers/mealC
 router.get('/:mealID/totalNutrient', getTotalNutrient);
 
 // Route for creating a new meal
-router.post('/create', createMeal);
+router.post('/', createMeal); //restful design for creating a meal
 
 // Route for deleting a meal
-router.delete('/:ID/delete', deleteMeal);
+router.delete('/:ID', deleteMeal); 
 
 /*
 router.post('/register', registerUser);

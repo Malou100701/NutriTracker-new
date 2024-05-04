@@ -5,25 +5,23 @@ const { VarChar } = require("mssql");
 
 // Controller for creating a new meal
 const createMeal = asyncHandler(async (req, res, next) => {
-  let { Name } = req.body;
-
-  let meal = new Meal(null, Name);
-  await meal.insertMealIntoDatabase();
+  let name = req.body.name;
+  await Meal.insertMealIntoDatabase(name);
 
   res.status(201).json({
     success: true,
-    data: { message: `Meal "${Name}" created successfully.` }
+    data: { message: `Meal "${name}" created successfully.` }
   });
 });
 
 
 const deleteMeal = asyncHandler(async (req, res, next) => {
-  let meal = new Meal(req.params.ID);
-  await meal.deleteMealFromDatabase();
+  let mealID = req.params.ID;
+  await Meal.deleteMealFromDatabase(mealID);
 
   res.status(200).json({
     success: true,
-    data: { message: `Meal with ID "${req.params.ID}" deleted successfully.` }
+    data: { message: `Meal with ID "${mealID}" deleted successfully.` }
   });
 });
 
@@ -31,10 +29,8 @@ const deleteMeal = asyncHandler(async (req, res, next) => {
 // Controller for totalNutrient registration
 const getTotalNutrient = asyncHandler(async (req, res, next) => {
     
-    let meal = new Meal(req.params.mealID);
-    let totalNutrient = meal.getTotalNutrient();
-
-
+    let mealID = req.params.mealID;
+    let totalNutrient = Meal.getTotalNutrient(mealID);
 
     res.status(201).json({
       success: true,
