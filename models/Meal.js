@@ -39,7 +39,9 @@ async function deleteMealFromDatabase(ID) {
             const request = new sql.Request();
     
             // Query to delete meal from database using the primary key column named "ID"
-            const query = `DELETE FROM Meal WHERE ID = ${ID};`;
+            const query = `DELETE FROM MealIngredient WHERE MealID = ${ID};
+                        DELETE FROM Meal WHERE ID = ${ID};`
+    
     
             // Execute the query with the ID parameter
             await request.input('id', ID).query(query);

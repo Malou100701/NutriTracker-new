@@ -66,6 +66,12 @@ app.get('/inspector', function(req, res) {
   res.render('pages/inspector');
 });
 
+// Meal page
+app.get('/', function(req, res) {
+  res.render('pages/mealCreator');
+});
+
+
 //Routes
 const indexRoutes = require("./routes/indexRoutes");
 app.use("/", indexRoutes);
