@@ -70,8 +70,10 @@ app.get('/mealCreator', function(req, res) {
   res.render('pages/mealCreator'); //here it will use the mealCreator.ejs file, where the html is written
 });
 
+
+// Henter den url der hedder localhost:3000/allMeals, og render allMeals.ejs filen
 app.get('/allMeals', function(req, res) {
-  res.render('pages/allMeals'); //here it will use the mealCreator.ejs file, where the html is written
+  res.render('pages/allMeals'); 
 });
 
 
