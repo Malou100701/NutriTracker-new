@@ -36,12 +36,12 @@ app.get('/', function(req, res) {
 });
 
 
-// log ind page
+// log ind - page
 app.get('/login', function(req, res) {
   res.render('pages/login');
 });
 
-// Opret profil page
+// Opret profil - page
 app.get('/register', function(req, res) {
   res.render('pages/register');
 });
@@ -66,9 +66,9 @@ app.get('/inspector', function(req, res) {
   res.render('pages/inspector');
 });
 
-// Meal page
-app.get('/', function(req, res) {
-  res.render('pages/mealCreator');
+// Mealpage - this is a route for http get request so it will be shown on the mealCreator page
+app.get('/meal', function(req, res) {
+  res.render('pages/mealCreator'); //here it will use the mealCreator.ejs file, where the html is written
 });
 
 
