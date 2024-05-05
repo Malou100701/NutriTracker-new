@@ -5,11 +5,8 @@ const { VarChar } = require("mssql");
 
 // Controller for creating a new meal
 const createMeal = asyncHandler(async (req, res, next) => {
-<<<<<<< HEAD
-  let { name, userID } = req.body;
-=======
+
   let name = req.body.name;
->>>>>>> 7ca0380 (ændringer med udkommenteret kode som drengene har lavet)
   await Meal.insertMealIntoDatabase(name, userID);
   res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
