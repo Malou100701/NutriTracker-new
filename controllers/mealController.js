@@ -5,13 +5,13 @@ const { VarChar } = require("mssql");
 
 // Controller for creating a new meal
 const createMeal = asyncHandler(async (req, res, next) => {
-  let name = req.body.name;
-  await Meal.insertMealIntoDatabase(name);
+  let { name, userID } = req.body;
+  await Meal.insertMealIntoDatabase(name, userID);
   res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
   res.status(201).json({
     success: true,
-    data: { message: `Meal "${name}" created successfully.` }
+    data: { message: `Meal "${name}" created successfully by user "${userID}"` }
   });
 });
 

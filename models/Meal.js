@@ -2,7 +2,7 @@ const sql = require('mssql');
 const config = require('../config');
 
 //den skal have et bedre navn, så det er nemmere at ændre i fremtiden.
-async function insertMealIntoDatabase(name) {
+async function insertMealIntoDatabase(name, userID) {
             try {
             // Connect SQL Server Database
                 await sql.connect(config);
@@ -12,8 +12,8 @@ async function insertMealIntoDatabase(name) {
     
             //Query to insert meal into database
                 const query = 
-                `INSERT INTO Meal (Name)
-                 VALUES ('${name}'); SELECT SCOPE_IDENTITY() AS id;` //det id der gemmes i databasen bliver også gemt i objektet ved scope identity. 
+                `INSERT INTO Meal (Name, UserID)
+                 VALUES ('${name}', '${userID}');` //det id der gemmes i databasen bliver også gemt i objektet ved scope identity. 
              ;
             let queryResult = await request.query(query);
             mealID = queryResult.recordset[0].id;
