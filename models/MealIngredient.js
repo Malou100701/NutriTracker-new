@@ -48,8 +48,29 @@ async function deleteMealIngredientFromDatabase(ID) {
 module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDatabase;
  
 //edit/opdater funktion 
+async function updateMealIngredientInDatabase(ID, amount) {
+    try {
+        // Connect SQL Server Database
+        await sql.connect(config);
 
-//
+        // Create SQL request object
+        const request = new sql.Request();
+
+        // Query to update meal ingredient in database
+        const query = `
+        UPDATE MealIngredient
+        SET Amount = ${amount}
+        WHERE ID = ${ID};
+        `;
+        await sql.query(query);
+        console.log(`Meal ingredient with ID "${ID}" amount updated in database.`);
+
+    } catch (error) {
+        console.error('Error updating meal ingredient in database.', error);
+        throw error;
+    }
+}
+module.exports.updateMealIngredientInDatabase = updateMealIngredientInDatabase;
 
 //ændre navnene til disse funktioner, så vi skjuler hvor det gemmes. så det er nemmere at ændre i fremtiden. ændre fx til savemealingredient
 
