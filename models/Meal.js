@@ -2,7 +2,11 @@ const sql = require('mssql');
 const config = require('../config');
 
 //den skal have et bedre navn, så det er nemmere at ændre i fremtiden.
+<<<<<<< HEAD
 async function insertMealIntoDatabase(name, userID) {
+=======
+async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI KAN IKKE FÅ DEN LINKET OP TIL EN USER
+>>>>>>> 7ca0380 (ændringer med udkommenteret kode som drengene har lavet)
             try {
             // Connect SQL Server Database
                 await sql.connect(config);
@@ -11,21 +15,29 @@ async function insertMealIntoDatabase(name, userID) {
                 const request = new sql.Request();
     
             //Query to insert meal into database
+<<<<<<< HEAD
                 const query = 
                 `INSERT INTO Meal (Name, UserID)
                  VALUES ('${name}', '${userID}');` //det id der gemmes i databasen bliver også gemt i objektet ved scope identity. 
              ;
+=======
+                const query = `
+                INSERT INTO Meal (Name, UserID)
+                VALUES ('${name}', ${userID});
+                SELECT SCOPE_IDENTITY() AS id;
+            `;
+
+>>>>>>> 7ca0380 (ændringer med udkommenteret kode som drengene har lavet)
             let queryResult = await request.query(query);
             mealID = queryResult.recordset[0].id;
     
             console.dir(queryResult)
-            console.log(`Meal with name "${name}" inserted into database with id: ${mealID}`);
+            console.log(`Meal with name "${name}" inserted into database with id: ${mealID}, under the user with id: ${userID}`);
             } catch (error) {
                 console.error('Error inserting meal into database.', error);
                 throw error;
             }
         }
-
         module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
 
 
