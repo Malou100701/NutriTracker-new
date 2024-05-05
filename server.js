@@ -35,7 +35,6 @@ app.get('/', function(req, res) {
   }
 });
 
-
 // log ind - page
 app.get('/login', function(req, res) {
   res.render('pages/login');
