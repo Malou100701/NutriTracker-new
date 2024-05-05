@@ -15,9 +15,9 @@ async function inspectIngredient(name) {
             SELECT 
                 Name, Calories, Protein, Fat, Fiber
             FROM
-                Ingredients
+                Ingredient
             WHERE
-                Ingredients.Name = ${name};
+                Ingredient.Name = ${name};
         `;
         const result = await request.query(query);
         return result.recordset; // Ensure data is returned
