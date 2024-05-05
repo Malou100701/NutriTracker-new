@@ -59,20 +59,18 @@ app.get('/profile', function(req, res) {
 
 // Foodinspector page
 app.get('/inspector', function(req, res) {
-  
   /*if (!req.session.user) {
     return res.redirect('/login');  // Redirect to login if not logged in
 } */
   res.render('pages/inspector');
 });
 
-// Mealpage - this is a route for http get request so it will be shown on the mealCreator page
+// create a meal (route) - this is a route for http get request so it will be shown on the mealCreator page
 app.get('/meal', function(req, res) {
   res.render('pages/mealCreator'); //here it will use the mealCreator.ejs file, where the html is written
 });
 
-
-//Routes
+//Routes for the different pages
 const indexRoutes = require("./routes/indexRoutes");
 app.use("/", indexRoutes);
 

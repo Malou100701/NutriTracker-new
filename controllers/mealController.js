@@ -7,11 +7,11 @@ const { VarChar } = require("mssql");
 const createMeal = asyncHandler(async (req, res, next) => {
   let name = req.body.name;
   await Meal.insertMealIntoDatabase(name);
+  res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
   res.status(201).json({
     success: true,
     data: { message: `Meal "${name}" created successfully.` }
-    
   });
 });
 
