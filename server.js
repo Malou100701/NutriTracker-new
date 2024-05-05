@@ -66,8 +66,12 @@ app.get('/inspector', function(req, res) {
 });
 
 // create a meal (route) - this is a route for http get request so it will be shown on the mealCreator page
-app.get('/meal', function(req, res) {
+app.get('/mealCreator', function(req, res) {
   res.render('pages/mealCreator'); //here it will use the mealCreator.ejs file, where the html is written
+});
+
+app.get('/allMeals', function(req, res) {
+  res.render('pages/allMeals'); //here it will use the mealCreator.ejs file, where the html is written
 });
 
 
