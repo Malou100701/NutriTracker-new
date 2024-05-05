@@ -70,6 +70,7 @@ app.get('/meal', function(req, res) {
   res.render('pages/mealCreator'); //here it will use the mealCreator.ejs file, where the html is written
 });
 
+
 //Routes for the different pages
 const indexRoutes = require("./routes/indexRoutes");
 app.use("/", indexRoutes);
