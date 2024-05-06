@@ -43,6 +43,16 @@ app.get('/profile', (req, res) => {
 app.get('/inspector', (req, res) => res.render('pages/inspector'));
 app.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
 app.get('/allMeals', (req, res) => res.render('pages/allMeals'));
+// app.get('/activitytracker', (req, res) => res.render('pages/activitytracker', { user: req.session.user, activities: activities}));
+
+
+// Dette er lidt en 'hacker' løsning, funktionen burde køres i controllers, men efter 3,5 timer uden held, så er det her vi er nu
+const Activity = require('./models/Activity');
+app.get('/activitytracker', async (req, res) => {
+  const activities = await Activity.getActivities();
+  res.render('pages/activitytracker', { user: req.session.user, activities: activities });
+});
+
 
 //Listening on the port
 const port = 3000;
