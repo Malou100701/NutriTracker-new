@@ -7,14 +7,18 @@ const { VarChar } = require("mssql");
 const createMeal = asyncHandler(async (req, res, next) => {
 
   let name = req.body.name;
+  let userID = req.session.user.userID;
+  console.log(req.session.user);
   await Meal.insertMealIntoDatabase(name, userID);
-  res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
-  res.status(201).json({
+  res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
+});
+  /*res.status(201).json({
     success: true,
     data: { message: `Meal "${name}" created successfully by user "${userID}"` }
-  });
-});
+  })*/
+  //res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
+
 
 //når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
 
@@ -27,6 +31,13 @@ const deleteMeal = asyncHandler(async (req, res, next) => {
     data: { message: `Meal with ID "${mealID}" deleted successfully.` }
   });
 });
+
+
+const addAllMeals = asyncHandler(async (req, res, next) => {
+  let meals = await Meal.addAllMealsIntoTable();
+
+  });
+
 
 
 // Controller for totalNutrient registration
@@ -47,5 +58,6 @@ const getTotalNutrient = asyncHandler(async (req, res, next) => {
     getTotalNutrient,
     createMeal,
     deleteMeal,
+    addAllMeals
   };
   

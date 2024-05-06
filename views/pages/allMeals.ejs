@@ -4,17 +4,27 @@
     <%- include('../partials/head'); %> 
 </head>
 <body>
-    <header><%- include('../partials/headerMain'); %></header>
+    <header><%- include('../partials/headerLoggedin'); %></header>
     <form class = "show" id = "showForm" action="/allMeals" method="GET">
     <div class="container" >
-        <h1>All Created Meals</h1>
+        <h1>Alle Måltider</h1>
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Navn</th>
+                    <th>Antal Ingredienser</th>
+                    <th>Antal Kalorier</th>
+                    <th>Protein</th>
+                    <th>Fedt</th>
+                    <th>Fiber</th>
                 </tr>
             </thead>
             <tbody>
+                <% meals.forEach(function() { %>
+                    <tr>
+                        <td><%= meal.name %><</td>
+                    </tr>
+                <% }); %>
             </tbody>
         </table>
     </div>

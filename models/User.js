@@ -23,6 +23,7 @@ async function getUserByUsername(username) {
         const user = result.recordset[0];
         console.log("User found:", user);
         return {
+            id: user.UserID,
             username: user.Username,
             password: user.Password,
             email: user.Email,

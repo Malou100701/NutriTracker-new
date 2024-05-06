@@ -10,7 +10,6 @@ class Activity {
         this.DateTime = DateTime;
     }
 
-
     async getUserIdByUsername(username) {
             await sql.connect(config);
             const request = new sql.Request();

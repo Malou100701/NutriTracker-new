@@ -22,7 +22,7 @@ const deleteMealIngredient = asyncHandler(async (req, res, next) => {
         success: true,
         data: { message: `Meal ingredient with ID "${ID}" deleted successfully.` }
     });
-
+    
 //vi skal undersøge nærmere om det kan blive et problem, hvis delete fejler, med et id der fx ikke findes.
 });
 

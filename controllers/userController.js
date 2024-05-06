@@ -29,6 +29,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+
 const logoutUser = asyncHandler(async (req, res) => {
   req.session.destroy(err => {
       if (err) {
@@ -57,9 +58,8 @@ const updateUser = asyncHandler(async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized. You must be logged in to update details." });
   }
 
-
   const { Age, Weight, Gender } = req.body;
-  if (await User.updateUserDetails(req.session.user.username, { Age, Weight, Gender })) {
+  if (await User.updateUserDetails(req.session.user.user, { Age, Weight, Gender })) {
       res.redirect('/profile');
   } else {
       res.status(404).json({ success: false, message: "User not found." });

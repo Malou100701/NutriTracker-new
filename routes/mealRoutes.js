@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const {getTotalNutrient, createMeal, deleteMeal} = require("../controllers/mealController");
+const {getTotalNutrient, createMeal, addAllMeals, deleteMeal} = require("../controllers/mealController");
 
 // Route for creating a new meal
 router.post('/', createMeal); //restful design for creating a meal
 // Route for deleting a meal
 router.delete('/:ID', deleteMeal); 
+
+router.get('/', addAllMeals);
 
 router.get('/:mealID/totalNutrient', getTotalNutrient);
 

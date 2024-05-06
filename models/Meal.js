@@ -13,7 +13,7 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
             //Query to insert meal into database
                 const query = `
                 INSERT INTO Meal (Name, UserID)
-                VALUES ('${name}', ${userID});
+                VALUES ('${name}', '${userID}');
                 SELECT SCOPE_IDENTITY() AS id;
             `;
 
@@ -56,6 +56,23 @@ async function deleteMealFromDatabase(ID) {
     
     module.exports.deleteMealFromDatabase = deleteMealFromDatabase;
 
+
+async function addAllMealsIntoTable() {
+    // Connect to SQL Server database
+    await sql.connect(config);
+
+    // Create SQL request object
+    const request = new sql.Request();
+
+    // Query to get all meals
+    const query = `SELECT * FROM Meal WHERE UserID = ${userID};`;
+    const result = await request.query(query);
+
+    // Return all meals
+    return result.recordset;
+}
+
+module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
 
     // Method to get total nutrient of meal
     async function getTotalNutrient(mealID) {
@@ -114,3 +131,7 @@ async function deleteMealFromDatabase(ID) {
 
 
 
+//    const result = await sql.query`
+// UPDATE Users 
+// SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
+// WHERE Username = ${username}`;
