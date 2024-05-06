@@ -1,6 +1,21 @@
 const sql = require('mssql');
 const config = require('../config');
 
+async function searchIngredient(name) {
+    //Connect to SQL Server database
+    await sql.connect(config);
+
+    //Create SQL request object
+    const request = new sql.Request();
+
+    const query = `SELECT IngredientID FROM Ingredient WHERE Name = ${name}`
+    const result = await request.query(query); 
+    return result.recordset;
+
+}
+module.exports.searchIngredient = searchIngredient;
+
+
 async function insertMealIngredientIntoDatabase(mealID, ingredientID, amount) {
         try {
             // Connect SQL Server Database
@@ -11,7 +26,7 @@ async function insertMealIngredientIntoDatabase(mealID, ingredientID, amount) {
 
             // Query to insert meal ingredient into database
             const query = `
-                INSERT INTO MealIngredient (MealID, IngredientsID, Amount)
+                INSERT INTO MealIngredient (MealID, IngredientID, Amount)
                 VALUES (${mealID}, ${ingredientID}, ${amount});
             `;
             await sql.query(query);
@@ -71,6 +86,7 @@ async function updateMealIngredientInDatabase(ID, amount) {
     }
 }
 module.exports.updateMealIngredientInDatabase = updateMealIngredientInDatabase;
+
 
 //ændre navnene til disse funktioner, så vi skjuler hvor det gemmes. så det er nemmere at ændre i fremtiden. ændre fx til savemealingredient
 

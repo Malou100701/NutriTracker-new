@@ -12,19 +12,30 @@
             <thead>
                 <tr>
                     <th>Navn</th>
-                    <th>Antal Ingredienser</th>
                     <th>Antal Kalorier</th>
                     <th>Protein</th>
                     <th>Fedt</th>
                     <th>Fiber</th>
+                    <th>Antal Ingredienser</th>
+                    <th>Tilføj ingrediens</th>
                 </tr>
             </thead>
             <tbody>
-                <% meals.forEach(function() { %>
+                <% meals.forEach(meal => { %>
                     <tr>
-                        <td><%= meal.name %><</td>
+                        <td><%= meal.Name %></td> <!-- Correct the property name to match the actual property -->
+                            <!-- Display other meal properties as needed -->
+                            <td>
+                                <form class="addIngredientForm" id="addIngredientForm_<%= meal.ID %>" action="/mealIngredient" method="POST">
+                                    <input type="hidden" name="mealID" value="<%= meal.ID %>" />
+                                    <input type="text" name="ingredientName" placeholder="Enter ingredient name" />
+                                    <input type="number" name="amount" placeholder="Enter amount" />
+                                    <button type="submit">Add Ingredient</button>
+                                </form>
+                            </td>
                     </tr>
                 <% }); %>
+
             </tbody>
         </table>
     </div>

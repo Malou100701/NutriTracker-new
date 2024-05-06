@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const {addMealIngredient, deleteMealIngredient, updateMealIngredient} = require("../controllers/mealIngredientController");
+const {searchIngredientForMeal, addMealIngredient, deleteMealIngredient, updateMealIngredient} = require("../controllers/mealIngredientController");
+
+router.get('/', searchIngredientForMeal);
 
 router.post('/', addMealIngredient); //restful design for adding meal ingredient
 
