@@ -4,6 +4,7 @@ const {getTotalNutrient, createMeal, addAllMeals, deleteMeal} = require("../cont
 
 // Route for creating a new meal
 router.post('/', createMeal); //restful design for creating a meal
+
 // Route for deleting a meal
 router.delete('/:ID', deleteMeal); 
 

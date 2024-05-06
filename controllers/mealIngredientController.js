@@ -3,16 +3,21 @@ const asyncHandler = require("../middlewares/asyncHandler");
 const { VarChar } = require("mssql");
 
 
-const addMealIngredient = asyncHandler(async (req, res, next) => {
+const searchIngredientForMeal = asyncHandler(async (req, res, next) => {  
+    let name = req.params.name;
+    await MealIngredient.searchIngredient(name);
+});
 
-    let { mealID, ingredientID, amount } = req.body;
+
+const addMealIngredient = asyncHandler(async (req, res, next) => {
+    const { mealID, ingredientID, amount } = req.body;
     await MealIngredient.insertMealIngredientIntoDatabase(mealID, ingredientID, amount);
 
     res.status(201).json({
         success: true,
         data: { message: `Meal ingredient inserted successfully.` }
     });
-});
+}); 
 
 const deleteMealIngredient = asyncHandler(async (req, res, next) => {
     let ID = req.params.ID;
@@ -39,6 +44,7 @@ const updateMealIngredient = asyncHandler(async (req, res, next) => {
 
 module.exports = {
     addMealIngredient,
+    searchIngredientForMeal,
     deleteMealIngredient,
     updateMealIngredient,
   };

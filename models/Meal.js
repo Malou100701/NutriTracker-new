@@ -29,6 +29,20 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
         }
         module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
 
+        async function addAllMealsIntoTable(userID) {
+            try {
+                await sql.connect(config);
+                const request = new sql.Request();
+                const query = `SELECT * FROM Meal WHERE UserID = '${userID}';`;
+                const result = await request.query(query);
+                return result.recordset;
+            } catch (error) {
+                console.error('Error fetching meals:', error);
+                throw error;
+            }
+        }
+        module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
+        
 
 //nyt navn, så det er nemmere at ændre i fremtiden.
 async function deleteMealFromDatabase(ID) {
@@ -56,23 +70,6 @@ async function deleteMealFromDatabase(ID) {
     
     module.exports.deleteMealFromDatabase = deleteMealFromDatabase;
 
-
-async function addAllMealsIntoTable() {
-    // Connect to SQL Server database
-    await sql.connect(config);
-
-    // Create SQL request object
-    const request = new sql.Request();
-
-    // Query to get all meals
-    const query = `SELECT * FROM Meal WHERE UserID = ${userID};`;
-    const result = await request.query(query);
-
-    // Return all meals
-    return result.recordset;
-}
-
-module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
 
     // Method to get total nutrient of meal
     async function getTotalNutrient(mealID) {

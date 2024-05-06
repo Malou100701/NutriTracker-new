@@ -42,7 +42,9 @@ app.get('/profile', (req, res) => {
 });
 app.get('/inspector', (req, res) => res.render('pages/inspector'));
 app.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
-app.get('/allMeals', (req, res) => res.render('pages/allMeals'));
+
+//app.get('/addIngredient', (req, res) => res.render('pages/addIngredient'));
+//app.get('/allMeals', (req, res) => res.render('pages/allMeals'), { meals }); den skal ind her på et tidspunkt fra controlleren 
 
 //Listening on the port
 const port = 3000;

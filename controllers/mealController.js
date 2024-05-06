@@ -5,7 +5,6 @@ const { VarChar } = require("mssql");
 
 // Controller for creating a new meal
 const createMeal = asyncHandler(async (req, res, next) => {
-
   let name = req.body.name;
   let userID = req.session.user.userID;
   console.log(req.session.user);
@@ -20,6 +19,13 @@ const createMeal = asyncHandler(async (req, res, next) => {
   //res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
 
+  const addAllMeals = asyncHandler(async (req, res, next) => {
+    const userID = req.session.user.userID; // Assuming you have the user ID in the session
+    const meals = await Meal.addAllMealsIntoTable(userID);
+    res.render('pages/allMeals', { meals: meals }); // Pass the meals data to the EJS template
+});
+
+
 //når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
 
 const deleteMeal = asyncHandler(async (req, res, next) => {
@@ -31,14 +37,6 @@ const deleteMeal = asyncHandler(async (req, res, next) => {
     data: { message: `Meal with ID "${mealID}" deleted successfully.` }
   });
 });
-
-
-const addAllMeals = asyncHandler(async (req, res, next) => {
-  let meals = await Meal.addAllMealsIntoTable();
-
-  });
-
-
 
 // Controller for totalNutrient registration
 const getTotalNutrient = asyncHandler(async (req, res, next) => {
