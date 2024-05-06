@@ -5,24 +5,39 @@
 </head>
 <body>
     <header><%- include('../partials/headerLoggedin'); %></header>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Activity Tracker</h1>
-                    <p>Track your activities here</p>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3>Activity Tracker</h3>
-                                </div>
-                                <div class="card-body">
-                                    <form action="/activityTracker" method="POST">
-                                        <div class="form-group">
-                                            <label for="activity">Activity</label>
-                                            <input type="text" class="form-control" id="activity" name="activity" placeholder="Enter activity">
-    
-    <footer><%- include('../partials/footer'); %></footer>
+
+
+
+
+
+    <p>Log en Aktivitet</p>
+    <form action="/activitytracker/logActivity" method="POST">
+
+      <div class="labelPair">
+        <select name="activityTypeID" id="activityTypeID">
+            <% activities.forEach(function(activity) { %>
+                <option value="<%= activity.ActivityTypeID %>"><%= activity.ActivityName %></option>
+            <% }); %>
+        </select>
+      </div>
+      <div class="labelPair">
+        <label for="duration">Hvor lang tid trænede du? (Minutter)</label>
+        <input
+          type="number"
+          name="duration"
+          id="duration"
+
+        />
+      </div>
+      <div class="labelPair">
+        <label for="dateTime">Tidspunkt</label>
+        <input
+          type="datetime-local"
+          name="dateTime"
+          id="dateTime">
+      </div>
+      <button type="submit">Log Aktivitet</button>
+    </form>
 </body>
+<footer><%- include('../partials/footer'); %></footer>
 </html>

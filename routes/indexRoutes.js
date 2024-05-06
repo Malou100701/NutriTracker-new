@@ -15,7 +15,7 @@ const userRoutes = require("./userRoutes");
 router.use("/user", userRoutes);
 
 const activityRoutes = require("./activityRoutes");
-router.use("/activity", activityRoutes);
+router.use("/activitytracker", activityRoutes);
 
 module.exports = router;
 

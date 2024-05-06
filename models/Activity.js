@@ -3,14 +3,9 @@ const config = require('../config');
 const moment = require('moment-timezone');
 
 
-class Activity {
-    constructor(ActivityTypeID, Duration, DateTime) {
-        this.ActivityTypeID = ActivityTypeID;
-        this.Duration = Duration;
-        this.DateTime = DateTime;
-    }
 
-    async getUserIdByUsername(username) {
+
+    async function getUserIdByUsername(username) {
             await sql.connect(config);
             const request = new sql.Request();
             request.input('Username', sql.VarChar, username);
@@ -28,9 +23,8 @@ class Activity {
 
 
   
-    async logActivity(username) {
-        const userID = await this.getUserIdByUsername(username); // NOTE fjern this. tror jeg
-        console.log('userID: ' + userID);
+    async function logActivity(userID, activityTypeID, duration, dateTime) {
+console.log('logActivity');
         
         await sql.connect(config);
 
@@ -38,22 +32,22 @@ class Activity {
         //Det vil sige, vi kan lave en post request til kl 13:00:00, hvilket normal vil blive til kl. 11 i vores database. Derfor adderer vi med to i vores backend, som indsætter det korrekte i databasen, smart ik?
         //Dog krævede dette at vi installerede npm moment, og requirede den i denne model
 
-        const adjustedDatetime = moment.utc(this.DateTime).add(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
+        const adjustedDatetime = moment.utc(dateTime).add(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
 
         const request = new sql.Request();
             request.input('UserID', sql.Int, userID);
             console.log('UserID' + userID);
-            request.input('ActivityTypeID', sql.Int, this.ActivityTypeID);
-            console.log('ActivityTypeID' + this.ActivityTypeID);
-            request.input('Duration', sql.Decimal, this.Duration);
-            console.log('Duration' + this.Duration);
+            request.input('ActivityTypeID', sql.Int, activityTypeID);
+            console.log('ActivityTypeID' + activityTypeID);
+            request.input('Duration', sql.Decimal, duration);
+            console.log('Duration' + duration);
             request.input('DateTime', sql.DateTime, adjustedDatetime);
             console.log('DateTime' + adjustedDatetime);
 
         // const time = this.Time.time();
         // console.log('time' + time);
         const result = await request.query(`
-            INSERT INTO UserActivities (UserID, ActivityTypeID, Duration, DateTime)
+            INSERT INTO UserActivity (UserID, ActivityTypeID, Duration, DateTime)
             VALUES (@UserID, @ActivityTypeID, @Duration, @DateTime)
         `);
 
@@ -61,8 +55,15 @@ class Activity {
         console.log('recordset' + result.recordset);    
 
     }
-  
-    // Other methods...
-  }
-  
-  module.exports = Activity;
+  module.exports.logActivity = logActivity;
+
+    async function getActivities() {
+        console.log('getActivities');
+        await sql.connect(config);
+        const query = `SELECT ActivityTypeID, ActivityName 
+        FROM ActivityType 
+`;
+        const result = await sql.query(query);
+        return result.recordset;
+    }
+    module.exports.getActivities = getActivities;
