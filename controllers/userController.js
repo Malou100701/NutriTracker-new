@@ -44,7 +44,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized. You must be logged in to delete an account." });
   }
 
-  if (await User.deleteUserByUsername(req.session.user.username)) {
+  if (await User.deleteUserByUserID(req.session.user.userID)) {
       req.session.destroy(() => {
           res.redirect('/');
       });

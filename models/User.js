@@ -46,15 +46,15 @@ module.exports.validatePassword = validatePassword;
 
 
 
-async function deleteUserByUsername(username) {
+async function deleteUserByUserID(userID) {
     await sql.connect(config);
-    const result = await sql.query`DELETE FROM Users WHERE Username = ${username}`;
+    const result = await sql.query`DELETE FROM Users WHERE UserID = ${userID}`;
     if (result.rowsAffected[0] > 0) {
         return true;
     }
     return false;
 }
-module.exports.deleteUserByUsername = deleteUserByUsername;
+module.exports.deleteUserByUserID = deleteUserByUserID;
 
 
 async function updateUserDetails(username, newDetails) {
