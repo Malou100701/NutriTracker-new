@@ -5,8 +5,7 @@
 </head>
 <body>
     <header><%- include('../partials/headerLoggedin'); %></header>
-    <form class = "show" id = "showForm" action="/allMeals" method="GET">
-    <div class="container" >
+    <div class="container">
         <h1>Alle Måltider</h1>
         <table>
             <thead>
@@ -26,11 +25,11 @@
                         <td><%= meal.Name %></td> <!-- Correct the property name to match the actual property -->
                             <!-- Display other meal properties as needed -->
                             <td>
-                                <form class="addIngredientForm" id="addIngredientForm_<%= meal.ID %>" action="/mealIngredient" method="POST">
-                                    <input type="hidden" name="mealID" value="<%= meal.ID %>" />
-                                    <input type="text" name="ingredientName" placeholder="Enter ingredient name" />
-                                    <input type="number" name="amount" placeholder="Enter amount" />
-                                    <button type="submit">Add Ingredient</button>
+                                <!-- Add a form for adding ingredients -->
+                                <form action="/allMeals" method="POST">
+                                    <input type="hidden" name="mealID" value="<%= meal.ID %>">
+                                    <input type="text" name="ingredientName" placeholder="Søg efter ingrediens">
+                                    <button type="submit">Tilføj</button>
                                 </form>
                             </td>
                     </tr>

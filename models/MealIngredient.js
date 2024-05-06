@@ -1,43 +1,35 @@
 const sql = require('mssql');
 const config = require('../config');
 
-async function searchIngredient(name) {
-    //Connect to SQL Server database
-    await sql.connect(config);
+// Med denne logik forsøger vi kun at tilføje en ting til database af brugerinput, dette mindsker chancen for fejl og er testet i postman. Ikke ændre dette.
+// IKKE ÆNDRE
 
-    //Create SQL request object
-    const request = new sql.Request();
+async function addIngredientToMeal(mealID, ingredientName) {
+    try {
+        // Connect to SQL Server database
+        await sql.connect(config);
 
-    const query = `SELECT IngredientID FROM Ingredient WHERE Name = ${name}`
-    const result = await request.query(query); 
-    return result.recordset;
+        // Create SQL request object
+        const request = new sql.Request();
 
-}
-module.exports.searchIngredient = searchIngredient;
+        // Query to insert the ingredient into the MealIngredient table
+        const query = `
+            INSERT INTO MealIngredient (MealID, IngredientID)
+            SELECT ${mealID}, IngredientID
+            FROM Ingredient 
+            WHERE Name = '${ingredientName}'
+        `;
 
+        // Execute the query to insert the meal ingredient
+        await request.query(query);
 
-async function insertMealIngredientIntoDatabase(mealID, ingredientID, amount) {
-        try {
-            // Connect SQL Server Database
-            await sql.connect(config);
-
-            // Create SQL request object
-            const request = new sql.Request();
-
-            // Query to insert meal ingredient into database
-            const query = `
-                INSERT INTO MealIngredient (MealID, IngredientID, Amount)
-                VALUES (${mealID}, ${ingredientID}, ${amount});
-            `;
-            await sql.query(query);
-            console.log(`Meal ingredient inserted into database.`);
-
-        } catch (error) {
-            console.error('Error inserting meal ingredient into database.', error);
-            throw error;
-        }
+        console.log(`Ingredient "${ingredientName}" added to meal ${mealID}`);
+    } catch (error) {
+        console.error('Error adding ingredient to meal.', error);
+        throw error;
     }
-module.exports.insertMealIngredientIntoDatabase = insertMealIngredientIntoDatabase;
+}
+module.exports.addIngredientToMeal = addIngredientToMeal;
 
 async function deleteMealIngredientFromDatabase(ID) {
         try {

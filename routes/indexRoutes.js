@@ -6,7 +6,8 @@ router.use("/meal", mealRoutes);
 router.use("/allMeals", mealRoutes);
 
 const mealIngredientRoutes = require("./mealIngredientRoutes");
-router.use("/addIngredient", mealIngredientRoutes);
+router.use("/mealIngredient", mealIngredientRoutes);
+router.use("/allMeals", mealIngredientRoutes);
 
 const inspectorRoutes = require("./inspectorRoutes");
 router.use("/inspector", inspectorRoutes);
