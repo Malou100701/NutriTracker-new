@@ -15,7 +15,6 @@ router.get('/', addAllMeals);
 
 router.get('/:mealID/totalNutrient', getTotalNutrient);
 
-
 router.get ('/mealCreator', (req, res) => res.render('pages/mealCreator'));
 
 /*
