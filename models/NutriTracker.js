@@ -137,25 +137,6 @@ const getCaloriesIntakePerHourToday = async (UserID) => {
     return result.recordset;
 };
 
-// fungere men kun med loggede timer
-// const getCaloriesBurnedPerHourToday = async (UserID) => {
-//     const today = new Date();
-//     const dateStr = today.toISOString().slice(0, 10);  // Format as "YYYY-MM-DD"
-
-//     const query = `
-//         SELECT DATEPART(hour, DateTime) AS Hour, SUM(at.CaloriesPerMinute * ua.Duration) AS Calories
-//         FROM UserActivity ua
-//         JOIN ActivityType at ON ua.ActivityTypeID = at.ActivityTypeID
-//         WHERE ua.UserID = @userID AND CONVERT(date, ua.DateTime) = @dateStr
-//         GROUP BY DATEPART(hour, ua.DateTime)
-//         ORDER BY Hour;
-//     `;
-//     const request = new sql.Request();
-//     request.input('UserID', sql.Int, UserID);
-//     request.input('dateStr', sql.VarChar, dateStr);
-//     const result = await request.query(query);
-//     return result.recordset;
-// };
 
 const getCaloriesBurnedPerHourToday = async (userID, BMR) => {
     const today = new Date();
@@ -196,38 +177,6 @@ const getCaloriesBurnedPerHourToday = async (userID, BMR) => {
 };
 
 
-// Virker med en enkelt dato
-// async function nutriTrackerView(UserID, date) {
-// // Connect to SQL Server database using provided configuration
-// await sql.connect(config);
-
-// // Create SQL request object
-// const request = new sql.Request();
-
-// // Query to get total calorie intake
-// const query = `
-//     SELECT SUM(i.Calories * mi.Amount * intk.Amount) AS TotalCalorieIntake
-//     FROM Meal m
-//     JOIN MealIngredient mi ON m.ID = mi.MealID
-//     JOIN Ingredient i ON mi.IngredientID = i.IngredientID
-//     JOIN Intake intk ON m.ID = intk.MealID
-//     WHERE intk.UserID = @UserId AND CONVERT(date, intk.DateTime) = @date AND intk.MealID IS NOT NULL;
-// `;
-
-// // Add parameters to avoid SQL injection
-// request.input('UserId', sql.Int, UserID);
-// request.input('date', sql.VarChar, date);
-// console.log('date', date);
-
-// // Execute the query
-// const result = await request.query(query);
-
-// // Output result to console for debugging
-// console.log(result.recordset[0].TotalCalorieIntake);
-
-// // Return total calorie intake
-// return result.recordset[0].TotalCalorieIntake || 0;
-// };
 
 module.exports = {
     getCalorieIntakeLast30Days,
