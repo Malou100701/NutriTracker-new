@@ -40,9 +40,11 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   let ingredient = req.query.ingredient;
   let meal = await Meal.getMealByID(mealID);
+  let amount = req.query.amount;
+  await MealIngredient.updateMealIngredientInDatabase(mealID, ingredient, amount);
   await MealIngredient.addIngredientToMeal(mealID, ingredient);
   let ingredients = await Meal.getMealIngredients(mealID);
-  res.render('pages/mealEditor', { meal: meal, ingredients: ingredients });
+  res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
 });
 
 //når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.

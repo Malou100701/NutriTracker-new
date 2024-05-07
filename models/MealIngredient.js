@@ -71,8 +71,9 @@ async function updateMealIngredientInDatabase(ID, amount) {
         const query = `
         UPDATE MealIngredient
         SET Amount = ${amount}
-        WHERE ID = ${ID};
-        `;
+        WHERE IngredientID = ${ID};
+        ;`
+        
         await sql.query(query);
         console.log(`Meal ingredient with ID "${ID}" amount updated in database.`);
 
