@@ -1,4 +1,5 @@
 const Meal = require("../models/Meal");
+const MealIngredient = require("../models/MealIngredient");
 const asyncHandler = require("../middlewares/asyncHandler");
 const { VarChar } = require("mssql");
 
@@ -30,14 +31,18 @@ const editMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   let meal = await Meal.getMealByID(mealID);
   let ingredients = await Meal.getMealIngredients(mealID);
+  console.log(ingredients); 
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients });
 });
 
 
-const searchIngredient = asyncHandler(async (req, res, next) => {
-  let name = req.params.name;
-  let ingredients = await Meal.searchIngredientByName(name);
-  res.render('pages/mealEditor', { ingredients: ingredients });
+const addIngredient = asyncHandler(async (req, res, next) => {
+  let mealID = req.params.ID;
+  let ingredient = req.query.ingredient;
+  let meal = await Meal.getMealByID(mealID);
+  await MealIngredient.addIngredientToMeal(mealID, ingredient);
+  let ingredients = await Meal.getMealIngredients(mealID);
+  res.render('pages/mealEditor', { meal: meal, ingredients: ingredients });
 });
 
 //når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
@@ -68,7 +73,7 @@ const getTotalNutrient = asyncHandler(async (req, res, next) => {
   module.exports = {
     getTotalNutrient,
     editMeal,
-    searchIngredient,
+    addIngredient,
     createMeal,
     deleteMeal,
     addAllMeals

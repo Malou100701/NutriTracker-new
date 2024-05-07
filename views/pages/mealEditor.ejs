@@ -8,7 +8,7 @@
     <div class="container">
         <div class="content">
           <div class="box">
-            <h1>Ret i dit måltid <%= meal.Name %> </h1>
+            <h1>Ret i dit måltid <%= meal.Name %></h1>
             <table>
                 <thead>
                     <tr>
@@ -24,7 +24,7 @@
                 <tbody>
                     <% ingredients.forEach(ingredient => { %>
                         <tr>
-                            <td><option value="<%= ingredient.ID %>"><%= ingredient.Name %></option></td> 
+                            <td><%= ingredient.IngredientName %></td> 
                         </tr>
                     <% }); %>
     
@@ -32,7 +32,7 @@
             </table>
 
              <!-- Add a form for adding ingredients -->
-             <form action="/searchIngredient" method="GET">
+             <form action= "/meal/<%= meal.ID %>/addIngredient?ingredient" method="GET"> <!--query parameter efter URL -->
                 <label for="ingredient">Vælg ingrediens</label>
                 <input type="text" id="ingredient" name="ingredient" placeholder="Type to search...">
                 <button type="submit">Tilføj ingrediens</button>
