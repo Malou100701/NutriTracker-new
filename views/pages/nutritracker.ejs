@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+<body>
+    <header><%- include('../partials/headerLoggedin'); %></header>
+    <h1>Nutritional Tracker - Last 30 Days</h1>
+    <p>Track your nutritional intake and activities here.</p>
+    <!-- Link to the view page -->
+    <p><a href="/nutritracker/view">View Hourly Calorie Data</a></p>
+    <div class="tracker">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Calorie Intake</th>
+                    <th>Calories Burned</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% dailyData.forEach(data => { %>
+                <tr>
+                    <td><%= data.date %></td>
+                    <td><%= data.intake %> kcal</td>
+                    <td><%= data.burned %> kcal</td>
+                    <td><%= data.balance %> kcal</td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+    <footer><%- include('../partials/footer'); %></footer>
+</body>
+</html>

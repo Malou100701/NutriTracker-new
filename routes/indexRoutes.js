@@ -35,9 +35,12 @@ router.get('/register', function (req, res) {
 const nutriTrackerRoutes = require("./nutriTrackerRoutes");
 router.use("/nutritracker", nutriTrackerRoutes);
 
+
+
 //ACTIVITY ROUTES
 const activityRoutes = require("./activityRoutes");
 router.use("/activitytracker", activityRoutes);
+
 
 const mealTrackerRoutes = require("./mealTrackerRoutes");
 router.use("/mealtracker", mealTrackerRoutes);

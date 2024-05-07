@@ -102,6 +102,98 @@ async function getCaloriesBurnedLast30Days(UserID) {
 }
 
 
+const getCaloriesIntakePerHourToday = async (UserID) => {
+    const today = new Date();
+    const dateStr = today.toISOString().slice(0, 10);  // Format as "YYYY-MM-DD"
+
+    const query = `
+        WITH Hours AS (
+            SELECT 0 AS Hour UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+            SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL
+            SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15 UNION ALL SELECT 16 UNION ALL
+            SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL SELECT 21 UNION ALL SELECT 22 UNION ALL
+            SELECT 23
+        ),
+        CaloriesData AS (
+            SELECT DATEPART(hour, intk.DateTime) AS Hour, SUM(i.Calories * mi.Amount) AS Calories
+            FROM Meal m
+            JOIN MealIngredient mi ON m.ID = mi.MealID
+            JOIN Ingredient i ON mi.IngredientID = i.IngredientID
+            JOIN Intake intk ON m.ID = intk.MealID
+            WHERE intk.UserID = @UserID AND CONVERT(date, intk.DateTime) = @dateStr
+            GROUP BY DATEPART(hour, intk.DateTime)
+        )
+        SELECT h.Hour, ISNULL(cd.Calories, 0) AS Calories
+        FROM Hours h
+        LEFT JOIN CaloriesData cd ON h.Hour = cd.Hour
+        ORDER BY h.Hour;
+    `;
+
+    const request = new sql.Request();
+    request.input('UserID', sql.Int, UserID);
+    request.input('dateStr', sql.VarChar, dateStr);
+    const result = await request.query(query);
+    console.log('Calories Intake per Hour:', result.recordset);
+    return result.recordset;
+};
+
+// fungere men kun med loggede timer
+// const getCaloriesBurnedPerHourToday = async (UserID) => {
+//     const today = new Date();
+//     const dateStr = today.toISOString().slice(0, 10);  // Format as "YYYY-MM-DD"
+
+//     const query = `
+//         SELECT DATEPART(hour, DateTime) AS Hour, SUM(at.CaloriesPerMinute * ua.Duration) AS Calories
+//         FROM UserActivity ua
+//         JOIN ActivityType at ON ua.ActivityTypeID = at.ActivityTypeID
+//         WHERE ua.UserID = @userID AND CONVERT(date, ua.DateTime) = @dateStr
+//         GROUP BY DATEPART(hour, ua.DateTime)
+//         ORDER BY Hour;
+//     `;
+//     const request = new sql.Request();
+//     request.input('UserID', sql.Int, UserID);
+//     request.input('dateStr', sql.VarChar, dateStr);
+//     const result = await request.query(query);
+//     return result.recordset;
+// };
+
+const getCaloriesBurnedPerHourToday = async (userID, BMR) => {
+    const today = new Date();
+    const dateStr = today.toISOString().slice(0, 10);  // Format as "YYYY-MM-DD"
+
+    const query = `
+        WITH Hours AS (
+            SELECT 0 AS Hour UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+            SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL
+            SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15 UNION ALL SELECT 16 UNION ALL
+            SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL SELECT 21 UNION ALL SELECT 22 UNION ALL
+            SELECT 23
+        ),
+        BMR_Distributed AS (
+            SELECT @bmr / 24 AS BMRPerHour  -- Calculate BMR per hour
+        ),
+        CaloriesData AS (
+            SELECT DATEPART(hour, ua.DateTime) AS Hour, SUM(at.CaloriesPerMinute * ua.Duration) AS Calories
+            FROM UserActivity ua
+            JOIN ActivityType at ON ua.ActivityTypeID = at.ActivityTypeID
+            WHERE ua.UserID = @userID AND CONVERT(date, ua.DateTime) = @dateStr
+            GROUP BY DATEPART(hour, ua.DateTime)
+        )
+        SELECT h.Hour, ISNULL(cd.Calories, 0) + bmr.BMRPerHour AS Calories
+        FROM Hours h
+        CROSS JOIN BMR_Distributed bmr
+        LEFT JOIN CaloriesData cd ON h.Hour = cd.Hour
+        ORDER BY h.Hour;
+    `;
+
+    const request = new sql.Request();
+    request.input('userID', sql.Int, userID);
+    request.input('bmr', sql.Float, BMR); // Ensure BMR is passed correctly
+    request.input('dateStr', sql.VarChar, dateStr);
+    const result = await request.query(query);
+    console.log('Calories Burned per Hour:', result.recordset);
+    return result.recordset;
+};
 
 
 // Virker med en enkelt dato
@@ -139,5 +231,7 @@ async function getCaloriesBurnedLast30Days(UserID) {
 
 module.exports = {
     getCalorieIntakeLast30Days,
-    getCaloriesBurnedLast30Days
+    getCaloriesBurnedLast30Days,
+    getCaloriesIntakePerHourToday,
+    getCaloriesBurnedPerHourToday
 };

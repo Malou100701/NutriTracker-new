@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+<body>
+    <header><%- include('../partials/headerLoggedin'); %></header>
+
+
+        <h1>Hourly Calorie Balance for Today</h1>
+        <table>
+            <tr>
+                <th>Hour</th>
+                <th>Calories Intake</th>
+                <th>Calories Burned</th>
+                <th>Calorie Balance</th>
+            </tr>
+            <% hourlyData.forEach(function(data) { %>
+                <tr>
+                    <td><%= data.hour %>:00</td>
+                    <td><%= data.intake %> kcal</td>
+                    <td><%= data.burned %> kcal</td>
+                    <td><%= data.balance %> kcal</td>
+                </tr>
+            <% }); %>
+        </table>
+
+
+    </div>
+    <footer><%- include('../partials/footer'); %></footer>
+</body>
+</html>
