@@ -39,13 +39,33 @@
                 name="dateTime"
                 id="dateTime">
             </div>
+
+                <!-- hidden fields for geolocation -->
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
             <button type="submit">Log Meal</button>
           </form>
+        </div>
         <div class="box">
           <img src="/images/start.png" alt="start image" />
         </div>
       </div>
     </div>
     <footer><%- include('../partials/footer'); %></footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(function(position) {
+                  document.getElementById('latitude').value = position.coords.latitude;
+                  document.getElementById('longitude').value = position.coords.longitude;
+              }, function(error) {
+                  console.error("Geolocation error: " + error.message);
+              });
+          } else {
+              console.error("Geolocation is not supported by this browser.");
+          }
+      });
+      </script>
   </body>
 </html>
