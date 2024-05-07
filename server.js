@@ -40,10 +40,10 @@ app.get('/', (req, res) => {
 });*/
 
 //app.get('/register', (req, res) => res.render('pages/register'));
-/*app.get('/profile', (req, res) => {
+app.get('/profile', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   res.render('pages/profile', { user: req.session.user });
-});*/
+});
 
 //app.get('/inspector', (req, res) => res.render('pages/inspector'));
 //app.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
