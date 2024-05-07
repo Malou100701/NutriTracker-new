@@ -103,7 +103,7 @@ module.exports.searchIngredientByName = searchIngredientByName;
             const request = new sql.Request();
 
             // Query to get meal by ID
-            const query = `SELECT Name FROM Meal WHERE ID = ${ID};`;
+            const query = `SELECT Name, ID FROM Meal WHERE ID = ${ID};`;
 
             const result = await request.query(query);
 
