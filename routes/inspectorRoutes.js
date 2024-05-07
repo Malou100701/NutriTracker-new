@@ -4,7 +4,7 @@ const inspectIngredient = require("../controllers/inspectorController");
 
 router.get('/:Name', inspectIngredient);
 
-router.get ('/inspector', (req, res) => res.render('pages/inspector'));
+router.get('/inspector', (req, res) => res.render('pages/inspector'));
 
 module.exports = router;
 

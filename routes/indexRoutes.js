@@ -5,7 +5,7 @@ const router = express.Router();
 const mealRoutes = require("./mealRoutes");
 router.use("/meal", mealRoutes);
 router.use("/allMeals", mealRoutes);
-router.get("mealCreator", function (req, res) {
+router.get("/mealCreator", function (req, res) {
     res.redirect("/meal/mealCreator");
 });
 
@@ -16,9 +16,9 @@ router.use("/allMeals", mealIngredientRoutes);
 
 //INSPECTOR ROUTES
 const inspectorRoutes = require("./inspectorRoutes");
-router.use("/inspector", inspectorRoutes);
+router.use('/inspector', inspectorRoutes);
 router.get('/inspector', function (req, res) {
-    res.redirect('/inspector');
+    res.redirect('/inspector/inspector');
 });
 
 //USER ROUTES
@@ -30,11 +30,6 @@ router.get('/login', function (req, res) {
 router.get('/register', function (req, res) {
     res.redirect('/user/register');
 });
-router.get('/profile', function (req, res) {
-    if (!req.session.user) return res.redirect('/login');
-    res.render('/profile', { user: req.session.user });
-  });
-
 
 //ACTIVITY ROUTES
 const activityRoutes = require("./activityRoutes");
