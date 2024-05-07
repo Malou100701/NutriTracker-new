@@ -34,7 +34,11 @@ app.get('/', (req, res) => {
   res.render('pages/index', { user: req.session.user || null });
 });
 
-app.get('/login', (req, res) => res.render('pages/login'));
+//app.get('/login', (req, res) => res.render('pages/login'));
+/*app. get('/login', function (req, res) {
+	res.redirect('/user/login');
+});*/
+
 app.get('/register', (req, res) => res.render('pages/register'));
 app.get('/profile', (req, res) => {
   if (!req.session.user) return res.redirect('/login');

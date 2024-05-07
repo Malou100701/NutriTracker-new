@@ -14,6 +14,9 @@ router.use("/inspector", inspectorRoutes);
 
 const userRoutes = require("./userRoutes");
 router.use("/user", userRoutes);
+router.get('/login', function (req, res) {
+	res.redirect('/user/login');
+});
 
 const activityRoutes = require("./activityRoutes");
 router.use("/activitytracker", activityRoutes);

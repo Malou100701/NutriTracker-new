@@ -13,6 +13,7 @@ router.post('/update', userController.updateUser);
 
 // router.get('/profile', userController.viewProfile)
 
+router.get ('/login', (req, res) => res.render('pages/login'));
 
 
 module.exports = router;
