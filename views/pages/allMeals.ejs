@@ -22,15 +22,10 @@
             <tbody>
                 <% meals.forEach(meal => { %>
                     <tr>
-                        <td><%= meal.Name %></td> <!-- Correct the property name to match the actual property -->
+                        <td> <a href= "/meal/<%= meal.ID %>/edit" > <%= meal.Name %> </a></td> <!-- Correct the property name to match the actual property -->
                             <!-- Display other meal properties as needed -->
                             <td>
-                                <!-- Add a form for adding ingredients -->
-                                <form action="/mealIngredient" method="POST">
-                                    <input type="hidden" name="mealID" value="<%= meal.ID %>">
-                                    <input type="text" name="ingredientName" placeholder="Søg efter ingrediens">
-                                    <button type="submit">Tilføj</button>
-                                </form>
+                               
                             </td>
                     </tr>
                 <% }); %>

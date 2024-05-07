@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %> <!-- This line includes the head.ejs file from the partials folder -->
+</head>
+<body>
+    <header><%- include('../partials/headerLoggedin'); %></header>
+    <div class="container">
+        <div class="content">
+          <div class="box">
+            <h1>Ret i dit måltid <%= meal.Name %> </h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Antal Kalorier</th>
+                        <th>Protein</th>
+                        <th>Fedt</th>
+                        <th>Fiber</th>
+                        <th>Antal Ingredienser</th>
+                        <th>Tilføj ingrediens</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% ingredients.forEach(ingredient => { %>
+                        <tr>
+                            <td> <%= ingredient.Amount %></td> 
+                            <td> <%= ingredient.Name %> </td>   
+                        </tr>
+                    <% }); %>
+    
+                </tbody>
+            </table>
+
+
+             <!-- Add a form for adding ingredients -->
+             <form action="/mealIngredient" method="POST">
+                <input type="hidden" name="mealID" value="<%= meal.ID %>">
+                <input type="text" name="ingredientName" placeholder="Søg efter ingrediens">
+                <button type="submit">Tilføj</button>
+            </form>
+            </div>
+        </div>
+    </div>
+    
+    <footer><%- include('../partials/footer'); %></footer>
+</body>
+</html>
