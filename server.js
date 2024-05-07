@@ -34,10 +34,9 @@ app.get('/', (req, res) => {
   res.render('pages/index', { user: req.session.user || null });
 });
 
-app.get('/profile', (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
-  res.render('pages/profile', { user: req.session.user });
-});
+// app.get('/profile', (req, res) => {
+
+// });
 
 // Dette er lidt en 'hacker' løsning, funktionen burde køres i controllers, men efter 3,5 timer uden held, så er det her vi er nu
 const Activity = require('./models/Activity');
@@ -52,6 +51,18 @@ app.get('/mealtracker', async (req, res) => {
   const meals = await MealTracker.getMeals(UserID);
   console.log('Meals:', { meals });
   res.render('pages/mealTracker', { user: req.session.user, meals: meals });
+});
+
+
+const User = require('./models/User');
+app.get('/profile', async (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  console.log('serverJS');
+  const UserID = req.session.user.userID;
+  const BMR = await User.BMR(UserID);
+  console.log("User BMRServer:", BMR);
+  res.render('pages/profile', { user: req.session.user, BMR });
 });
 
 

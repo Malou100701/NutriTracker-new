@@ -73,6 +73,55 @@ async function updateUserDetails(username, newDetails) {
 
 module.exports.updateUserDetails = updateUserDetails;
 
+
+async function BMR(UserID) {
+    console.log("Running Model BMR")
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('UserID', sql.Int, UserID);
+    const query = `SELECT
+    Gender,
+    Age,
+    Weight,
+    CASE
+        WHEN Gender = 'Kvinde' THEN
+            CASE
+                WHEN Age < 3 THEN 0.244 * Weight - 0.13
+                WHEN Age BETWEEN 4 AND 10 THEN 0.085 * Weight + 2.03
+                WHEN Age BETWEEN 11 AND 18 THEN 0.056 * Weight + 2.90
+                WHEN Age BETWEEN 19 AND 30 THEN 0.0615 * Weight + 2.08
+                WHEN Age BETWEEN 31 AND 60 THEN 0.0364 * Weight + 3.47
+                WHEN Age BETWEEN 61 AND 75 THEN 0.0386 * Weight + 2.88
+                WHEN Age > 75 THEN 0.0410 * Weight + 2.61
+            END
+        WHEN Gender = 'Mand' THEN
+            CASE
+                WHEN Age < 3 THEN 0.249 * Weight - 0.13
+                WHEN Age BETWEEN 4 AND 10 THEN 0.095 * Weight + 2.11
+                WHEN Age BETWEEN 11 AND 18 THEN 0.074 * Weight + 2.75
+                WHEN Age BETWEEN 19 AND 30 THEN 0.064 * Weight + 2.84
+                WHEN Age BETWEEN 31 AND 60 THEN 0.0485 * Weight + 3.67
+                WHEN Age BETWEEN 61 AND 75 THEN 0.0499 * Weight + 2.93
+                WHEN Age > 75 THEN 0.035 * Weight + 3.43
+            END
+    END AS BMR
+FROM
+    Users
+    WHERE UserID = @UserID
+    ;`;
+    const result = await request.query(query);
+    console.log("BMR found:", result.recordset[0].BMR);
+     const kCal = result.recordset[0].BMR * 238.8458966275;
+     console.log("kCal found:", kCal);
+     return kCal
+
+}
+
+module.exports.BMR = BMR;
+
+
+
+
 /*
 class User {
     constructor(username, password, email, age, weight, gender) {

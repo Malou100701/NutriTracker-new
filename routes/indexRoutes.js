@@ -31,6 +31,10 @@ router.get('/register', function (req, res) {
     res.redirect('/user/register');
 });
 
+// NUTRI TRACKER ROUTES
+const nutriTrackerRoutes = require("./nutriTrackerRoutes");
+router.use("/nutritracker", nutriTrackerRoutes);
+
 //ACTIVITY ROUTES
 const activityRoutes = require("./activityRoutes");
 router.use("/activitytracker", activityRoutes);

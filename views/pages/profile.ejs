@@ -9,6 +9,8 @@
       <div class="content">
         <div class="box">
           <h1>Hej <%- user.username %></h1>
+          <p>Dit basale stofskifte udregnet på baggrund af dit køn, alder og vægt er <%- BMR %></p>
+
           <p>Opdater dine informationer</p>
           <form action="/user/update" method="POST">
             <input type="hidden" name="_method" value="PUT" />
