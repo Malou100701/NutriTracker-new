@@ -6,6 +6,8 @@ const config = require('../config');
 
 //URL = meal/mealID/view - så man kan se hvilke ingredienser der er i en meal
 
+// Nedenstående virker og skal bare aktivteres når der tastes en ingrediens. 
+// Det var aktiveret i går og virkede fra frontend af...
 async function addIngredientToMeal(mealID, ingredientName) {
     try {
         // Connect to SQL Server database
