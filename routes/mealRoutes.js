@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const {editMeal, getTotalNutrient, createMeal, addAllMeals, deleteMeal} = require("../controllers/mealController");
+const {editMeal, searchIngredient, getTotalNutrient, createMeal, addAllMeals, deleteMeal} = require("../controllers/mealController");
 
 // Route for creating a new meal
 router.post('/', createMeal); //restful design for creating a meal
 
 // Route for viewing a meal
-router.get('/:ID/edit', editMeal);
+router.get('/:ID/edit', editMeal, searchIngredient);
 
 // Route for deleting a meal
 router.delete('/:ID', deleteMeal); 

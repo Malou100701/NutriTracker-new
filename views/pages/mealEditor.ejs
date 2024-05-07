@@ -24,24 +24,24 @@
                 <tbody>
                     <% ingredients.forEach(ingredient => { %>
                         <tr>
-                            <td> <%= ingredient.Amount %></td> 
-                            <td> <%= ingredient.Name %> </td>   
+                            <td><option value="<%= ingredient.ID %>"><%= ingredient.Name %></option></td> 
                         </tr>
                     <% }); %>
     
                 </tbody>
             </table>
 
-
              <!-- Add a form for adding ingredients -->
-             <form action="/mealIngredient" method="POST">
-                <input type="hidden" name="mealID" value="<%= meal.ID %>">
-                <input type="text" name="ingredientName" placeholder="Søg efter ingrediens">
-                <button type="submit">Tilføj</button>
+             <form action="/meal/<%= meal.ID %>/edit" method="POST">
+                <label for="ingredient">Vælg ingrediens</label>
+                <input type="text" id="ingredient" name="ingredient" placeholder="Type to search...">
+                <button type="submit">Tilføj ingrediens</button>
             </form>
-            </div>
+            </div> 
+             
         </div>
     </div>
+
     
     <footer><%- include('../partials/footer'); %></footer>
 </body>

@@ -6,6 +6,7 @@ const session = require('express-session');
 require('dotenv').config();
 const methodOverride = require('method-override');
 
+
 // Database and configurations 
 const config = require('./config');
 
