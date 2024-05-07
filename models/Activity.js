@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 
 
 
-
+// Kan muligvis slettes
     async function getUserIdByUsername(username) {
             await sql.connect(config);
             const request = new sql.Request();
@@ -36,13 +36,9 @@ console.log('logActivity');
 
         const request = new sql.Request();
             request.input('UserID', sql.Int, userID);
-            console.log('UserID' + userID);
             request.input('ActivityTypeID', sql.Int, activityTypeID);
-            console.log('ActivityTypeID' + activityTypeID);
             request.input('Duration', sql.Decimal, duration);
-            console.log('Duration' + duration);
             request.input('DateTime', sql.DateTime, adjustedDatetime);
-            console.log('DateTime' + adjustedDatetime);
 
         // const time = this.Time.time();
         // console.log('time' + time);

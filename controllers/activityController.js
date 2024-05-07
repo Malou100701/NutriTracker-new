@@ -15,6 +15,8 @@ res.redirect('/activitytracker');
  
 });
 
+
+// Kan muligvis slettes
 const getActivities = asyncHandler(async (req, res) => {
     console.log("Endpoint hit");
     const activities = await Activity.getActivities();
