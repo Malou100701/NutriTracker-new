@@ -25,6 +25,13 @@ const createMeal = asyncHandler(async (req, res, next) => {
     res.render('pages/allMeals', { meals: meals }); // Pass the meals data to the EJS template
 });
 
+const editMeal = asyncHandler(async (req, res, next) => {
+  let mealID = req.params.ID;
+  let meal = await Meal.getMealByID(mealID);
+  let ingredients = await Meal.getMealIngredients(mealID);
+  res.render('pages/mealEditor', { meal: meal, ingredients: ingredients });
+});
+
 
 //når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
 
@@ -54,6 +61,7 @@ const getTotalNutrient = asyncHandler(async (req, res, next) => {
 
   module.exports = {
     getTotalNutrient,
+    editMeal,
     createMeal,
     deleteMeal,
     addAllMeals

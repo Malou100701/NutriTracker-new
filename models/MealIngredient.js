@@ -4,6 +4,8 @@ const config = require('../config');
 // Med denne logik forsøger vi kun at tilføje en ting til database af brugerinput, dette mindsker chancen for fejl og er testet i postman. Ikke ændre dette.
 // IKKE ÆNDRE
 
+//URL = meal/mealID/view - så man kan se hvilke ingredienser der er i en meal
+
 async function addIngredientToMeal(mealID, ingredientName) {
     try {
         // Connect to SQL Server database
@@ -19,7 +21,7 @@ async function addIngredientToMeal(mealID, ingredientName) {
             FROM Ingredient 
             WHERE Name = '${ingredientName}'
         `;
-
+        
         // Execute the query to insert the meal ingredient
         await request.query(query);
 

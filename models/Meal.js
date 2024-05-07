@@ -29,11 +29,11 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
         }
         module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
 
-        async function addAllMealsIntoTable(userID) {
+    async function addAllMealsIntoTable(userID) {
             try {
                 await sql.connect(config);
                 const request = new sql.Request();
-                const query = `SELECT * FROM Meal WHERE UserID = '${userID}';`;
+                const query = `SELECT Name, ID FROM Meal WHERE UserID = '${userID}';`;
                 const result = await request.query(query);
                 return result.recordset;
             } catch (error) {
@@ -42,7 +42,65 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
             }
         }
         module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
-        
+
+    async function getMealIngredients(ID) {
+            try {
+                // Connect to SQL Server database
+                await sql.connect(config);
+    
+                // Create SQL request object
+                const request = new sql.Request();
+    
+                // Query to get meal ingredients from database
+                const query = `
+                SELECT 
+                    i.Name AS IngredientName,
+                    mi.Amount AS Amount
+                FROM
+                    MealIngredient mi
+                JOIN
+                    Ingredient i ON mi.IngredientID = i.IngredientID
+                WHERE
+                    mi.MealID = ${ID};
+                `;
+    
+                const result = await request.query(query);
+    
+                console.log(result.recordset);
+                // Return meal ingredients
+                return result.recordset;
+            } catch (error) {
+                console.error('Error fetching meal ingredients.', error);
+                throw error;
+            }
+
+    }
+
+    module.exports.getMealIngredients = getMealIngredients;
+
+    async function getMealByID(ID) {
+        try {
+            // Connect to SQL Server database
+            await sql.connect(config);
+
+            // Create SQL request object
+            const request = new sql.Request();
+
+            // Query to get meal by ID
+            const query = `SELECT Name FROM Meal WHERE ID = ${ID};`;
+
+            const result = await request.query(query);
+
+            console.log(result.recordset[0]);
+            // Return meal
+            return result.recordset[0];
+        } catch (error) {
+            console.error('Error fetching meal by ID.', error);
+            throw error;
+        }
+    
+    }
+    module.exports.getMealByID = getMealByID;
 
 //nyt navn, så det er nemmere at ændre i fremtiden.
 async function deleteMealFromDatabase(ID) {

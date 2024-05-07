@@ -34,14 +34,19 @@ app.get('/', (req, res) => {
   res.render('pages/index', { user: req.session.user || null });
 });
 
-app.get('/login', (req, res) => res.render('pages/login'));
-app.get('/register', (req, res) => res.render('pages/register'));
+//app.get('/login', (req, res) => res.render('pages/login'));
+/*app. get('/login', function (req, res) {
+	res.redirect('/user/login');
+});*/
+
+//app.get('/register', (req, res) => res.render('pages/register'));
 app.get('/profile', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   res.render('pages/profile', { user: req.session.user });
 });
-app.get('/inspector', (req, res) => res.render('pages/inspector'));
-app.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
+
+//app.get('/inspector', (req, res) => res.render('pages/inspector'));
+//app.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
 //app.get('/allMeals', (req, res) => res.render('pages/allMeals'));
 // app.get('/mealTracker', (req, res) => res.render('pages/mealTracker'));
 
@@ -81,6 +86,9 @@ app.listen(port, () => {
     console.log(`Listening on port ${port}`);
   });
 
+
+
+  
   /*
 
 // use res.render to load up an ejs view file
