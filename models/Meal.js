@@ -43,6 +43,22 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
         }
         module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
 
+
+async function searchIngredientByName (name) {
+    try {
+        await sql.connect(config);
+        const request = new sql.Request();
+        const query = `SELECT Name FROM Ingredient WHERE Name LIKE '%${name}%';`;
+        const result = await request.query(query);
+        return result.recordset;
+    } catch (error) {
+        console.error('Error fetching ingredients:', error);
+        throw error;
+    }
+};
+
+module.exports.searchIngredientByName = searchIngredientByName;
+
     async function getMealIngredients(ID) {
             try {
                 // Connect to SQL Server database

@@ -19,11 +19,12 @@ const createMeal = asyncHandler(async (req, res, next) => {
   //res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
 
-  const addAllMeals = asyncHandler(async (req, res, next) => {
+const addAllMeals = asyncHandler(async (req, res, next) => {
     const userID = req.session.user.userID; // Assuming you have the user ID in the session
     const meals = await Meal.addAllMealsIntoTable(userID);
     res.render('pages/allMeals', { meals: meals }); // Pass the meals data to the EJS template
 });
+
 
 const editMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
@@ -33,8 +34,13 @@ const editMeal = asyncHandler(async (req, res, next) => {
 });
 
 
-//når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
+const searchIngredient = asyncHandler(async (req, res, next) => {
+  let name = req.params.name;
+  let ingredients = await Meal.searchIngredientByName(name);
+  res.render('pages/mealEditor', { ingredients: ingredients });
+});
 
+//når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
 const deleteMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   await Meal.deleteMealFromDatabase(mealID);
@@ -62,6 +68,7 @@ const getTotalNutrient = asyncHandler(async (req, res, next) => {
   module.exports = {
     getTotalNutrient,
     editMeal,
+    searchIngredient,
     createMeal,
     deleteMeal,
     addAllMeals
