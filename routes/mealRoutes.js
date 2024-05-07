@@ -6,7 +6,9 @@ const {editMeal, searchIngredient, getTotalNutrient, createMeal, addAllMeals, de
 router.post('/', createMeal); //restful design for creating a meal
 
 // Route for viewing a meal
-router.get('/:ID/edit', editMeal, searchIngredient);
+router.get('/:ID/edit', editMeal);
+
+router.post('/searchIngredient', searchIngredient);
 
 // Route for deleting a meal
 router.delete('/:ID', deleteMeal); 
