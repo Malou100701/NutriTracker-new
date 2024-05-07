@@ -50,7 +50,6 @@ const MealTracker = require('./models/MealTracker');
 app.get('/mealtracker', async (req, res) => {
   const UserID = req.session.user.userID;
   const meals = await MealTracker.getMeals(UserID);
-  console.log('Meals:', { meals });
   res.render('pages/mealTracker', { user: req.session.user, meals: meals });
 });
 
@@ -58,8 +57,6 @@ app.get('/mealtracker', async (req, res) => {
 const User = require('./models/User');
 app.get('/profile', async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-
-  console.log('serverJS');
   const UserID = req.session.user.userID;
   const BMR = await User.BMR(UserID);
   console.log("User BMRServer:", BMR);

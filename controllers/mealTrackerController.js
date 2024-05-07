@@ -11,22 +11,20 @@ const asyncHandler = require("../middlewares/asyncHandler");
 //     });
 
 const trackMeal = asyncHandler(async (req, res) => {
-  const { MealID, DateTime, Amount, latitude, longitude } = req.body;
-  const UserID = req.session.user.userID;
-  console.log('Session user:', req.session.user + 'body ' + { MealID, DateTime, Amount, latitude, longitude }); // Log session user and geolocation
-  await MealTracker.trackMeal(UserID, MealID, DateTime, Amount, latitude, longitude);
-  res.redirect('/mealtracker');
-});
+    const { MealID, DateTime, Amount, latitude, longitude } = req.body;
+    console.log('DateTime in Controller' + DateTime); // Logs the DateTime received from the form
+    const UserID = req.session.user.userID;
+    console.log('Session user:', req.session.user + 'body ' + { MealID, DateTime, Amount, latitude, longitude }); // Log session user and geolocation
+    await MealTracker.trackMeal(UserID, MealID, DateTime, Amount, latitude, longitude);
+    res.redirect('/mealtracker');
+  });
+  
 
 
 
 const getMeals = asyncHandler(async (req, res) => {
-  console.log("1");
   const UserID = req.session.user.userID;
-  console.log("2");
   const meals = await MealTracker.getMeals(UserID);
-  console.log("3");
-  console.log('Meals in controller:', { meals });
   res.render('pages/mealTracker', { user: req.session.user, meals: meals });
 });
 
