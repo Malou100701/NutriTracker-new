@@ -39,13 +39,14 @@ app.get('/', (req, res) => {
 	res.redirect('/user/login');
 });*/
 
-app.get('/register', (req, res) => res.render('pages/register'));
-app.get('/profile', (req, res) => {
+//app.get('/register', (req, res) => res.render('pages/register'));
+/*app.get('/profile', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   res.render('pages/profile', { user: req.session.user });
-});
-app.get('/inspector', (req, res) => res.render('pages/inspector'));
-app.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
+});*/
+
+//app.get('/inspector', (req, res) => res.render('pages/inspector'));
+//app.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
 //app.get('/allMeals', (req, res) => res.render('pages/allMeals'));
 
 //Listening on the port
@@ -54,6 +55,9 @@ app.listen(port, () => {
     console.log(`Listening on port ${port}`);
   });
 
+
+
+  
   /*
 
 // use res.render to load up an ejs view file

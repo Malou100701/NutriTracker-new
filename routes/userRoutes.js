@@ -14,6 +14,10 @@ router.post('/update', userController.updateUser);
 // router.get('/profile', userController.viewProfile)
 
 router.get ('/login', (req, res) => res.render('pages/login'));
+router.get ('/register', (req, res) => res.render('pages/register'));
+router.get ('/profile', (req, res) => res.render('pages/profile'));
+
+
 
 
 module.exports = router;
