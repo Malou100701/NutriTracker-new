@@ -42,58 +42,45 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   let ingredient = req.query.ingredient;
   let meal = await Meal.getMealByID(mealID);
   let amount = req.query.amount;
+  console.log(amount);
   await MealIngredient.addIngredientToMeal(mealID, ingredient, amount);
-  // console.log('hej', addedIngredient); - Brugt til fejlsøgning
-  //let nutritionDetails = await Ingredient.getNutrition(mealID, ingredient); - Virker ikke.
   //await MealIngredient.updateMealIngredientInDatabase(mealIngredientID, amount); - Bruges ikke endnu
+  await Meal.getTotalEnergy(mealID, ingredient);
+  await Meal.getTotalProtein(mealID, ingredient);
+  await Meal.getTotalFat(mealID, ingredient);
+  await Meal.getTotalFiber(mealID, ingredient);
   let ingredients = await Meal.getMealIngredients(mealID);
   //console.log(ingredients); - Brugt til fejlsøgning
-  let test = await Meal.getTotalEnergy(mealID, ingredient);
-  let test2 = await Meal.getTotalProtein(mealID, ingredient);
-  let test3 = await Meal.getTotalFat(mealID, ingredient);
-  let test4 = await Meal.getTotalFiber(mealID, ingredient);
-  console.log('Energi:', test);
-  console.log('Protein:', test2);
-  console.log('Fedt:', test3);
-  console.log('Fiber:', test4);
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
 });
-
-
-
 
 
 //når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
 const deleteMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   await Meal.deleteMealFromDatabase(mealID);
-
-  res.status(200).json({
-    success: true,
-    data: { message: `Meal with ID "${mealID}" deleted successfully.` }
-  });
+  res.render('pages/mealEditor');
 });
 
-// Controller for totalNutrient registration
-const getTotalNutrient = asyncHandler(async (req, res, next) => {
-    
-    let mealID = req.params.mealID;
-    let totalNutrient = Meal.getTotalNutrient();
-
-    res.status(201).json({
+  const deleteMealIngredient = asyncHandler(async (req, res, next) => {
+    let { mealID, ingredientID } = req.body;
+    console.log(mealID);
+    await Meal.deleteMealIngredientFromDatabase(mealID, ingredientID);
+    res.status(200).json({
       success: true,
-      data: {
-        message: totalNutrient.toString()
-      }
+      data: { message: `Meal ingredient with ID "${mealID}" deleted successfully.` }
     });
-  });
+    
+//vi skal undersøge nærmere om det kan blive et problem, hvis delete fejler, med et id der fx ikke findes.
+});
 
   module.exports = {
-    getTotalNutrient,
+    //getTotalNutrient, - Den er slettet?
     editMeal,
     addIngredient,
     createMeal,
     deleteMeal,
-    addAllMeals
+    addAllMeals,
+    deleteMealIngredient
   };
   

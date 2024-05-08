@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const {addMealIngredient, deleteMealIngredient, updateMealIngredient} = require("../controllers/mealIngredientController");
+const { updateMealIngredient} = require("../controllers/mealIngredientController");
 
-//router.get('/:name', searchIngredientForMeal);
-
-router.post('/', addMealIngredient); //restful design for adding meal ingredient
-
-router.delete('/:ID', deleteMealIngredient); //restful design for deleting meal ingredient
+ //restful design for deleting meal ingredient
 
 router.post('/:ID', updateMealIngredient); //restful design for updating meal ingredient
+
+
+router.get('/mealIngredient', (req, res) => {
+    res.render('pages/mealEditor');
+});
 
 module.exports = router;
 

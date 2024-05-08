@@ -25,16 +25,26 @@
                         <tr>
                             <td><%= ingredient.IngredientName %></td> 
                             <td><%= ingredient.Amount %></td>
-                            
+                            <td><%= ingredient.Calories %></td>
+                            <td><%= ingredient.Protein %></td>
+                            <td><%= ingredient.Fat %></td>
+                            <td><%= ingredient.Fiber %></td>
+                            <td>
+                                <!-- Delete knap -->
+                                <form action="/meal/<%= meal.ID %>/delete" method="POST">
+                                    <input type="hidden" name="mealID" value="<%= meal.ID %>">
+                                    <input type="hidden" name="ingredientID" value="<%= ingredient.ID %>">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     <% }); %>
-    
                 </tbody>
             </table>
              <!-- Add a form for adding ingredients -->
              <form action= "/meal/<%= meal.ID %>/addIngredient?ingredient&amount" method="GET"> <!--query parameter efter URL -->
                 <label for="ingredient">Vælg ingrediens</label>
-                <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Type Country Name Here" />
+                <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Indtast ingrediens" />
                 <span id="search_result"> </span>
                 <input type = "text" id="amount" name="amount" placeholder="Mængde">
                 <button type="submit">Tilføj ingrediens</button>

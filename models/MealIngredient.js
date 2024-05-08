@@ -49,29 +49,6 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
 
 }
 module.exports.addIngredientToMeal = addIngredientToMeal;
-
-async function deleteMealIngredientFromDatabase(ID) {
-        try {
-            // Connect SQL Server Database
-            await sql.connect(config);
-
-            // Create SQL request object
-            const request = new sql.Request();
-
-            // Query to delete meal ingredient from database
-            const query = `
-                DELETE FROM MealIngredient
-                WHERE ID = ${ID};
-            `;
-            await sql.query(query);
-            console.log(`Meal ingredient with ID "${ID}" deleted from database.`);
-
-        } catch (error) {
-            console.error('Error deleting meal ingredient from database.', error);
-            throw error;
-        }
-    }
-module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDatabase;
  
 //edit/opdater funktion 
 async function updateMealIngredientInDatabase(ID, amount) {
