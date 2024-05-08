@@ -41,8 +41,8 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   let ingredient = req.query.ingredient;
   let meal = await Meal.getMealByID(mealID);
   let amount = req.query.amount;
-  await MealIngredient.updateMealIngredientInDatabase(mealID, ingredient, amount);
-  await MealIngredient.addIngredientToMeal(mealID, ingredient);
+  let mealIngredientID = await MealIngredient.addIngredientToMeal(mealID, ingredient);
+  await MealIngredient.updateMealIngredientInDatabase(mealIngredientID, amount);
   let ingredients = await Meal.getMealIngredients(mealID);
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
 });

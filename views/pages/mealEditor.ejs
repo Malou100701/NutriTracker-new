@@ -25,6 +25,7 @@
                     <% ingredients.forEach(ingredient => { %>
                         <tr>
                             <td><%= ingredient.IngredientName %></td> 
+                            
 
                         </tr>
                     <% }); %>
@@ -33,7 +34,7 @@
             </table>
 
              <!-- Add a form for adding ingredients -->
-             <form action= "/meal/<%= meal.ID %>/addIngredient?ingredient" method="GET"> <!--query parameter efter URL -->
+             <form action= "/meal/<%= meal.ID %>/addIngredient?ingredient&amount" method="GET"> <!--query parameter efter URL -->
                 <label for="ingredient">Vælg ingrediens</label>
                 <input type="text" id="ingredient" name="ingredient" placeholder="Type to search...">
                 <input type = "text" id="amount" name="amount" placeholder="Mængde">

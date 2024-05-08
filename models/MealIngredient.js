@@ -15,23 +15,38 @@ async function addIngredientToMeal(mealID, ingredientName) {
 
         // Create SQL request object
         const request = new sql.Request();
+        const query1 = `
+            SELECT IngredientID
+            FROM Ingredient 
+            WHERE Name = '${ingredientName}';`
+        
+        let result1 = await request.query(query1);
+        console.log(result1);
+
+        let ingredientID = result1.recordset[0].IngredientID;
+        console.log(ingredientID);
 
         // Query to insert the ingredient into the MealIngredient table
-        const query = `
+        const query2 = `
             INSERT INTO MealIngredient (MealID, IngredientID)
-            SELECT ${mealID}, IngredientID
-            FROM Ingredient 
-            WHERE Name = '${ingredientName}'
+            VALUES ('${mealID}', '${ingredientID}');
+            SELECT SCOPE_IDENTITY() AS id;
         `;
+
         
         // Execute the query to insert the meal ingredient
-        await request.query(query);
+        let result2 = await request.query(query2);
+        console.log(result2);
+
+        let mealIngredientID = result2.recordset[0].id;
 
         console.log(`Ingredient "${ingredientName}" added to meal ${mealID}`);
+        return mealIngredientID;
     } catch (error) {
         console.error('Error adding ingredient to meal.', error);
         throw error;
     }
+
 }
 module.exports.addIngredientToMeal = addIngredientToMeal;
 
@@ -71,11 +86,12 @@ async function updateMealIngredientInDatabase(ID, amount) {
         const query = `
         UPDATE MealIngredient
         SET Amount = ${amount}
-        WHERE IngredientID = ${ID};
+        WHERE ID = ${ID}
         ;`
-        
-        await sql.query(query);
-        console.log(`Meal ingredient with ID "${ID}" amount updated in database.`);
+ 
+        let result = await sql.query(query);
+        console.log(result);
+        console.log(`Meal ingredient with ID "${ID}" amount updated to "${amount}" in database.`);
 
     } catch (error) {
         console.error('Error updating meal ingredient in database.', error);
