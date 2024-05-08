@@ -75,7 +75,6 @@ module.exports.updateUserDetails = updateUserDetails;
 
 
 async function BMR(UserID) {
-    console.log("Running Model BMR")
     await sql.connect(config);
     const request = new sql.Request();
     request.input('UserID', sql.Int, UserID);
@@ -110,10 +109,8 @@ FROM
     WHERE UserID = @UserID
     ;`;
     const result = await request.query(query);
-    console.log("BMR found:", result.recordset[0].BMR);
-     const kCal = result.recordset[0].BMR * 238.8458966275;
-     console.log("kCal found:", kCal);
-     return kCal
+    const kCal = result.recordset[0].BMR * 238.8458966275;
+    return kCal
 
 }
 

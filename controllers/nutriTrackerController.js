@@ -25,7 +25,6 @@ const combinedTrackerView = asyncHandler(async (req, res) => {
         });
     }
 
-    console.log('Calorie Intake and Burned:', dailyData);
     res.render('pages/nutritracker', { dailyData: dailyData }); // the name of your EJS file
 });
 
@@ -49,8 +48,6 @@ const displayHourlyCalories = asyncHandler(async (req, res) => {
         };
         return hourData;
     });
-
-    console.log('Hourly balance:', hourlyBalance);
 
     res.render('pages/nutritrackertimer', { hourlyData: hourlyBalance });
 });

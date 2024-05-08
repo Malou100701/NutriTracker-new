@@ -9,7 +9,10 @@
       <div class="content">
         <div class="box">
           <h1>Hej <%- user.username %></h1>
-          <p>Dit basale stofskifte udregnet på baggrund af dit køn, alder og vægt er <%- BMR %></p>
+          <p>
+            Dit basale stofskifte udregnet på baggrund af dit køn, alder og vægt
+            er <%- Math.round(BMR) %>
+          </p>
 
           <p>Opdater dine informationer</p>
           <form action="/user/update" method="POST">
@@ -45,7 +48,11 @@
             <button type="submit" class="logout">Log ud</button>
           </form>
 
-          <form action="/user/delete" method="POST">
+          <form
+            action="/user/delete"
+            method="POST"
+            onsubmit="return confirmDelete();"
+          >
             <input type="hidden" name="_method" value="DELETE" />
             <button type="submit" class="delete">Slet profil</button>
           </form>
@@ -57,5 +64,12 @@
       </div>
     </div>
     <footer><%- include('../partials/footer'); %></footer>
+    <script>
+      function confirmDelete() {
+        return confirm(
+          "Er du sikker på, at du vil slette din profil? Denne handling kan ikke fortrydes."
+        );
+      }
+    </script>
   </body>
 </html>

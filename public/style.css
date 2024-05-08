@@ -229,3 +229,24 @@ input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
   display: none;
 }
+
+a.button-link {
+  color: var(--Background);
+  text-decoration: none;
+  width: 170px;
+}
+
+table {
+  border-collapse: collapse;
+}
+th {
+  background-color: var(--Primary);
+  color: var(--Background);
+}
+th,
+td {
+  width: 200px;
+  text-align: center;
+  padding: 10px 20px;
+  border: 1px solid var(--Primary);
+}

@@ -50,7 +50,6 @@ async function getCalorieIntakeLast30Days(UserID) {
     `;
     request.input('UserID', sql.Int, UserID);
     const result = await request.query(query);
-    console.log(result.recordset);
     return result.recordset;
 }
 
@@ -96,7 +95,6 @@ async function getCaloriesBurnedLast30Days(UserID) {
         `;
         request.input('UserID', sql.Int, UserID);
         const result = await request.query(query);
-        console.log(result.recordset);
         return result.recordset;
 
 }
@@ -133,7 +131,6 @@ const getCaloriesIntakePerHourToday = async (UserID) => {
     request.input('UserID', sql.Int, UserID);
     request.input('dateStr', sql.VarChar, dateStr);
     const result = await request.query(query);
-    console.log('Calories Intake per Hour:', result.recordset);
     return result.recordset;
 };
 
@@ -172,7 +169,6 @@ const getCaloriesBurnedPerHourToday = async (userID, BMR) => {
     request.input('bmr', sql.Float, BMR); // Ensure BMR is passed correctly
     request.input('dateStr', sql.VarChar, dateStr);
     const result = await request.query(query);
-    console.log('Calories Burned per Hour:', result.recordset);
     return result.recordset;
 };
 

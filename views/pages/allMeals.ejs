@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <%- include('../partials/head'); %> 
-</head>
-<body>
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
     <header><%- include('../partials/headerLoggedin'); %></header>
     <div class="container">
-        <h1>Alle Måltider</h1>
-        <table>
+      <div class="content">
+        <div class="box">
+          <h1>Alle Måltider</h1>
+          <table>
             <thead>
-                <tr>
-                    <th>Navn</th>
-                    <th>Antal Kalorier</th>
-                    <th>Protein</th>
-                    <th>Fedt</th>
-                    <th>Fiber</th>
-                    <th>Antal Ingredienser</th>
-                    <th>Tilføj ingrediens</th>
-                </tr>
+              <tr>
+                <th>Navn</th>
+                <th>Antal Kalorier</th>
+                <th>Protein</th>
+                <th>Fedt</th>
+                <th>Fiber</th>
+                <th>Antal Ingredienser</th>
+                <th>Tilføj ingrediens</th>
+              </tr>
             </thead>
             <tbody>
-                <% meals.forEach(meal => { %>
-                    <tr>
-                        <td> <a href= "/meal/<%= meal.ID %>/edit" > <%= meal.Name %> </a></td> <!-- Correct the property name to match the actual property -->
-                            <!-- Display other meal properties as needed -->
-                            <td>
-                               
-                            </td>
-                    </tr>
-                <% }); %>
-
+              <% meals.forEach(meal => { %>
+              <tr>
+                <td>
+                  <a href="/meal/<%= meal.ID %>/edit"> <%= meal.Name %> </a>
+                </td>
+                <!-- Correct the property name to match the actual property -->
+                <!-- Display other meal properties as needed -->
+                <td></td>
+              </tr>
+              <% }); %>
             </tbody>
-        </table>
+          </table>
+        </div>
+      </div>
     </div>
-    
     <footer><%- include('../partials/footer'); %></footer>
-</body>
+  </body>
 </html>
