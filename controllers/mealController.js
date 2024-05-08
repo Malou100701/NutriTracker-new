@@ -59,18 +59,13 @@ const addIngredient = asyncHandler(async (req, res, next) => {
 const deleteMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   await Meal.deleteMealFromDatabase(mealID);
-  res.render('pages/mealEditor');
 });
 
   const deleteMealIngredient = asyncHandler(async (req, res, next) => {
-    let { mealID, ingredientID } = req.body;
+    let mealID = req.params.ID;
     console.log(mealID);
-    await Meal.deleteMealIngredientFromDatabase(mealID, ingredientID);
-    res.status(200).json({
-      success: true,
-      data: { message: `Meal ingredient with ID "${mealID}" deleted successfully.` }
-    });
-    
+    await Meal.deleteMealIngredientFromDatabase(mealID);
+    res.redirect('/meal/' + mealID + '/edit');
 //vi skal undersøge nærmere om det kan blive et problem, hvis delete fejler, med et id der fx ikke findes.
 });
 

@@ -32,8 +32,6 @@
                             <td>
                                 <!-- Delete knap -->
                                 <form action="/meal/<%= meal.ID %>/delete" method="POST">
-                                    <input type="hidden" name="mealID" value="<%= meal.ID %>">
-                                    <input type="hidden" name="ingredientID" value="<%= ingredient.ID %>">
                                     <button type="submit">Delete</button>
                                 </form>
                             </td>

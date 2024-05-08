@@ -310,12 +310,19 @@ async function deleteMealIngredientFromDatabase(mealID) {
         // Create SQL request object
         const request = new sql.Request();
 
+        const query1 = `
+            SELECT IngredientID FROM MealIngredient WHERE MealID = '${mealID}';`;
+
+        let result = await request.query(query1);
+        let ingredientID = result.recordset[0].IngredientID;
+
+
         // Query to delete meal ingredient from database
-        const query= `
+        const query2= `
             DELETE FROM MealIngredient WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';
         `;
-        await sql.query(query);
-        console.log(`Meal ingredient with ID "${mealID}" deleted from database.`);
+        await sql.query(query2);
+        console.log(`Meal ingredient with ID "${mealID}" deleted from database "${ingredientID}".`);
 
     } catch (error) {
         console.error('Error deleting meal ingredient from database.', error);
@@ -329,3 +336,4 @@ module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDataba
 // UPDATE Users 
 // SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
 // WHERE Username = ${username}`;
+
