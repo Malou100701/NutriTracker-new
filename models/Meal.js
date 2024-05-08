@@ -296,7 +296,7 @@ async function getTotalFiber(mealID, name) {
     
 module.exports.getTotalFiber = getTotalFiber;
 
-//    const result = await sql.query`
+//  const result = await sql.query`
 // UPDATE Users 
 // SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
 // WHERE Username = ${username}`;
