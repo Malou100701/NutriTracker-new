@@ -45,7 +45,7 @@ const displayHourlyCalories = asyncHandler(async (req, res) => {
             hour: intake.Hour, // or simply index if you want to use the array index for hours
             intake: intake.Calories,
             burned: (caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24, // Add BMR/24 if no activity was recorded
-            balance: ((caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24) - intake.Calories
+            balance: intake.Calories - ((caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24)
         };
         return hourData;
     });
