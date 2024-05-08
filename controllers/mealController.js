@@ -50,8 +50,12 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   //console.log(ingredients); - Brugt til fejlsøgning
   let test = await Meal.getTotalEnergy(mealID, ingredient);
   let test2 = await Meal.getTotalProtein(mealID, ingredient);
-  console.log(test);
-  console.log(test2);
+  let test3 = await Meal.getTotalFat(mealID, ingredient);
+  let test4 = await Meal.getTotalFiber(mealID, ingredient);
+  console.log('Energi:', test);
+  console.log('Protein:', test2);
+  console.log('Fedt:', test3);
+  console.log('Fiber:', test4);
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
 });
 

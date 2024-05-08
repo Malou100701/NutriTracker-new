@@ -229,7 +229,72 @@ async function getTotalProtein(mealID, name) {
     return result2.recordset[0].TotalProtein;
     };
     
-    module.exports.getTotalProtein = getTotalProtein;
+module.exports.getTotalProtein = getTotalProtein;
+
+
+
+async function getTotalFat(mealID, name) {
+        //Connect to SQL Server database
+         await sql.connect(config);
+        
+        //Create SQL request object
+        const request = new sql.Request();
+        const query1 = `
+            SELECT IngredientID
+            FROM Ingredient 
+            WHERE Name = '${name}';`
+        
+        let result1 = await request.query(query1);
+        //console.log(result1);
+        
+        let ingredientID = result1.recordset[0].IngredientID;
+        //console.log(ingredientID);
+        //console.log(mealID);
+        
+        const query2 = `SELECT (i.Fat/100 * mi.Amount) AS TotalFat
+        FROM MealIngredient mi
+        JOIN Ingredient i ON mi.IngredientID = '${ingredientID}'
+        WHERE mi.MealID = '${mealID}';`;
+        const result2 = await request.query(query2);
+        
+        console.log(result2.recordset[0]);
+        // Return total energy
+        return result2.recordset[0].TotalFat;
+        };
+        
+module.exports.getTotalFat = getTotalFat;
+
+
+async function getTotalFiber(mealID, name) {
+    //Connect to SQL Server database
+     await sql.connect(config);
+    
+    //Create SQL request object
+    const request = new sql.Request();
+    const query1 = `
+        SELECT IngredientID
+        FROM Ingredient 
+        WHERE Name = '${name}';`
+    
+    let result1 = await request.query(query1);
+    //console.log(result1);
+    
+    let ingredientID = result1.recordset[0].IngredientID;
+    //console.log(ingredientID);
+    //console.log(mealID);
+    
+    const query2 = `SELECT (i.Fiber/100 * mi.Amount) AS TotalFiber
+    FROM MealIngredient mi
+    JOIN Ingredient i ON mi.IngredientID = '${ingredientID}'
+    WHERE mi.MealID = '${mealID}';`;
+    const result2 = await request.query(query2);
+    
+    console.log(result2.recordset[0]);
+    // Return total energy
+    return result2.recordset[0].TotalFiber;
+    };
+    
+module.exports.getTotalFiber = getTotalFiber;
 
 //    const result = await sql.query`
 // UPDATE Users 
