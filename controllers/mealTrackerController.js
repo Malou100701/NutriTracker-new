@@ -26,14 +26,12 @@ const formatDateTimeForSQL = (isoString) => {
 };
 
 const updateMeal = asyncHandler(async (req, res) => {
-  const { intakeId } = req.params; // Retrieve the specific IntakeID
-  const { DateTime, Amount } = req.body;
-  const UserId = req.session.user.userID;
-
+  const { IntakeID, DateTime, Amount } = req.body;
+  console.log(IntakeID, DateTime, Amount);
+  const UserID = req.session.user.userID;
   const formattedDateTime = formatDateTimeForSQL(DateTime);
 
-
-      const affectedRows = await MealModel.updateMeal(intakeId, UserId, formattedDateTime, Amount);
+      const affectedRows = await MealTracker.updateMeal(IntakeID, UserID, formattedDateTime, Amount);
       if (affectedRows > 0) {
           res.redirect('/mealtracker'); // Redirect back to the meal tracker page
       } else {

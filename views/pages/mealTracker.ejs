@@ -50,7 +50,8 @@
             <tbody>
               <% meals.forEach(meal => { %>
               <tr>
-                <form method="POST" action="/mealtracker/update/<%= meal.IntakeID %>">
+                <form method="POST" action="/mealtracker/update">
+                  <input type="hidden" name="IntakeID" value="<%= meal.IntakeID %>">
                   <td><%= meal.Name %></td>
                   <td>
                     <input

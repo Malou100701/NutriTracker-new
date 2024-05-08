@@ -37,12 +37,24 @@ async function renderMeals(UserID) {
 module.exports.renderMeals = renderMeals;
 
 
-async function updateMeal(mealId, UserId, IntakeID, DateTime, Amount){
+async function updateMeal(UserID, IntakeID, DateTime, Amount){
     await sql.connect(config);
-    const result = await sql.query`
+    console.log('UserID', UserID, 'IntakeID:', IntakeID, 'DateTime:', DateTime, 'Amount:', Amount);
+
+    
+    const request = new sql.Request();
+    request.input('UserID', sql.Int, UserID);
+    request.input('IntakeID', sql.Int, IntakeID);
+    request.input('DateTime', sql.DateTime, DateTime);
+    request.input('Amount', sql.Int, Amount);
+
+    const result = await request.query(`
         UPDATE Intake
-        SET DateTime = ${DateTime}, Amount = ${Amount}
-        WHERE IntakeID = ${intakeId} AND UserID = ${UserId}`;
+        SET DateTime = @DateTime, Amount = @Amount
+        WHERE IntakeID = @IntakeID AND UserID = @UserID;
+    `);
+
+        console.log(result.rowsAffected[0] + ' row(s) updated');
     return result.rowsAffected[0]; // Returns the number of affected rows
 }
 
