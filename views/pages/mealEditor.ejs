@@ -25,18 +25,18 @@
                     <% ingredients.forEach(ingredient => { %>
                         <tr>
                             <td><%= ingredient.IngredientName %></td> 
-                            
+
 
                         </tr>
                     <% }); %>
     
                 </tbody>
             </table>
-
              <!-- Add a form for adding ingredients -->
              <form action= "/meal/<%= meal.ID %>/addIngredient?ingredient&amount" method="GET"> <!--query parameter efter URL -->
                 <label for="ingredient">Vælg ingrediens</label>
-                <input type="text" id="ingredient" name="ingredient" placeholder="Type to search...">
+                <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Type Country Name Here" />
+                <span id="search_result"> </span>
                 <input type = "text" id="amount" name="amount" placeholder="Mængde">
                 <button type="submit">Tilføj ingrediens</button>
             </form>
@@ -49,3 +49,70 @@
     <footer><%- include('../partials/footer'); %></footer>
 </body>
 </html>
+<script>
+// Hentet fra: https://www.webslesson.info/2022/07/nodejs-autocomplete-search-with-mysql-database.html?m=1
+
+function load_data(query = '')
+    {
+        fetch('/ingredient/search?name='+query+'').then(function(response){
+
+            return response.json();
+
+        }).then(function(responseData){
+
+
+            var html = '<ul>';
+            if(responseData.length > 0)
+            {
+                for(var count = 0; count < responseData.length; count++)
+                {
+                    var regular_expression = new RegExp('('+query+')', 'gi');
+
+                    html += '<a href="#" onclick="get_text(this)">'+responseData[count].Name.replace(regular_expression, '<span>$1</span>')+'</a><br/>';
+                }
+            }
+            else
+            {
+                html += '<a href="#">No Data Found</a>';
+            }
+
+            html += '</ul>';
+
+            document.getElementById('search_result').innerHTML = html;
+
+        });
+    };
+
+    var search_element = document.getElementById("autocomplete_search");
+
+    // En listener man sætter på search elementet
+    //Onkeyup - Når man trykker på en tast og slipper den igen. 
+    search_element.onkeyup = function(){
+
+        var query = search_element.value;
+
+        load_data(query);
+
+    };
+
+
+    //Onfocus - Når vi klikker på den valgte fokusere den på det (værdien man sætter ind)
+    search_element.onfocus = function(){
+
+        var query = search_element.value;
+
+        load_data(query);
+
+    };
+
+    async function get_text(event)
+    {
+        let ingredientName = event.textContent;
+
+        document.getElementById('autocomplete_search').value = ingredientName;
+
+        document.getElementById('search_result').innerHTML = '';
+    }
+
+</script>
+

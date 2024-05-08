@@ -20,7 +20,7 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
             let queryResult = await request.query(query);
             mealID = queryResult.recordset[0].id;
     
-            console.dir(queryResult)
+            //console.dir(queryResult)
             console.log(`Meal with name "${name}" inserted into database with id: ${mealID}, under the user with id: ${userID}`);
             } catch (error) {
                 console.error('Error inserting meal into database.', error);
@@ -44,20 +44,7 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
         module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
 
 
-async function searchIngredientByName (name) {
-    try {
-        await sql.connect(config);
-        const request = new sql.Request();
-        const query = `SELECT Name FROM Ingredient WHERE Name LIKE '%${name}%';`;
-        const result = await request.query(query);
-        return result.recordset;
-    } catch (error) {
-        console.error('Error fetching ingredients:', error);
-        throw error;
-    }
-};
 
-module.exports.searchIngredientByName = searchIngredientByName;
 
     async function getMealIngredients(ID) {
             try {
@@ -82,7 +69,7 @@ module.exports.searchIngredientByName = searchIngredientByName;
     
                 const result = await request.query(query);
     
-                console.log(result.recordset);
+                //console.log(result.recordset);
                 // Return meal ingredients
                 return result.recordset;
             } catch (error) {

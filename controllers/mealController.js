@@ -31,7 +31,7 @@ const editMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   let meal = await Meal.getMealByID(mealID);
   let ingredients = await Meal.getMealIngredients(mealID);
-  console.log(ingredients); 
+  //console.log(ingredients); 
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients });
 });
 

@@ -45,6 +45,10 @@ router.use("/activitytracker", activityRoutes);
 const mealTrackerRoutes = require("./mealTrackerRoutes");
 router.use("/mealtracker", mealTrackerRoutes);
 
+//INGREDIENT ROUTES
+const ingredientRoutes = require("./ingredientRoutes");
+router.use("/ingredient", ingredientRoutes);
+
 module.exports = router;
 
 // Path: routes/mealRoutes.js

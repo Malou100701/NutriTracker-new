@@ -21,10 +21,10 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
             WHERE Name = '${ingredientName}';`
         
         let result1 = await request.query(query1);
-        console.log(result1);
+        //console.log(result1);
 
         let ingredientID = result1.recordset[0].IngredientID;
-        console.log(ingredientID);
+        //console.log(ingredientID);
 
         // Query to insert the ingredient into the MealIngredient table
         const query2 = `
@@ -36,7 +36,7 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
         
         // Execute the query to insert the meal ingredient
         let result2 = await request.query(query2);
-        console.log(result2);
+        //console.log(result2);
 
         let mealIngredientID = result2.recordset[0].id;
 
