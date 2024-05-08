@@ -154,6 +154,10 @@ const query1 = `
 let result1 = await request.query(query1);
 //console.log(result1);
 
+if (result1.recordset.length === 0) {
+    return 0;
+};
+
 let ingredientID = result1.recordset[0].IngredientID;
 
 
@@ -348,36 +352,33 @@ module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDataba
 
 
 // For hele måltidet
-
 async function getTotalEnergyForMeal(mealID) {
     //Connect to SQL Server database
      await sql.connect(config);
     
     //Create SQL request object
     const request = new sql.Request();
-
-    //console.log(ingredientID);
-    //console.log(mealID);
-    
-    const query = 
-        `SELECT SUM (Calories) AS TotalCalories
+    const query1 = `
+        SELECT SUM(Calories) AS TotalCalories
         FROM MealIngredient
         WHERE MealID = '${mealID}';`;
-    let result = await request.query(query);
-
-    let totalEnergy = result.recordset[0].TotalCalories;
-    console.log(totalEnergy);
+    
+    let result = await request.query(query1);
+    
+    let totalCalories = result.recordset[0].TotalCalories;
+    console.log(totalCalories);
 
 // Insert TotalCalories into MealIngredient table
-    const insertQuery = 
-    `UPDATE Meal
-    SET Calories = '${totalEnergy}'
-    WHERE MealID = '${mealID}';`;
+    const insertQuery = `
+        UPDATE Meal 
+        SET Calories = '${totalCalories}'
+        WHERE ID = '${mealID}';`;
+    
+    let result2 = await request.query(insertQuery);
+    // Return the calculated TotalCalories value
+    console.log(result2)
 
-    await request.query(insertQuery);
-
-// Return the calculated TotalCalories value
-    return totalEnergy;
+    console.log(`Total calories for meal with ID ${mealID} is ${totalCalories}`);
 };
     
 module.exports.getTotalEnergyForMeal = getTotalEnergyForMeal;
