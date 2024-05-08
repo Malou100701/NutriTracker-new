@@ -81,7 +81,7 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
 
     module.exports.getMealIngredients = getMealIngredients;
 
-    async function getMealByID(ID) {
+async function getMealByID(ID) {
         try {
             // Connect to SQL Server database
             await sql.connect(config);
@@ -131,6 +131,7 @@ async function deleteMealFromDatabase(ID) {
     
     module.exports.deleteMealFromDatabase = deleteMealFromDatabase;
 
+/*
 
     // Method to get total nutrient of meal
 async function getTotalNutrient(mealID) {
@@ -161,33 +162,74 @@ async function getTotalNutrient(mealID) {
         return result.recordset[0].TotalNutrient;
         
 }
-
 module.exports.getTotalNutrient = getTotalNutrient;
-
+*/
 
 
 // Denne virker for kalorier
-// async getTotalEnergy() {
-//     // Connect to SQL Server database
-//     await sql.connect(config);
+async function getTotalEnergy(mealID, name) {
+//Connect to SQL Server database
+ await sql.connect(config);
 
-//     // Create SQL request object
-//     const request = new sql.Request();
+//Create SQL request object
+const request = new sql.Request();
+const query1 = `
+    SELECT IngredientID
+    FROM Ingredient 
+    WHERE Name = '${name}';`
 
-//     // Query to get total energy of meal
-//     const query = `SELECT SUM(i.Calories * mi.Amount) AS TotalCalories
-//     FROM MealIngredient mi
-//     JOIN Ingredients i ON mi.IngredientsID = i.IngredientID
-//     WHERE mi.MealID = ${this.mealID};`;
-//     const result = await request.query(query);
+let result1 = await request.query(query1);
+//console.log(result1);
 
-//     console.log(result.recordset[0]);
-//     // Return total energy
-//     return result.recordset[0].TotalEnergy;
+let ingredientID = result1.recordset[0].IngredientID;
+//console.log(ingredientID);
+//console.log(mealID);
+
+const query2 = `SELECT (i.Calories/100 * mi.Amount) AS TotalCalories
+FROM MealIngredient mi
+JOIN Ingredient i ON mi.IngredientID = '${ingredientID}'
+WHERE mi.MealID = '${mealID}';`;
+const result2 = await request.query(query2);
+
+console.log(result2.recordset[0]);
+// Return total energy
+return result2.recordset[0].TotalCalories;
+};
+
+module.exports.getTotalEnergy = getTotalEnergy;
+
+
+// Denne virker for kalorier
+async function getTotalProtein(mealID, name) {
+    //Connect to SQL Server database
+     await sql.connect(config);
     
-// }
-
-
+    //Create SQL request object
+    const request = new sql.Request();
+    const query1 = `
+        SELECT IngredientID
+        FROM Ingredient 
+        WHERE Name = '${name}';`
+    
+    let result1 = await request.query(query1);
+    //console.log(result1);
+    
+    let ingredientID = result1.recordset[0].IngredientID;
+    //console.log(ingredientID);
+    //console.log(mealID);
+    
+    const query2 = `SELECT (i.Protein/100 * mi.Amount) AS TotalProtein
+    FROM MealIngredient mi
+    JOIN Ingredient i ON mi.IngredientID = '${ingredientID}'
+    WHERE mi.MealID = '${mealID}';`;
+    const result2 = await request.query(query2);
+    
+    console.log(result2.recordset[0]);
+    // Return total energy
+    return result2.recordset[0].TotalProtein;
+    };
+    
+    module.exports.getTotalProtein = getTotalProtein;
 
 //    const result = await sql.query`
 // UPDATE Users 

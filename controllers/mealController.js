@@ -1,5 +1,6 @@
 const Meal = require("../models/Meal");
 const MealIngredient = require("../models/MealIngredient");
+const Ingredient = require("../models/Ingredient");
 const asyncHandler = require("../middlewares/asyncHandler");
 const { VarChar } = require("mssql");
 
@@ -41,11 +42,22 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   let ingredient = req.query.ingredient;
   let meal = await Meal.getMealByID(mealID);
   let amount = req.query.amount;
-  let mealIngredientID = await MealIngredient.addIngredientToMeal(mealID, ingredient, amount);
-  //await MealIngredient.updateMealIngredientInDatabase(mealIngredientID, amount);
+  await MealIngredient.addIngredientToMeal(mealID, ingredient, amount);
+  // console.log('hej', addedIngredient); - Brugt til fejlsøgning
+  //let nutritionDetails = await Ingredient.getNutrition(mealID, ingredient); - Virker ikke.
+  //await MealIngredient.updateMealIngredientInDatabase(mealIngredientID, amount); - Bruges ikke endnu
   let ingredients = await Meal.getMealIngredients(mealID);
+  //console.log(ingredients); - Brugt til fejlsøgning
+  let test = await Meal.getTotalEnergy(mealID, ingredient);
+  let test2 = await Meal.getTotalProtein(mealID, ingredient);
+  console.log(test);
+  console.log(test2);
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
 });
+
+
+
+
 
 //når vi sletter et måltid, så skal den kunne slette dens meal ingredients også.
 const deleteMeal = asyncHandler(async (req, res, next) => {
