@@ -196,12 +196,67 @@ header nav ul li a {
   width: 100%;
   display: flex;
   justify-content: center;
+  /* flex-wrap: wrap; */
 }
 
+
+/* 
+@media (max-width: 1200px) {
+  .content {
+      width: 80%;
+  }
+  .box{
+    width: 100%;
+  }
+}
+
+@media (min-width: 1201px, max-width: 1366px) {
+  .content {
+      width: 77%;
+  }
+  .box{
+    width: 100%;
+  }
+}
+@media (max-width: 1600px) {
+  .content {
+      width: 74%;
+  }
+  .box{
+    width: 33%;
+  }
+}
+@media (max-width: 1920px) {
+  .content {
+      width: 65%;
+  }
+  .box{
+    width: 33%;
+  }
+}
+@media (max-width: 3840px) {
+  .content {
+      width: 55%;
+  }
+  .box{
+    width: 33%;
+  }
+} */
+
+
 .content {
-  width: 1120px;
   display: flex;
   flex-direction: row;
+  gap: 20px;
+  flex-wrap: wrap;
+  width: 1120px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 33%;
   gap: 20px;
 }
 
@@ -214,13 +269,6 @@ header nav ul li a {
   align-items: center;
 }
 
-.box {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  width: 33%;
-  gap: 20px;
-}
 
 /* Disable WebKit’s proprietary pseudo elements */
 input[type="search"]::-webkit-search-decoration,
