@@ -8,7 +8,7 @@ const config = require('../config');
 
 // Nedenstående virker og skal bare aktivteres når der tastes en ingrediens. 
 // Det var aktiveret i går og virkede fra frontend af...
-async function addIngredientToMeal(mealID, ingredientName) {
+async function addIngredientToMeal(mealID, ingredientName, amount) {
     try {
         // Connect to SQL Server database
         await sql.connect(config);
@@ -28,8 +28,8 @@ async function addIngredientToMeal(mealID, ingredientName) {
 
         // Query to insert the ingredient into the MealIngredient table
         const query2 = `
-            INSERT INTO MealIngredient (MealID, IngredientID)
-            VALUES ('${mealID}', '${ingredientID}');
+            INSERT INTO MealIngredient (MealID, IngredientID, Amount)
+            VALUES ('${mealID}', '${ingredientID}', '${amount}');
             SELECT SCOPE_IDENTITY() AS id;
         `;
 
