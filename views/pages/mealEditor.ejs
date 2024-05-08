@@ -13,20 +13,19 @@
                 <thead>
                     <tr>
                         <th>Navn</th>
-                        <th>Antal Kalorier</th>
+                        <th>Gram</th>
+                        <th>Kalorier</th>
                         <th>Protein</th>
                         <th>Fedt</th>
                         <th>Fiber</th>
-                        <th>Antal Ingredienser</th>
-                        <th>Tilføj ingrediens</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% ingredients.forEach(ingredient => { %>
                         <tr>
                             <td><%= ingredient.IngredientName %></td> 
-
-
+                            <td><%= ingredient.Amount %></td>
+                            <td><%= ingredient.Calories %></td>
                         </tr>
                     <% }); %>
     

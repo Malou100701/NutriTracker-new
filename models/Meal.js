@@ -133,7 +133,7 @@ async function deleteMealFromDatabase(ID) {
 
 
     // Method to get total nutrient of meal
-    async function getTotalNutrient(mealID) {
+async function getTotalNutrient(mealID) {
         // Connect to SQL Server database
         await sql.connect(config);
 
@@ -160,9 +160,9 @@ async function deleteMealFromDatabase(ID) {
         // Return total nutrient
         return result.recordset[0].TotalNutrient;
         
-    }
+}
 
-    module.exports.getTotalNutrient = getTotalNutrient;
+module.exports.getTotalNutrient = getTotalNutrient;
 
 
 
