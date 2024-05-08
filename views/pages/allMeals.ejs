@@ -26,9 +26,11 @@
                 <td>
                   <a href="/meal/<%= meal.ID %>/edit"> <%= meal.Name %> </a>
                 </td>
-                <!-- Correct the property name to match the actual property -->
-                <!-- Display other meal properties as needed -->
-                <td></td>
+                <td><%= meal.Calories %></td>
+              
+                <form action="/meal/<%= meal.ID %>/deleteMeal" method="POST">
+                  <button type="submit">Delete</button>
+                  </form>
               </tr>
               <% }); %>
             </tbody>

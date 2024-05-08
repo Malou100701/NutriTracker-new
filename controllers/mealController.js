@@ -24,6 +24,8 @@ const createMeal = asyncHandler(async (req, res, next) => {
 const addAllMeals = asyncHandler(async (req, res, next) => {
     const userID = req.session.user.userID; // Assuming you have the user ID in the session
     const meals = await Meal.addAllMealsIntoTable(userID);
+    let mealID = req.params.ID;
+    await Meal.getTotalEnergyForMeal(mealID);
     res.render('pages/allMeals', { meals: meals }); // Pass the meals data to the EJS template
 });
 
@@ -59,6 +61,7 @@ const addIngredient = asyncHandler(async (req, res, next) => {
 const deleteMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   await Meal.deleteMealFromDatabase(mealID);
+  res.redirect('/allMeals');
 });
 
   const deleteMealIngredient = asyncHandler(async (req, res, next) => {

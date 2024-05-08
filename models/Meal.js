@@ -33,7 +33,11 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
             try {
                 await sql.connect(config);
                 const request = new sql.Request();
-                const query = `SELECT Name, ID FROM Meal WHERE UserID = '${userID}';`;
+                const query = `SELECT 
+                    Name AS Name, 
+                    ID AS ID,
+                    Calories AS Calories
+                    FROM Meal WHERE UserID = '${userID}';`;
                 const result = await request.query(query);
                 return result.recordset;
             } catch (error) {
@@ -302,6 +306,8 @@ async function getTotalFiber(mealID, name) {
     
 module.exports.getTotalFiber = getTotalFiber;
 
+
+
 async function deleteMealIngredientFromDatabase(mealID) {
     try {
         // Connect SQL Server Database
@@ -337,3 +343,41 @@ module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDataba
 // SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
 // WHERE Username = ${username}`;
 
+// Denne virker for kalorier
+
+
+
+// For hele måltidet
+
+async function getTotalEnergyForMeal(mealID) {
+    //Connect to SQL Server database
+     await sql.connect(config);
+    
+    //Create SQL request object
+    const request = new sql.Request();
+
+    //console.log(ingredientID);
+    //console.log(mealID);
+    
+    const query = 
+        `SELECT SUM (Calories) AS TotalCalories
+        FROM MealIngredient
+        WHERE MealID = '${mealID}';`;
+    let result = await request.query(query);
+
+    let totalEnergy = result.recordset[0].TotalCalories;
+    console.log(totalEnergy);
+
+// Insert TotalCalories into MealIngredient table
+    const insertQuery = 
+    `UPDATE Meal
+    SET Calories = '${totalEnergy}'
+    WHERE MealID = '${mealID}';`;
+
+    await request.query(insertQuery);
+
+// Return the calculated TotalCalories value
+    return totalEnergy;
+};
+    
+module.exports.getTotalEnergyForMeal = getTotalEnergyForMeal;
