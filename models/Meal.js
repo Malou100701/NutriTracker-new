@@ -124,7 +124,7 @@ async function deleteMealFromDatabase(ID) {
     
             // Query to delete meal from database using the primary key column named "ID"
             const query = `DELETE FROM MealIngredient WHERE MealID = ${ID};
-                        DELETE FROM Meal WHERE ID = ${ID};`
+                            DELETE FROM Meal WHERE ID = ${ID};`
     
     
             // Execute the query with the ID parameter

@@ -25,7 +25,7 @@ const addAllMeals = asyncHandler(async (req, res, next) => {
     const userID = req.session.user.userID; // Assuming you have the user ID in the session
     const meals = await Meal.addAllMealsIntoTable(userID);
     let mealID = req.params.ID;
-    await Meal.getTotalEnergyForMeal(mealID);
+    //await Meal.getTotalEnergyForMeal(mealID);
     res.render('pages/allMeals', { meals: meals }); // Pass the meals data to the EJS template
 });
 
