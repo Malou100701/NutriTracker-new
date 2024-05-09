@@ -17,9 +17,7 @@ router.use("/allMeals", mealIngredientRoutes);
 //INSPECTOR ROUTES
 const inspectorRoutes = require("./inspectorRoutes");
 router.use('/inspector', inspectorRoutes);
-router.get('/inspector', function (req, res) {
-    res.redirect('/inspector/inspector');
-});
+
 
 //USER ROUTES
 const userRoutes = require("./userRoutes");

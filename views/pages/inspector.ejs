@@ -7,19 +7,110 @@
     <header><%- include('../partials/headerLoggedin'); %></header>
     <div class="container">
       <div class="content">
-        <div class="box">
-          <h1>Food Inspector</h1>
-          <form class="search" id="searchForm" action="/inspector" method="GET">
-            <input type="search" name="Name" placeholder="Søg efter..." />
-            <button type="submit">Søg</button>
-          </form>
-        </div>
-
-        <div class="box">
-          <img src="/images/start.png" alt="start image" />
-        </div>
+    <div class="box">
+      <h2>Ingredient Details</h2>
+      <table>
+          <thead>
+            <tr>
+              <th>Navn</th>
+              <th>Kalorier</th>
+              <th>Protein</th>
+              <th>Fedt</th>
+              <th>Fiber</th>
+          </tr>
+          </thead>
+          <tbody>
+              <% if (ingredient) { %>
+                <tr>
+                  <td><%= ingredient.Name %></td>
+                  <td><%= ingredient.Calories %></td>
+                  <td><%= ingredient.Protein %></td>
+                  <td><%= ingredient.Fat %></td>
+                  <td><%= ingredient.Fiber %></td>
+                </tr>
+              <% } else { %>
+                <tr>
+    
+                </tr>
+              <% }; %>
+          </tbody>
+      </table>
+      <form action= "/inspector/ingredientView?ingredient" method="GET"> <!--query parameter efter URL -->
+        <label for="ingredient">Vælg ingrediens</label>
+        <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Indtast ingrediens" />
+        <span id="search_result"> </span>
+        <button type="submit">Undersøg ingrediens</button>
+    </form>
+  </div>
       </div>
     </div>
     <footer><%- include('../partials/footer'); %></footer>
   </body>
 </html>
+
+<script>
+  // Hentet fra: https://www.webslesson.info/2022/07/nodejs-autocomplete-search-with-mysql-database.html?m=1
+  
+  function load_data(query = '')
+      {
+          fetch('/inspector/search?name='+query+'').then(function(response){
+  
+              return response.json();
+  
+          }).then(function(responseData){
+  
+  
+              var html = '<ul>';
+              if(responseData.length > 0)
+              {
+                  for(var count = 0; count < responseData.length; count++)
+                  {
+                      var regular_expression = new RegExp('('+query+')', 'gi');
+  
+                      html += '<a href="#" onclick="get_text(this)">'+responseData[count].Name.replace(regular_expression, '<span>$1</span>')+'</a><br/>';
+                  }
+              }
+              else
+              {
+                  html += '<a href="#">No Data Found</a>';
+              }
+  
+              html += '</ul>';
+  
+              document.getElementById('search_result').innerHTML = html;
+  
+          });
+      };
+  
+      var search_element = document.getElementById("autocomplete_search");
+  
+      // En listener man sætter på search elementet
+      //Onkeyup - Når man trykker på en tast og slipper den igen. 
+      search_element.onkeyup = function(){
+  
+          var query = search_element.value;
+  
+          load_data(query);
+  
+      };
+  
+  
+      //Onfocus - Når vi klikker på den valgte fokusere den på det (værdien man sætter ind)
+      search_element.onfocus = function(){
+  
+          var query = search_element.value;
+  
+          load_data(query);
+  
+      };
+  
+      async function get_text(event)
+      {
+          let ingredientName = event.textContent;
+  
+          document.getElementById('autocomplete_search').value = ingredientName;
+  
+          document.getElementById('search_result').innerHTML = '';
+      }
+  
+  </script>

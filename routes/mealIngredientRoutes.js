@@ -6,9 +6,7 @@ const { updateMealIngredient} = require("../controllers/mealIngredientController
 
 router.post('/:ID', updateMealIngredient); //restful design for updating meal ingredient
 
-
-router.get('/mealIngredient', (req, res) => {
-    res.render('pages/mealEditor');
+router.get('/mealIngredient', (req, res) => {res.render('pages/mealEditor');
 });
 
 module.exports = router;

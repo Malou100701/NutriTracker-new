@@ -10,17 +10,25 @@ async function inspectIngredient(name) {
         // Create SQL request object
         const request = new sql.Request();
         // Parameterized query for safety
-        request.input('IngredientName', sql.VarChar, name); //Fjern denne linje og indsæt ${IngredientName} i linje 26
         const query = `
-            SELECT 
-                Name, Calories, Protein, Fat, Fiber
-            FROM
-                Ingredient
-            WHERE
-                Ingredient.Name = ${name};
-        `;
+            SELECT Name FROM Ingredient WHERE Name LIKE '%${name}%'`;
         const result = await request.query(query);
         return result.recordset; // Ensure data is returned
     }
 
 module.exports.inspectIngredient = inspectIngredient;
+
+async function showIngredient(name) {
+    await sql.connect(config);
+    const request = new sql.Request();
+
+    const query = `
+        SELECT Name AS Name, 
+        Calories, Protein, Fat, Fiber
+        FROM Ingredient
+        WHERE Name = '${name}';`;
+    
+    const result = await request.query(query);
+    return result.recordset[0];
+}
+module.exports.showIngredient = showIngredient;
