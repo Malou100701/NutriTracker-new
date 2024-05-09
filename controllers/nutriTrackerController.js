@@ -39,22 +39,26 @@ const displayHourlyCalories = asyncHandler(async (req, res) => {
 
     const caloriesIntake = await NutriTracker.getCaloriesIntakePerHourToday(userID, today);
     const caloriesBurned = await NutriTracker.getCaloriesBurnedPerHourToday(userID, BMR);
-    const water = await NutriTracker.getWaterPerHourToday(userID, today);
+    const waterIntake = await NutriTracker.getWaterPerHourToday(userID, today); // This should return an array of objects with `Hour` and `TotalWater`
 
-    // Ensure we have data for all 24 hours, even if no activities were logged
+    // Map through calories intake data, which is assumed to be synchronous with calories burned and water intake data
     const hourlyBalance = caloriesIntake.map((intake, index) => {
+        const water = (waterIntake[index] && waterIntake[index].TotalWater) ? waterIntake[index].TotalWater : 0; // Safely handle missing water data
+        const burned = (caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24;
+
         const hourData = {
-            hour: intake.Hour, // or simply index if you want to use the array index for hours
+            hour: intake.Hour, // Assuming each array is properly indexed by hour
             intake: intake.Calories,
-            burned: (caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24, // Add BMR/24 if no activity was recorded
-            balance: intake.Calories - ((caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24),
-            water: water.Water
+            burned: burned,
+            balance: intake.Calories - burned,
+            totalWater: water
         };
         return hourData;
     });
 
     res.render('pages/nutritrackertimer', { hourlyData: hourlyBalance });
 });
+
 
 
 module.exports = {

@@ -76,7 +76,6 @@ async function getWaterLast30Days(UserID){
     `;
     request.input('UserID', sql.Int, UserID);
     const result = await request.query(query);
-    console.log(result.recordset);
     return result.recordset;
 
 }
@@ -84,23 +83,24 @@ async function getWaterLast30Days(UserID){
 async function getWaterPerHourToday(UserID) {
         await sql.connect(config);
         const result = await sql.query`
-            WITH HourlySeries AS (
-                SELECT TOP (24) 
-                    DATEADD(HOUR, -ROW_NUMBER() OVER (ORDER BY object_id) + 1, GETDATE()) AS Hour
-                FROM sys.all_objects
-            )
-            SELECT
-                FORMAT(hs.Hour, 'yyyy-MM-dd HH:00:00') AS Hour,
-                ISNULL(SUM(i.Amount), 0) AS TotalWater
-            FROM HourlySeries hs
-            LEFT JOIN Intake i ON hs.Hour = DATEADD(HOUR, DATEDIFF(HOUR, 0, i.DateTime), 0)
-                AND i.UserID = ${UserID}
-                AND i.IngredientID = 45
-                AND i.DateTime >= DATEADD(HOUR, -24, GETDATE())
-            GROUP BY hs.Hour
-            ORDER BY hs.Hour DESC;
+        WITH HourlySeries AS (
+            SELECT TOP (24)
+                DATEADD(HOUR, -ROW_NUMBER() OVER (ORDER BY object_id) + 1, GETDATE()) AS Hour
+            FROM sys.all_objects
+        )
+        SELECT
+            FORMAT(hs.Hour, 'yyyy-MM-dd HH:00:00') AS Hour,
+            ISNULL(SUM(i.Amount), 0) AS TotalWater
+        FROM HourlySeries hs
+        LEFT JOIN Intake i ON
+            CAST(hs.Hour AS DATE) = CAST(i.DateTime AS DATE)
+            AND DATEPART(HOUR, hs.Hour) = DATEPART(HOUR, i.DateTime)
+            AND i.UserID = 93
+            AND i.IngredientID = 45
+            AND i.DateTime >= DATEADD(HOUR, -24, GETDATE())
+        GROUP BY hs.Hour
+        ORDER BY hs.Hour DESC;
         `;
-        console.log('Hourly Water Intake Last 24 Hours:', result.recordset);
         return result.recordset;
 
 }

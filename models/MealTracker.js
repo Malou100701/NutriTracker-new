@@ -41,11 +41,13 @@ async function updateMeal(UserID, IntakeID, DateTime, Amount){
     request.input('DateTime', sql.DateTime, DateTime);
     request.input('Amount', sql.Int, Amount);
 
+    console.log('Updating meal with:', { UserID, IntakeID, DateTime, Amount });
     const result = await request.query(`
         UPDATE Intake
         SET DateTime = @DateTime, Amount = @Amount
         WHERE IntakeID = @IntakeID AND UserID = @UserID;
     `);
+    console.log(result.rowsAffected[0] + ' rows updated');
     return result.rowsAffected[0]; // Returns the number of affected rows
 }
 
