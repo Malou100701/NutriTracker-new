@@ -36,7 +36,17 @@
             <button type="submit">Log Meal</button>
           </form>
         </div>
+        <div class="box">
+          <h2>Log en enkelt ingrediens</h2>
 
+          <form action= "/inspector/ingredientView?ingredient" method="GET"> <!--query parameter efter URL -->
+            <label for="ingredient">Vælg ingrediens</label>
+            <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Indtast ingrediens" />
+            <span id="search_result"> </span>
+            <button type="submit">Log Ingrediens</button>
+        </form>
+
+        </div>
 
 
 
@@ -76,35 +86,42 @@
                 <th>Meal Name</th>
                 <th>Date and Time</th>
                 <th>Amount Consumed</th>
-                <th>Update</th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              <% meals.forEach(meal => { %>
+              <% intakes.forEach(intake => { %>
               <tr>
                 <form method="POST" action="/mealtracker/update">
                   <input
                     type="hidden"
                     name="IntakeID"
-                    value="<%= meal.IntakeID %>"
+                    value="<%= intake.IntakeID %>"
                   />
-                  <td><%= meal.Name %></td>
+                  <td><%= intake.Name %></td>
                   <td>
                     <input
                       type="datetime-local"
                       name="DateTime"
-                      value="<%= new Date(meal.DateTime).toISOString().slice(0,16) %>"
+                      value="<%= new Date(intake.DateTime).toISOString().slice(0,16) %>"
                     />
                   </td>
                   <td>
                     <input
                       type="number"
                       name="Amount"
-                      value="<%= meal.Amount %>"
+                      value="<%= intake.Amount %>"
                     />
                   </td>
                   <td><button type="submit">Update</button></td>
                 </form>
+                <form method="POST" action="/mealtracker/delete">
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <input type="hidden" name="IntakeID" value="<%= intake.IntakeID %>" />
+                  <td><button type="submit" class="delete">Delete</button></td>
+                </form>
+
               </tr>
               <% }) %>
             </tbody>

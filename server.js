@@ -50,7 +50,10 @@ const MealTracker = require('./models/MealTracker');
 app.get('/mealtracker', async (req, res) => {
   const UserID = req.session.user.userID;
   const meals = await MealTracker.getMeals(UserID);
-  res.render('pages/mealTracker', { user: req.session.user, meals: meals });
+  const intakes = await MealTracker.renderMeals(UserID);
+  console.log("Meals:", meals);
+  console.log("Intakes:", intakes);
+  res.render('pages/mealTracker', { user: req.session.user, meals: meals, intakes: intakes });
 });
 
 

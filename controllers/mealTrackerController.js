@@ -9,14 +9,15 @@ const trackMeal = asyncHandler(async (req, res) => {
     res.redirect('/mealtracker');
   });
   
-  const renderMealTracker = asyncHandler(async (req, res) => {
-    const UserID = req.session.user.userID;
-    const meals = await MealTracker.renderMeals(UserID);
-    res.render('pages/mealTracker', {
-        user: req.session.user,
-        meals: meals
-    });
-});
+//   const renderMealTracker = asyncHandler(async (req, res) => {
+//     const UserID = req.session.user.userID;
+//     const intakes = await MealTracker.renderMeals(UserID);
+//     console.log("intakes", intakes);
+//     res.render('pages/mealTracker', {
+//         user: req.session.user,
+//         intakes: intakes
+//     });
+// });
 
 const formatDateTimeForSQL = (isoString) => {
   const dateTime = new Date(isoString);
@@ -28,7 +29,7 @@ const updateMeal = asyncHandler(async (req, res) => {
   const UserID = req.session.user.userID;
   const formattedDateTime = formatDateTimeForSQL(DateTime);
 
-      const affectedRows = await MealTracker.updateMeal(IntakeID, UserID, formattedDateTime, Amount);
+      const affectedRows = await MealTracker.updateMeal(UserID, IntakeID, formattedDateTime, Amount);
       if (affectedRows > 0) {
           res.redirect('/mealtracker'); // Redirect back to the meal tracker page
       } else {
@@ -36,11 +37,22 @@ const updateMeal = asyncHandler(async (req, res) => {
       }
   });
 
-const getMeals = asyncHandler(async (req, res) => {
-  const UserID = req.session.user.userID;
-  const meals = await MealTracker.getMeals(UserID);
-  res.render('pages/mealTracker', { user: req.session.user, meals: meals });
-});
+
+  const handleMeals = asyncHandler(async (req, res) => {
+    const UserID = req.session.user.userID;
+    const meals = await MealTracker.getMeals(UserID);
+    const intakes = await MealTracker.renderMeals(UserID);
+    res.render('pages/mealtracker', { user: req.session.user, meals: meals, intakes: intakes});
+  });
+
+
+// const getMeals = asyncHandler(async (req, res) => {
+//   console.log("getMeals");
+//   const UserID = req.session.user.userID;
+//   const meals = await MealTracker.getMeals(UserID);
+//   console.log("meals", meals);
+//   res.render('pages/mealtracker', { user: req.session.user, meals: meals });
+// });
 
 const trackWater = asyncHandler(async (req, res) => {
   const { DateTime, Amount, latitude, longitude } = req.body;
@@ -52,15 +64,23 @@ const trackWater = asyncHandler(async (req, res) => {
 const trackIngredient = asyncHandler(async (req, res) => {
   const { DateTime, IngredientID, Amount, latitude, longitude } = req.body;
   const UserID = req.session.user.userID;
-  await MealTracker.trackIngredient(UserID, IntakeID, IngredientID, Amount);
+  await MealTracker.trackIngredient(UserID, IntakeID, IngredientID, DateTime, Amount, latitude, longitude);
   res.redirect('/mealtracker');
+});
+
+const deleteMeal = asyncHandler(async (req, res) => {
+  const { IntakeID } = req.body;
+  const affectedRows = await MealTracker.deleteMeal(IntakeID);
+  if (affectedRows > 0) {
+      res.redirect('/mealtracker'); // Redirect back to the meal tracker page
+  }
 });
 
 module.exports = {
     trackMeal,
-    getMeals,
-    renderMealTracker,
     updateMeal, 
     trackWater,
-    trackIngredient
+    trackIngredient,
+    deleteMeal,
+    handleMeals
     }

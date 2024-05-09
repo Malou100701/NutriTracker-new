@@ -53,6 +53,19 @@ async function updateMeal(UserID, IntakeID, DateTime, Amount){
 
 module.exports.updateMeal = updateMeal;
 
+async function deleteMeal(IntakeID) {
+        await sql.connect(config);
+        const request = new sql.Request();
+        request.input('IntakeID', sql.Int, IntakeID);
+        const result = await request.query(`
+            DELETE FROM Intake
+            WHERE IntakeID = @IntakeID;
+        `);
+        return result.rowsAffected[0];  // Returns the number of rows affected
+}
+
+module.exports.deleteMeal = deleteMeal;
+
 async function trackWater(UserID, DateTime, Amount, latitude, longitude) {
     const adjustedDatetime = moment.utc(DateTime).add(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
 
