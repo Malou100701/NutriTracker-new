@@ -56,7 +56,9 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   let ingredients = await Meal.getMealIngredients(mealID);
   await Meal.getTotalEnergyPerMeal(mealID);
   await Meal.getTotalProteinPerMeal(mealID);
-  
+  await Meal.getTotalFatPerMeal(mealID);
+  await Meal.getTotalFiberPerMeal(mealID);
+
   //console.log(ingredients); - Brugt til fejlsøgning
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
 });

@@ -36,7 +36,10 @@ async function insertMealIntoDatabase(name, userID) {
                 const query = `SELECT 
                     Name AS Name, 
                     ID AS ID,
-                    Calories AS Calories
+                    Calories AS Calories,
+                    Protein AS Protein,
+                    Fat AS Fat,
+                    Fiber AS Fiber
                     FROM Meal WHERE UserID = '${userID}';`;
                 const result = await request.query(query);                
                 return result.recordset;
@@ -437,3 +440,55 @@ async function getTotalProteinPerMeal(mealID) {
     return totalProtein;
 }
 module.exports.getTotalProteinPerMeal = getTotalProteinPerMeal;
+
+async function getTotalFatPerMeal(mealID) {
+    await sql.connect(config);
+
+    const request = new sql.Request();
+    
+    const query = `
+    SELECT SUM (Fat) AS TotalFat
+    FROM MealIngredient
+    WHERE MealID = ${mealID};`;
+
+    let result = await request.query(query);
+    
+    let totalFat = result.recordset[0].TotalFat;
+    console.log(totalFat);
+    
+    const insertQuery = `
+        UPDATE Meal
+        SET Fat = '${totalFat}'
+        WHERE ID = '${mealID}';`;
+    
+    await request.query(insertQuery);
+    
+    return totalFat;
+}
+module.exports.getTotalFatPerMeal = getTotalFatPerMeal;
+
+async function getTotalFiberPerMeal(mealID) {
+    await sql.connect(config);
+
+    const request = new sql.Request();
+    
+    const query = `
+    SELECT SUM (Fiber) AS TotalFiber
+    FROM MealIngredient
+    WHERE MealID = ${mealID};`;
+
+    let result = await request.query(query);
+    
+    let totalFiber = result.recordset[0].TotalFiber;
+    //console.log(totalFiber); - Brugt til testing
+    
+    const insertQuery = `
+        UPDATE Meal
+        SET Fiber = '${totalFiber}'
+        WHERE ID = '${mealID}';`;
+    
+    await request.query(insertQuery);
+    
+    return totalFiber;
+}
+module.exports.getTotalFiberPerMeal = getTotalFiberPerMeal;

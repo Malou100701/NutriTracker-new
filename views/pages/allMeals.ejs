@@ -24,13 +24,11 @@
             <tbody>
               <% meals.forEach(meal => { %>
               <tr>
-                <td>
-                  <a href="/meal/<%= meal.ID %>/edit"> <%= meal.Name %> </a>
-                </td>
-                <!-- Correct the property name to match the actual property -->
-                <!-- Display other meal properties as needed -->
+                <td><a href="/meal/<%= meal.ID %>/edit"> <%= meal.Name %> </a></td>
                 <td><%= meal.Calories %></td>
                 <td><%= meal.Protein %></td>
+                <td><%= meal.Fat %></td>
+                <td><%= meal.Fiber %></td>
                 <td>
                   <form action="/meal/<%= meal.ID %>/deleteMeal" method="POST">
                   <button type="submit">Delete</button>
