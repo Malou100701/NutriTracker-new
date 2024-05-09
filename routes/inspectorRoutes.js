@@ -4,9 +4,9 @@ const { inspectIngredientController, ingredientView } = require("../controllers/
 
 router.get('/search', inspectIngredientController);
 
-router.get('/ingredientView', ingredientView)
+router.get('/ingredientView', ingredientView);
 
-router.get('/inspector', (req, res) => res.render('pages/inspector'));
+router.get('/', (req, res) => res.render('pages/inspector', {ingredient: null}));
 
 module.exports = router;
 

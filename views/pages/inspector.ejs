@@ -11,18 +11,28 @@
       <h2>Ingredient Details</h2>
       <table>
           <thead>
-              <tr>
-                  <th>Name</th>
-                  <!-- Add more table headers as needed -->
-              </tr>
+            <tr>
+              <th>Navn</th>
+              <th>Kalorier</th>
+              <th>Protein</th>
+              <th>Fedt</th>
+              <th>Fiber</th>
+          </tr>
           </thead>
           <tbody>
-              <% ingredient.forEach(ingredient => { %>
-              <tr>
+              <% if (ingredient) { %>
+                <tr>
                   <td><%= ingredient.Name %></td>
-              </tr>
-              <% }); %>
-      
+                  <td><%= ingredient.Calories %></td>
+                  <td><%= ingredient.Protein %></td>
+                  <td><%= ingredient.Fat %></td>
+                  <td><%= ingredient.Fiber %></td>
+                </tr>
+              <% } else { %>
+                <tr>
+    
+                </tr>
+              <% }; %>
           </tbody>
       </table>
       <form action= "/inspector/ingredientView?ingredient" method="GET"> <!--query parameter efter URL -->

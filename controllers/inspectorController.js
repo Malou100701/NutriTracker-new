@@ -9,6 +9,7 @@ const inspectIngredientController = asyncHandler(async (req, res, next) => {
 });
 module.exports.inspectIngredientController = inspectIngredientController;
 
+
 const ingredientView = asyncHandler(async (req, res, next) => {
 let ingredientName = req.query.ingredient;
 let ingredient = await Inspector.showIngredient(ingredientName);
