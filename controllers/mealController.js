@@ -20,6 +20,17 @@ const createMeal = asyncHandler(async (req, res, next) => {
   })*/
   //res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
+  const addAllMeals = asyncHandler(async (req, res, next) => {
+    const userID = req.session.user.userID; // Assuming you have the user ID in the session
+    // Retrieve all meals for the user
+    //const mealID = req.params.ID;
+    const meals = await Meal.addAllMealsIntoTable(userID);
+    //console.log(totalCalories);
+    // Render the meals page with updated meals data including total calories
+    res.render('pages/allMeals', { meals: meals });
+  });
+
+
 
 const editMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
@@ -43,20 +54,11 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   await Meal.getTotalFat(mealID, ingredient);
   await Meal.getTotalFiber(mealID, ingredient);
   let ingredients = await Meal.getMealIngredients(mealID);
+  await Meal.getTotalEnergyPerMeal(mealID);
+  await Meal.getTotalProteinPerMeal(mealID);
+  
   //console.log(ingredients); - Brugt til fejlsøgning
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
-});
-
-
-const addAllMeals = asyncHandler(async (req, res, next) => {
-  const userID = req.session.user.userID; // Assuming you have the user ID in the session
-  // Retrieve all meals for the user
-  //const mealID = req.params.ID;
-  const meals = await Meal.addAllMealsIntoTable(userID);
-  //await Meal.getTotalEnergyForMeal(mealID);
-  //console.log(totalCalories);
-  // Render the meals page with updated meals data including total calories
-  res.render('pages/allMeals', { meals: meals });
 });
 
 

@@ -387,27 +387,16 @@ async function getTotalEnergyPerMeal(mealID) {
     await sql.connect(config);
 
     const request = new sql.Request();
-
-    //Create SQL request object
-  /*  const request = new sql.Request();
-    const query1 = `
-        SELECT IngredientID
-        FROM MealIngredient
-        WHERE MealID = '${mealID}';`*/
     
-   // let result1 = await request.query(query1);
-    //console.log(result1);
-  //  let ingredientID = result1.recordset[0].IngredientID;
-    
-    const query2 = `
+    const query = `
     SELECT SUM (Calories) AS TotalCalories
     FROM MealIngredient
     WHERE MealID = ${mealID};`;
 
-    let result2 = await request.query(query2);
+    let result = await request.query(query);
     
-    let totalCalories = result2.recordset[0].totalCalories;
-    console.log(totalCalories);
+    let totalCalories = result.recordset[0].TotalCalories;
+    //console.log(totalCalories); - Brugt til fejlsøgning
     
     // Insert TotalCalories into MealIngredient table
     const insertQuery = `
@@ -419,6 +408,32 @@ async function getTotalEnergyPerMeal(mealID) {
     
     // Return the calculated TotalCalories value
     return totalCalories;
-    }
+}
+module.exports.getTotalEnergyPerMeal = getTotalEnergyPerMeal;
+
+
+async function getTotalProteinPerMeal(mealID) {
+    await sql.connect(config);
+
+    const request = new sql.Request();
     
-    module.exports.getTotalEnergyPerMeal = getTotalEnergyPerMeal;
+    const query = `
+    SELECT SUM (Protein) AS TotalProtein
+    FROM MealIngredient
+    WHERE MealID = ${mealID};`;
+
+    let result = await request.query(query);
+    
+    let totalProtein = result.recordset[0].TotalProtein;
+    console.log(totalProtein);
+    
+    const insertQuery = `
+        UPDATE Meal
+        SET Protein = '${totalProtein}'
+        WHERE ID = '${mealID}';`;
+    
+    await request.query(insertQuery);
+    
+    return totalProtein;
+}
+module.exports.getTotalProteinPerMeal = getTotalProteinPerMeal;

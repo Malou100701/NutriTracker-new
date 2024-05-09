@@ -30,9 +30,7 @@
                 <!-- Correct the property name to match the actual property -->
                 <!-- Display other meal properties as needed -->
                 <td><%= meal.Calories %></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td><%= meal.Protein %></td>
                 <td>
                   <form action="/meal/<%= meal.ID %>/deleteMeal" method="POST">
                   <button type="submit">Delete</button>

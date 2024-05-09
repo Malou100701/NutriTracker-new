@@ -1,6 +1,8 @@
 
-//Importer MSSQL-modulet til at kommunikere med SQL-Server
+//Importer MSSQL-modulet til at kommunikere med SQL Server-databasen
 const sql = require('mssql');
+
+//Importer konfigurationsindstillinger fra en anden fil
 const config = require('../config');
 
 
