@@ -59,7 +59,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 
   const { Age, Weight, Gender } = req.body;
-  if (await User.updateUserDetails(req.session.user.user, { Age, Weight, Gender })) {
+  if (await User.updateUserDetails(req.session.user.userID, { Age, Weight, Gender })) {
       res.redirect('/profile');
   } else {
       res.status(404).json({ success: false, message: "User not found." });
@@ -70,7 +70,6 @@ const updateUser = asyncHandler(async (req, res) => {
 const BMR = asyncHandler(async (req, res) => {
   const UserID = req.session.user.userID;
   const BMR = await User.BMR(UserID);
-  console.log("User BMR:", BMR);
   res.render('pages/profile', { BMR: BMR });
   
 });

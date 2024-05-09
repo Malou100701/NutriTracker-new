@@ -12,6 +12,7 @@ const combinedTrackerView = asyncHandler(async (req, res) => {
     const UserID = req.session.user.userID;
     const calorieIntake = await NutriTracker.getCalorieIntakeLast30Days(UserID);
     const caloriesBurned = await NutriTracker.getCaloriesBurnedLast30Days(UserID);
+    const totalWater = await NutriTracker.getWaterLast30Days(UserID)
     const BMR = await calculateBMR(UserID);
 
     // Combine both datasets
@@ -21,7 +22,8 @@ const combinedTrackerView = asyncHandler(async (req, res) => {
             date: calorieIntake[i].Date || caloriesBurned[i].Date, // Assuming both have the same length and dates aligned
             intake: calorieIntake[i].DailyCalorieIntake || 0,
             burned: caloriesBurned[i].DailyCaloriesBurned + BMR || 0,
-            balance: (calorieIntake[i].DailyCalorieIntake || 0) - (caloriesBurned[i].DailyCaloriesBurned + BMR || 0)
+            balance: (calorieIntake[i].DailyCalorieIntake || 0) - (caloriesBurned[i].DailyCaloriesBurned + BMR || 0),
+            totalWater: totalWater[i].TotalWater
         });
     }
 
@@ -37,6 +39,7 @@ const displayHourlyCalories = asyncHandler(async (req, res) => {
 
     const caloriesIntake = await NutriTracker.getCaloriesIntakePerHourToday(userID, today);
     const caloriesBurned = await NutriTracker.getCaloriesBurnedPerHourToday(userID, BMR);
+    const water = await NutriTracker.getWaterPerHourToday(userID, today);
 
     // Ensure we have data for all 24 hours, even if no activities were logged
     const hourlyBalance = caloriesIntake.map((intake, index) => {
@@ -44,7 +47,8 @@ const displayHourlyCalories = asyncHandler(async (req, res) => {
             hour: intake.Hour, // or simply index if you want to use the array index for hours
             intake: intake.Calories,
             burned: (caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24, // Add BMR/24 if no activity was recorded
-            balance: intake.Calories - ((caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24)
+            balance: intake.Calories - ((caloriesBurned[index] && caloriesBurned[index].Calories) ? caloriesBurned[index].Calories : BMR / 24),
+            water: water.Water
         };
         return hourData;
     });

@@ -34,7 +34,6 @@ async function getUserByUsername(username) {
     }
     return null;
 }
-
 module.exports.getUserByUsername = getUserByUsername;
 
 async function validatePassword(userPassword, password) {
@@ -57,20 +56,17 @@ async function deleteUserByUserID(userID) {
 module.exports.deleteUserByUserID = deleteUserByUserID;
 
 
-async function updateUserDetails(username, newDetails) {
+async function updateUserDetails(userID, newDetails) {
     const { Age, Weight, Gender } = newDetails;
     await sql.connect(config);
-
     const result = await sql.query`
         UPDATE Users SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
-        WHERE Username = ${username}`;
-    console.log("Update result:", result);
+        WHERE UserID = ${userID}`;
     if (result.rowsAffected[0] > 0) {
         return true;
     }
     return false;
 }
-
 module.exports.updateUserDetails = updateUserDetails;
 
 
@@ -113,10 +109,7 @@ FROM
     return kCal
 
 }
-
 module.exports.BMR = BMR;
-
-
 
 
 /*
@@ -200,15 +193,6 @@ class User {
     
 
 }
-
-
-
-
-
-
-
 //         const validPassword = await bcrypt.compare(password, user.password);
-
-
 module.exports = User;
 */

@@ -53,6 +53,59 @@ async function getCalorieIntakeLast30Days(UserID) {
     return result.recordset;
 }
 
+async function getWaterLast30Days(UserID){
+
+    await sql.connect(config);
+    const request = new sql.Request();
+    const query = `
+    WITH DateSeries AS (
+        SELECT TOP (30) 
+            CAST(DATEADD(DAY, ROW_NUMBER() OVER (ORDER BY a.object_id) - 30, GETDATE()) AS DATE) AS Date
+        FROM sys.all_objects a
+        CROSS JOIN sys.all_objects b
+    )
+    SELECT
+        ds.Date,
+        ISNULL(SUM(i.Amount), 0) AS TotalWater
+    FROM DateSeries ds
+    LEFT JOIN Intake i ON ds.Date = CAST(i.DateTime AS DATE)
+        AND i.UserID = @UserID
+        AND i.IngredientID = 45
+    GROUP BY ds.Date
+    ORDER BY ds.Date DESC;
+    `;
+    request.input('UserID', sql.Int, UserID);
+    const result = await request.query(query);
+    console.log(result.recordset);
+    return result.recordset;
+
+}
+
+async function getWaterPerHourToday(UserID) {
+        await sql.connect(config);
+        const result = await sql.query`
+            WITH HourlySeries AS (
+                SELECT TOP (24) 
+                    DATEADD(HOUR, -ROW_NUMBER() OVER (ORDER BY object_id) + 1, GETDATE()) AS Hour
+                FROM sys.all_objects
+            )
+            SELECT
+                FORMAT(hs.Hour, 'yyyy-MM-dd HH:00:00') AS Hour,
+                ISNULL(SUM(i.Amount), 0) AS TotalWater
+            FROM HourlySeries hs
+            LEFT JOIN Intake i ON hs.Hour = DATEADD(HOUR, DATEDIFF(HOUR, 0, i.DateTime), 0)
+                AND i.UserID = ${UserID}
+                AND i.IngredientID = 45
+                AND i.DateTime >= DATEADD(HOUR, -24, GETDATE())
+            GROUP BY hs.Hour
+            ORDER BY hs.Hour DESC;
+        `;
+        console.log('Hourly Water Intake Last 24 Hours:', result.recordset);
+        return result.recordset;
+
+}
+
+
 
 async function getCaloriesBurnedLast30Days(UserID) {
 
@@ -178,5 +231,7 @@ module.exports = {
     getCalorieIntakeLast30Days,
     getCaloriesBurnedLast30Days,
     getCaloriesIntakePerHourToday,
-    getCaloriesBurnedPerHourToday
+    getCaloriesBurnedPerHourToday,
+    getWaterPerHourToday,
+    getWaterLast30Days
 };

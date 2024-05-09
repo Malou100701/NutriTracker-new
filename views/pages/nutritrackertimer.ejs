@@ -22,6 +22,8 @@
                     <th>Kcalorie indtag</th>
                     <th>Kcalorier forbrændt</th>
                     <th>Kcalorie balance</th>
+                    <th>Vand indtaget</th>
+
                 </tr>
               </thead>
               <tbody>
@@ -31,6 +33,7 @@
                             <td><%= Math.round(data.intake) %> kcal</td>
                             <td><%= Math.round(data.burned) %> kcal</td>
                             <td><%= Math.round(data.balance) %> kcal</td>
+                            <td><%= data.water %></td>
                         </tr>
                     <% }); %>
               </tbody>

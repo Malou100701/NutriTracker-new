@@ -13,7 +13,7 @@
           <form action="/mealtracker/trackMeal" method="POST">
             <div class="labelPair">
               <select name="MealID" id="MealID">
-                <% console.log(meals); %> <% meals.forEach(function(meal) { %>
+                <% meals.forEach(function(meal) { %>
                 <option value="<%= meal.ID %>"><%= meal.Name %></option>
                 <% }); %>
               </select>
@@ -36,6 +36,38 @@
             <button type="submit">Log Meal</button>
           </form>
         </div>
+
+
+
+
+        
+      </div>
+
+      <div class="content">
+        <div class="box">
+          <h2>Registrér vand</h2>
+          <p>Log din vand!</p>
+          <form action="/mealtracker/water" method="POST">
+            <div class="labelPair"></div>
+            <div class="labelPair">
+              <label for="Amount">Hvor meget vand drak du?</label>
+              <input type="number" name="Amount" id="Amount" />
+            </div>
+            <div class="labelPair">
+              <label for="DateTime">Tidspunkt</label>
+              <input type="datetime-local" name="DateTime" id="DateTime" />
+            </div>
+
+            <!-- hidden fields for geolocation -->
+            <input type="hidden" name="latitude" id="latitude" />
+            <input type="hidden" name="longitude" id="longitude" />
+
+            <button type="submit">Log Vand</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="content">
         <div class="box">
           <h2>List of Meals</h2>
           <table>
@@ -51,7 +83,11 @@
               <% meals.forEach(meal => { %>
               <tr>
                 <form method="POST" action="/mealtracker/update">
-                  <input type="hidden" name="IntakeID" value="<%= meal.IntakeID %>">
+                  <input
+                    type="hidden"
+                    name="IntakeID"
+                    value="<%= meal.IntakeID %>"
+                  />
                   <td><%= meal.Name %></td>
                   <td>
                     <input

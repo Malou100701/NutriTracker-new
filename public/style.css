@@ -195,8 +195,9 @@ header nav ul li a {
   padding: 80px 0px;
   width: 100%;
   display: flex;
-  justify-content: center;
-  /* flex-wrap: wrap; */
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
 }
 
 
@@ -242,7 +243,6 @@ header nav ul li a {
     width: 33%;
   }
 } */
-
 
 .content {
   display: flex;
