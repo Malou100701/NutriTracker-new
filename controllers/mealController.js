@@ -47,6 +47,7 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients, amount: amount });
 });
 
+
 const addAllMeals = asyncHandler(async (req, res, next) => {
   const userID = req.session.user.userID; // Assuming you have the user ID in the session
   // Retrieve all meals for the user
@@ -55,12 +56,6 @@ const addAllMeals = asyncHandler(async (req, res, next) => {
   //await Meal.getTotalEnergyForMeal(mealID);
   //console.log(totalCalories);
   // Render the meals page with updated meals data including total calories
-  for (let meal of meals) {
-    // Assuming each meal object has an 'ID' that corresponds to 'mealID'
-    // And assuming there's a way to determine or a default ingredientID if needed
-    const ingredientID = meal.ingredientID;  // Define how to handle ingredientID if necessary
-    await Meal.getTotalEnergyPerMeal(meal.ID, ingredientID);  // Call update function
-  }
   res.render('pages/allMeals', { meals: meals });
 });
 

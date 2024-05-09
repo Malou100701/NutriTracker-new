@@ -2,7 +2,7 @@ const sql = require('mssql');
 const config = require('../config');
 
 //den skal have et bedre navn, så det er nemmere at ændre i fremtiden.
-async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI KAN IKKE FÅ DEN LINKET OP TIL EN USER
+async function insertMealIntoDatabase(name, userID) { 
             try {
             // Connect SQL Server Database
                 await sql.connect(config);
@@ -38,16 +38,15 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
                     ID AS ID,
                     Calories AS Calories
                     FROM Meal WHERE UserID = '${userID}';`;
-                const result = await request.query(query);
+                const result = await request.query(query);                
                 return result.recordset;
+                
             } catch (error) {
                 console.error('Error fetching meals:', error);
                 throw error;
             }
         }
         module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
-
-
 
 
     async function getMealIngredients(ID) {
@@ -57,6 +56,7 @@ async function insertMealIntoDatabase(name, userID) { //PROBLEMER MED DENNE. VI 
     
                 // Create SQL request object
                 const request = new sql.Request();
+                
     
                 // Query to get meal ingredients from database
                 const query = `
@@ -149,7 +149,7 @@ const request = new sql.Request();
 const query1 = `
     SELECT IngredientID
     FROM Ingredient 
-    WHERE Name = '${name}';`
+    WHERE Name = '${name}';`;
 
 let result1 = await request.query(query1);
 //console.log(result1);
@@ -383,34 +383,37 @@ async function getTotalEnergyForMeal(mealID) {
 module.exports.getTotalEnergyForMeal = getTotalEnergyForMeal;*/
 
 
-async function getTotalEnergyPerMeal(mealID, ingredientID) {
+async function getTotalEnergyPerMeal(mealID) {
     await sql.connect(config);
 
-    //Create SQL request object
     const request = new sql.Request();
+
+    //Create SQL request object
+  /*  const request = new sql.Request();
     const query1 = `
         SELECT IngredientID
         FROM MealIngredient
-        WHERE MealID = '${mealID}';`
+        WHERE MealID = '${mealID}';`*/
     
-    let result1 = await request.query(query1);
+   // let result1 = await request.query(query1);
     //console.log(result1);
-    let ingredientID = result1.recordset[0].IngredientID;
+  //  let ingredientID = result1.recordset[0].IngredientID;
     
-    const query2 = `SELECT SUM Calories AS TotalCalories
-    FROM MealIngredient mi
-    JOIN Ingredient i ON mi.IngredientID = i.IngredientID
-    WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
+    const query2 = `
+    SELECT SUM (Calories) AS TotalCalories
+    FROM MealIngredient
+    WHERE MealID = ${mealID};`;
+
     let result2 = await request.query(query2);
     
-    let totalCalories = result2.recordset[0].TotalCalories;
+    let totalCalories = result2.recordset[0].totalCalories;
     console.log(totalCalories);
     
     // Insert TotalCalories into MealIngredient table
     const insertQuery = `
-        UPDATE MealIngredient 
-        SET calories = '${totalCalories}'
-        WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';`;
+        UPDATE Meal
+        SET Calories = '${totalCalories}'
+        WHERE ID = '${mealID}';`;
     
     await request.query(insertQuery);
     
