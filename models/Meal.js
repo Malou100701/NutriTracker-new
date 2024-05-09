@@ -153,11 +153,6 @@ const query1 = `
 
 let result1 = await request.query(query1);
 //console.log(result1);
-
-if (result1.recordset.length === 0) {
-    return 0;
-};
-
 let ingredientID = result1.recordset[0].IngredientID;
 
 
@@ -347,9 +342,13 @@ module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDataba
 // SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
 // WHERE Username = ${username}`;
 
-// Denne virker for kalorier
 
 
+
+
+
+
+/*
 
 // For hele måltidet
 async function getTotalEnergyForMeal(mealID) {
@@ -381,4 +380,42 @@ async function getTotalEnergyForMeal(mealID) {
     console.log(`Total calories for meal with ID ${mealID} is ${totalCalories}`);
 };
     
-module.exports.getTotalEnergyForMeal = getTotalEnergyForMeal;
+module.exports.getTotalEnergyForMeal = getTotalEnergyForMeal;*/
+
+
+async function getTotalEnergyPerMeal(mealID, ingredientID) {
+    await sql.connect(config);
+
+    //Create SQL request object
+    const request = new sql.Request();
+    const query1 = `
+        SELECT IngredientID
+        FROM MealIngredient
+        WHERE MealID = '${mealID}';`
+    
+    let result1 = await request.query(query1);
+    //console.log(result1);
+    let ingredientID = result1.recordset[0].IngredientID;
+    
+    const query2 = `SELECT SUM Calories AS TotalCalories
+    FROM MealIngredient mi
+    JOIN Ingredient i ON mi.IngredientID = i.IngredientID
+    WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
+    let result2 = await request.query(query2);
+    
+    let totalCalories = result2.recordset[0].TotalCalories;
+    console.log(totalCalories);
+    
+    // Insert TotalCalories into MealIngredient table
+    const insertQuery = `
+        UPDATE MealIngredient 
+        SET calories = '${totalCalories}'
+        WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';`;
+    
+    await request.query(insertQuery);
+    
+    // Return the calculated TotalCalories value
+    return totalCalories;
+    }
+    
+    module.exports.getTotalEnergyPerMeal = getTotalEnergyPerMeal;

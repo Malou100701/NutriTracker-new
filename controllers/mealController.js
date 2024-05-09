@@ -21,18 +21,6 @@ const createMeal = asyncHandler(async (req, res, next) => {
   //res.redirect('/allMeals'); // Redirect to allMeals page after creating a meal
 
 
-<<<<<<< HEAD
-const addAllMeals = asyncHandler(async (req, res, next) => {
-    const userID = req.session.user.userID; // Assuming you have the user ID in the session
-    const meals = await Meal.addAllMealsIntoTable(userID);
-    let mealID = req.params.ID;
-    //await Meal.getTotalEnergyForMeal(mealID);
-    res.render('pages/allMeals', { meals: meals }); // Pass the meals data to the EJS template
-});
-
-
-=======
->>>>>>> da5dc4a (virker ikke den total energy for et meal samlet)
 const editMeal = asyncHandler(async (req, res, next) => {
   let mealID = req.params.ID;
   let meal = await Meal.getMealByID(mealID);
@@ -62,11 +50,17 @@ const addIngredient = asyncHandler(async (req, res, next) => {
 const addAllMeals = asyncHandler(async (req, res, next) => {
   const userID = req.session.user.userID; // Assuming you have the user ID in the session
   // Retrieve all meals for the user
-  const mealID = req.params.ID;
+  //const mealID = req.params.ID;
   const meals = await Meal.addAllMealsIntoTable(userID);
-  await Meal.getTotalEnergyForMeal(mealID);
+  //await Meal.getTotalEnergyForMeal(mealID);
   //console.log(totalCalories);
   // Render the meals page with updated meals data including total calories
+  for (let meal of meals) {
+    // Assuming each meal object has an 'ID' that corresponds to 'mealID'
+    // And assuming there's a way to determine or a default ingredientID if needed
+    const ingredientID = meal.ingredientID;  // Define how to handle ingredientID if necessary
+    await Meal.getTotalEnergyPerMeal(meal.ID, ingredientID);  // Call update function
+  }
   res.render('pages/allMeals', { meals: meals });
 });
 
