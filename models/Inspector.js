@@ -11,7 +11,7 @@ async function inspectIngredient(name) {
         const request = new sql.Request();
         // Parameterized query for safety
         const query = `
-            SELECT Name FROM Ingredient WHERE Name LIKE '%${name}%'`;
+            SELECT IngredientID, Name FROM Ingredient WHERE Name LIKE '%${name}%'`;
         const result = await request.query(query);
         return result.recordset; // Ensure data is returned
     }

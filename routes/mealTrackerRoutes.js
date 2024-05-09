@@ -8,7 +8,7 @@ router.get('/', mealTrackerController.handleMeals);
 
 router.post('/update', mealTrackerController.updateMeal);
 router.post('/water', mealTrackerController.trackWater);
-router.get('/ingredient', mealTrackerController.trackIngredient);
+router.post('/ingredient', mealTrackerController.trackIngredient);
 router.post('/delete', mealTrackerController.deleteMeal);
 
 module.exports = router;

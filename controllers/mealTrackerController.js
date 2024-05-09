@@ -8,16 +8,7 @@ const trackMeal = asyncHandler(async (req, res) => {
     await MealTracker.trackMeal(UserID, MealID, DateTime, Amount, latitude, longitude);
     res.redirect('/mealtracker');
   });
-  
-//   const renderMealTracker = asyncHandler(async (req, res) => {
-//     const UserID = req.session.user.userID;
-//     const intakes = await MealTracker.renderMeals(UserID);
-//     console.log("intakes", intakes);
-//     res.render('pages/mealTracker', {
-//         user: req.session.user,
-//         intakes: intakes
-//     });
-// });
+
 
 const formatDateTimeForSQL = (isoString) => {
   const dateTime = new Date(isoString);
@@ -42,17 +33,11 @@ const updateMeal = asyncHandler(async (req, res) => {
     const UserID = req.session.user.userID;
     const meals = await MealTracker.getMeals(UserID);
     const intakes = await MealTracker.renderMeals(UserID);
+
     res.render('pages/mealtracker', { user: req.session.user, meals: meals, intakes: intakes});
   });
 
 
-// const getMeals = asyncHandler(async (req, res) => {
-//   console.log("getMeals");
-//   const UserID = req.session.user.userID;
-//   const meals = await MealTracker.getMeals(UserID);
-//   console.log("meals", meals);
-//   res.render('pages/mealtracker', { user: req.session.user, meals: meals });
-// });
 
 const trackWater = asyncHandler(async (req, res) => {
   const { DateTime, Amount, latitude, longitude } = req.body;
@@ -62,9 +47,10 @@ const trackWater = asyncHandler(async (req, res) => {
 });
 
 const trackIngredient = asyncHandler(async (req, res) => {
+  console.log(req.body);  // Log the request body to see what is being received
   const { DateTime, IngredientID, Amount, latitude, longitude } = req.body;
   const UserID = req.session.user.userID;
-  await MealTracker.trackIngredient(UserID, IntakeID, IngredientID, DateTime, Amount, latitude, longitude);
+  await MealTracker.trackIngredient(UserID, IngredientID, DateTime, Amount, latitude, longitude);
   res.redirect('/mealtracker');
 });
 

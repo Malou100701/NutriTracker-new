@@ -39,11 +39,16 @@
         <div class="box">
           <h2>Log en enkelt ingrediens</h2>
 
-          <form action= "/inspector/ingredientView?ingredient" method="GET"> <!--query parameter efter URL -->
-            <label for="ingredient">Vælg ingrediens</label>
-            <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Indtast ingrediens" />
-            <span id="search_result"> </span>
-            <button type="submit">Log Ingrediens</button>
+          <form action="/mealtracker/ingredient" method="POST">
+            <label for="ingredient">Choose Ingredient:</label>
+            <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Enter Ingredient" />
+            <div id="search_result"></div>
+            <input type="hidden" name="IngredientID" id="IngredientID">
+            <input type="datetime-local" name="DateTime" required>
+            <input type="number" name="Amount" placeholder="Amount consumed">
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
+            <button type="submit">Log Ingredient</button>
         </form>
 
         </div>
@@ -99,7 +104,7 @@
                     name="IntakeID"
                     value="<%= intake.IntakeID %>"
                   />
-                  <td><%= intake.Name %></td>
+                  <td><%= intake.MealName || intake.IngredientName %></td>
                   <td>
                     <input
                       type="datetime-local"
@@ -149,6 +154,47 @@
           console.error("Geolocation is not supported by this browser.");
         }
       });
+
+
+
+
+//trackingredient halløj
+function load_data(query = '') {
+    fetch('/inspector/search?name=' + query)
+    .then(response => response.json())
+    .then(responseData => {
+        var html = '<ul>';
+        if (responseData.length > 0) {
+            responseData.forEach(item => {
+                html += `<li onclick="selectIngredient(${item.IngredientID}, '${item.Name.replace("'", "\\'")}')">${item.Name}</li>`;
+            });
+        } else {
+            html += '<li>No Data Found</li>';
+        }
+        html += '</ul>';
+        document.getElementById('search_result').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('Error fetching search results:', error);
+    });
+}
+
+
+  function selectIngredient(id, name) {
+      document.getElementById('autocomplete_search').value = name;
+      document.getElementById('IngredientID').value = id;
+      document.getElementById('search_result').innerHTML = '';
+  }
+
+  var search_element = document.getElementById("autocomplete_search");
+  search_element.onkeyup = function() {
+      var query = search_element.value;
+      load_data(query);
+  };
+  search_element.onfocus = function() {
+      var query = search_element.value;
+      load_data(query);
+  };
     </script>
   </body>
 </html>
