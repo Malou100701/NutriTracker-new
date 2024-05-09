@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
 
 <head>
   <!-- Denne inkluderer head.ejs filen, som indeholder metadata og links til stylesheets -->
@@ -20,6 +21,22 @@
           <h1>Welcome back, <%= user.username %>!</h1>
           <!-- En index side der sender brugeren til sin nutri tracker via et link, når de logger ind -->
           <p>Check out your <a href="/nutritracker">nutri tracker</a>.</p>
+=======
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <header>
+      <% if (user) { %> <%- include('../partials/headerLoggedin'); %> <% } else
+      { %> <%- include('../partials/headerMain'); %> <% } %>
+    </header>
+    <div class="container">
+      <div class="content">
+        <div class="box">
+          <% if (user) { %>
+          <h1>Velkommen tilbage, <%= user.username %>!</h1>
+          <p>Tjek din <a href="/nutritracker"> Daglig Tracker</a>.</p>
+>>>>>>> 481f718 (ændret alt til dansk)
           <% } else { %>
             <h1>
               Start din fitnessrejse i dag, og hold øje med dine måltider og

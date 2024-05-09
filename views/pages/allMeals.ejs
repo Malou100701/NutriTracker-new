@@ -8,7 +8,7 @@
     <div class="container">
       <div class="content">
         <div class="box">
-          <h1>Alle Måltider</h1>
+          <h1>Dine Måltider</h1>
           <h2>Opdag og tilføj ingredienser ved at trykke på måltidet!</h2>
           <table>
             <thead>
@@ -31,7 +31,7 @@
                 <td><%= meal.Fiber %></td>
                 <td>
                   <form action="/meal/<%= meal.ID %>/deleteMeal" method="POST">
-                  <button type="submit">Delete</button>
+                  <button type="submit">Slet</button>
                   </form>
                 </td>
               </tr>

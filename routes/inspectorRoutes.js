@@ -16,5 +16,3 @@ router.get('/', (req, res) => res.render('pages/inspector', {ingredient: null}))
 
 // Eksporterer routeren, så den kan bruges af andre moduler.
 module.exports = router;
-
-// Path: controllers/inspectorController.js

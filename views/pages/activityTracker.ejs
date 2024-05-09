@@ -7,6 +7,7 @@
 </head>
 
 <body>
+<<<<<<< HEAD
   <!-- Inkluderer headeren, som er forskellig afhængig af om brugeren er logget ind eller ej -->
   <header><%- include('../partials/headerLoggedin'); %></header>
   <div class="container">
@@ -38,6 +39,44 @@
           <button type="submit">Log Activity</button>
         </form>
       </div>
+=======
+    <header><%- include('../partials/headerLoggedin'); %></header>
+    <div class="container">
+      <div class="content">
+        <div class="box">
+          <h1>Aktivitets Tracker</h1>
+          <p>
+            Registrer din aktivitet!
+          </p>
+          <form action="/activitytracker/logActivity" method="POST">
+
+            <div class="labelPair">
+              <select name="activityTypeID" id="activityTypeID">
+                  <% activities.forEach(function(activity) { %>
+                      <option value="<%= activity.ActivityTypeID %>"><%= activity.ActivityName %></option>
+                  <% }); %>
+              </select>
+            </div>
+            <div class="labelPair">
+              <label for="duration">Hvor lang tid trænede du? (Minutter)</label>
+              <input
+                type="number"
+                name="duration"
+                id="duration"
+      
+              />
+            </div>
+            <div class="labelPair">
+              <label for="dateTime">Tidspunkt</label>
+              <input
+                type="datetime-local"
+                name="dateTime"
+                id="dateTime">
+            </div>
+            <button type="submit">Registrer Aktivitet</button>
+          </form>
+        </div>
+>>>>>>> 481f718 (ændret alt til dansk)
 
       <div class="box">
         <img src="/images/start.png" alt="start image" />
