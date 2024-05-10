@@ -25,7 +25,7 @@ async function renderMeals(UserID) {
     const request = new sql.Request();
     request.input('UserID', sql.Int, UserID);
 
-    // Dette er en SQL-forespørgsel, der henter og sorterer oplysninger om fødeindtag for en bestemt bruger fra Intake, Meal og Ingredient tabellerne,
+    // Dette er en SQL-forespørgsel, der henter og sorterer oplysninger om ernæringsindtag for en bestemt bruger fra Intake, Meal og Ingredient tabellerne,
     // baseret på brugerens ID og tidspunktet for indtaget. Resultatet returneres i faldende rækkefølge efter DateTime.
     const query = `
         SELECT I.IntakeID, M.Name as MealName, Ing.Name as IngredientName, I.DateTime, I.Amount

@@ -86,34 +86,6 @@ async function getWaterLast30Days(UserID) {
 
 }
 
-// Funktionen henter vandindtag per time for i dag
-async function getWaterPerHourToday(UserID) {
-    await sql.connect(config); // Opretter forbindelse til databasen
-    // SQL-query, der henter vandindtag per time for i dag, og giver dem tilbage i et array af objekter med `Hour` og `TotalWater`
-    // Den logger også timer hvor der ikke er indtaget vand, og sætter TotalWater til 0
-    const result = await sql.query`
-        WITH HourlySeries AS (
-            SELECT TOP (24)
-                DATEADD(HOUR, -ROW_NUMBER() OVER (ORDER BY object_id) + 1, GETDATE()) AS Hour
-            FROM sys.all_objects
-        )
-        SELECT
-            FORMAT(hs.Hour, 'yyyy-MM-dd HH:00:00') AS Hour,
-            ISNULL(SUM(i.Amount), 0) AS TotalWater
-        FROM HourlySeries hs
-        LEFT JOIN Intake i ON
-            CAST(hs.Hour AS DATE) = CAST(i.DateTime AS DATE)
-            AND DATEPART(HOUR, hs.Hour) = DATEPART(HOUR, i.DateTime)
-            AND i.UserID = 93
-            AND i.IngredientID = 45
-            AND i.DateTime >= DATEADD(HOUR, -24, GETDATE())
-        GROUP BY hs.Hour
-        ORDER BY hs.Hour DESC;
-        `;
-    return result.recordset;
-
-}
-
 // Funktionen henter kalorier forbrændt for de sidste 30 dage
 async function getCaloriesBurnedLast30Days(UserID) {
 
@@ -159,6 +131,34 @@ async function getCaloriesBurnedLast30Days(UserID) {
     // Vi udfører vores query, og returnerer resultatet
     request.input('UserID', sql.Int, UserID);
     const result = await request.query(query);
+    return result.recordset;
+
+}
+
+// Funktionen henter vandindtag per time for i dag
+async function getWaterPerHourToday(UserID) {
+    await sql.connect(config); // Opretter forbindelse til databasen
+    // SQL-query, der henter vandindtag per time for i dag, og giver dem tilbage i et array af objekter med `Hour` og `TotalWater`
+    // Den logger også timer hvor der ikke er indtaget vand, og sætter TotalWater til 0
+    const result = await sql.query`
+        WITH HourlySeries AS (
+            SELECT TOP (24)
+                DATEADD(HOUR, -ROW_NUMBER() OVER (ORDER BY object_id) + 1, GETDATE()) AS Hour
+            FROM sys.all_objects
+        )
+        SELECT
+            FORMAT(hs.Hour, 'yyyy-MM-dd HH:00:00') AS Hour,
+            ISNULL(SUM(i.Amount), 0) AS TotalWater
+        FROM HourlySeries hs
+        LEFT JOIN Intake i ON
+            CAST(hs.Hour AS DATE) = CAST(i.DateTime AS DATE)
+            AND DATEPART(HOUR, hs.Hour) = DATEPART(HOUR, i.DateTime)
+            AND i.UserID = ${UserID}
+            AND i.IngredientID = 45
+            AND i.DateTime >= DATEADD(HOUR, -24, GETDATE())
+        GROUP BY hs.Hour
+        ORDER BY hs.Hour DESC;
+        `;
     return result.recordset;
 
 }
