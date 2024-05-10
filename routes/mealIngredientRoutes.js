@@ -7,6 +7,7 @@ const { updateMealIngredient} = require("../controllers/mealIngredientController
 //Bruges ikke
 //router.post('/:ID', updateMealIngredient); //restful design for updating meal ingredient
 
+// Definerer en GET-rute '/mealIngredient', der sender et renderet HTML-svar med siden 'mealEditor'.
 router.get('/mealIngredient', (req, res) => {res.render('pages/mealEditor');
 });
 
