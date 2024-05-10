@@ -7,26 +7,21 @@ const config = require('../config');
 
 
 // Funktion til at tilføje ingredienser til et måltid
-// Denne linje definere en asynkron funktion, der tager tre parametre
 async function addIngredientToMeal(mealID, ingredientName, amount) {
-    //Dette starter en try-blok, hvilket angiver, at al kode inden for den vil blive 
-    // forsøgt udført, og hvis der opstår en fejl, vil den blive fanget af den tilsvarende catch-blok
+    
+    // Starter en try-blok, hvor al kode inden for blokken vil blive forsøgt udført.
     try {
-        // Denne linje venter på at oprette forbindelse til en SQL-Server-database
-        // ved hjælp af 'config'-objektet. 'awai'-nøgleordet angiver, at funktionens
-        // udførelse vil sætte sig i venteposition, indtil forbindelsen er etableret ved hjælp af config funktionen.
+
         await sql.connect(config);
 
-        // Her oprettes et SQL-anmodningsobjekt ved hjælp af konstruktoren sql.Request()
         const request = new sql.Request();
-        //Dette definerer en SQL-forespørgsel til at vælge 'IngredientID' fra en tabel
-        // ved navn 'Ingredient', hvor 'Name' marcher det angivne 'ingredientName'
+
+        // Forespørgsel for at finde IngredientID baseret på navn
         const query1 = `
             SELECT IngredientID
             FROM Ingredient 
             WHERE Name = '${ingredientName}';`
         
-        // Denne linje udfører 'query1' ved hjælp af request-objektet og venter på resultatet.
         let result1 = await request.query(query1);
         //console.log(result1); - Brugt til fejlsøgning
 
@@ -34,9 +29,9 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
         let ingredientID = result1.recordset[0].IngredientID;
         //console.log(ingredientID); - Brugt til fejlsøgning
 
-        // Denne definere en anden SQL-forespørgsel til at indsætte en ny række i tabellen
-        // MealIngredient med det angivne mealID, ingredientID og amount.
-        // Den vælger også det nyindsatte id ved hjælp af SCOPE_Identity()
+
+        // SQL-forespørgsel til at indsætte en ny række i MealIngredient-tabellen med det angivne måltids ID, ingrediens ID og mængde.
+        // Det inkluderer også en forespørgsel til at få det nyindsatte id ved hjælp af SCOPE_IDENTITY() funktionen.
         const query2 = `
             INSERT INTO MealIngredient (MealID, IngredientID, Amount)
             VALUES ('${mealID}', '${ingredientID}', '${amount}');
@@ -52,6 +47,7 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
 
         // Dette logger en besked der angiver, at ingrediensen er blevet tilføjet til måltidet.
         console.log(`Ingredient "${ingredientName}" added to meal ${mealID}`);
+
         // Dette returnere 'mealIngredientID' fra funktionen, hvilket angiver, at funktionen er lykkes
         return mealIngredientID;
 
@@ -97,9 +93,6 @@ async function updateMealIngredientInDatabase(ID, amount) {
     }
 }
 module.exports.updateMealIngredientInDatabase = updateMealIngredientInDatabase;
-
-
-//ændre navnene til disse funktioner, så vi skjuler hvor det gemmes. så det er nemmere at ændre i fremtiden. ændre fx til savemealingredient
 */
 
 
