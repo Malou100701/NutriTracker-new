@@ -1,33 +1,25 @@
-const Activity = require("../models/Activity");
-const asyncHandler = require("../middlewares/asyncHandler");
+const Activity = require("../models/Activity"); // Importerer modellen
+const asyncHandler = require("../middlewares/asyncHandler"); // Importerer middleware
 
 
-
+// Controller til at logge en aktivitet
 const logActivity = asyncHandler(async (req, res) => {
-  console.log('Session user:', req.session.user); // Log session user
-  const userID = req.session.user.userID;
-  const { activityTypeID, duration, dateTime } = req.body;
+  const userID = req.session.user.userID; // Henter brugerens ID fra session
+  const { activityTypeID, duration, dateTime } = req.body; // Henter data fra request body
 
-  await Activity.logActivity(userID, activityTypeID, duration, dateTime);
-  console.log('Activity logged');
-//   await loggedActivity.logActivity(username);
-res.redirect('/activitytracker');
- 
+  await Activity.logActivity(userID, activityTypeID, duration, dateTime); // Kalder funktionen logActivity fra modellen
+  res.redirect('/activitytracker');
 });
 
 
-// Kan muligvis slettes
+// Controller til at hente alle aktiviteter, med henblik på at vise dem i viewets dropdown menu
 const getActivities = asyncHandler(async (req, res) => {
-    console.log("Endpoint hit");
-    const activities = await Activity.getActivities();
-    console.log('Activities:', { activities });
-    res.render('pages/activitytracker', { activities });
+  const activities = await Activity.getActivities(); // Kalder funktionen getActivities fra modellen
+  res.render('pages/activitytracker', { activities }); // Sender aktiviteterne til viewet
 });
-
-
 
 
 module.exports = {
-    logActivity,
-    getActivities
-  }
+  logActivity,
+  getActivities
+}

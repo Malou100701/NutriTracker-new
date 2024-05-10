@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head'); %>
-  </head>
-  <body>
-    <header>
-      <% if (user) { %> <%- include('../partials/headerLoggedin'); %> <% } else
-      { %> <%- include('../partials/headerMain'); %> <% } %>
-    </header>
-    <div class="container">
-      <div class="content">
-        <div class="box">
-          <% if (user) { %>
+
+<head>
+  <!-- Denne inkluderer head.ejs filen, som indeholder metadata og links til stylesheets -->
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <header>
+    <!-- Inkluderer headeren, som er forskellig afhængig af om brugeren er logget ind eller ej -->
+    <% if (user) { %> <%- include('../partials/headerLoggedin'); %>
+        <% } else { %> <%- include('../partials/headerMain'); %>
+            <% } %>
+  </header>
+  <div class="container">
+    <div class="content">
+      <div class="box">
+        <% if (user) { %>
           <h1>Welcome back, <%= user.username %>!</h1>
+          <!-- En index side der sender brugeren til sin nutri tracker via et link, når de logger ind -->
           <p>Check out your <a href="/nutritracker">nutri tracker</a>.</p>
           <% } else { %>
-          <h1>
-            Start din fitnessrejse i dag, og hold øje med dine måltider og
-            aktiviteter!
-          </h1>
-          <p>
-            <a href="/login">Log ind</a> eller
-            <a href="/register">opret en profil</a> og kom igang allerede i dag.
-          </p>
-          <% } %>
-        </div>
+            <h1>
+              Start din fitnessrejse i dag, og hold øje med dine måltider og
+              aktiviteter!
+            </h1>
+            <p>
+              <a href="/login">Log ind</a> eller
+              <a href="/register">opret en profil</a> og kom igang allerede i dag.
+            </p>
+            <% } %>
+      </div>
 
-        <div class="box">
-          <img src="/images/start.png" alt="start image" />
-        </div>
+      <div class="box">
+        <img src="/images/start.png" alt="start image" />
       </div>
     </div>
-    <footer><%- include('../partials/footer'); %></footer>
-  </body>
+  </div>
+  <footer><%- include('../partials/footer'); %></footer>
+</body>
+
 </html>

@@ -1,13 +1,14 @@
-const sql = require('mssql');
-const config = require('../config');
-const { get } = require('../routes/mealRoutes');
+const sql = require('mssql'); // Importerer mssql
+const config = require('../config'); // Importerer config.js
 
-
-
-// Virker ikke, men skal tage for de sidsste 30 dage
+// Funktionen henter kalorieindtag for de sidste 30 dage
 async function getCalorieIntakeLast30Days(UserID) {
-    await sql.connect(config);
+    await sql.connect(config); // Opretter forbindelse til databasen
+
+    // SQL-query, der henter kalorieindtag for de sidste 30 dage
     const request = new sql.Request();
+    // Dette SQL-forespørgsel genererer en rapport over det daglige kalorieindtag for en bestemt bruger i de sidste 30 dage,
+    // ved at sammenkæde data fra flere tabeller: Meal, MealIngredient, Ingredient og Intake. Den sørger for også at skabe en række for hver dag, selvom der ikke er noget data for den dag.
     const query = `
         WITH DateRange AS (
             SELECT
@@ -48,15 +49,19 @@ async function getCalorieIntakeLast30Days(UserID) {
             Calories c ON d.DateValue = c.Date
         OPTION (MAXRECURSION 31);
     `;
+    // Vi udfører vores query, og returnerer resultatet
     request.input('UserID', sql.Int, UserID);
     const result = await request.query(query);
     return result.recordset;
 }
 
-async function getWaterLast30Days(UserID){
+// Funktionen henter kalorier forbrændt for de sidste 30 dage
+async function getWaterLast30Days(UserID) {
 
-    await sql.connect(config);
+    await sql.connect(config); // Opretter forbindelse til databasen
+    // SQL-query, der henter kalorier forbrændt for de sidste 30 dage
     const request = new sql.Request();
+    // Fungere på samme måde som getCalorieIntakeLast30Days, men er lavet seperat, da det er en anden type data, der skal hentes, og den skal vises i seperat i grafen
     const query = `
     WITH DateSeries AS (
         SELECT TOP (30) 
@@ -74,15 +79,19 @@ async function getWaterLast30Days(UserID){
     GROUP BY ds.Date
     ORDER BY ds.Date DESC;
     `;
+    // Vi udfører vores query, og returnerer resultatet
     request.input('UserID', sql.Int, UserID);
     const result = await request.query(query);
     return result.recordset;
 
 }
 
+// Funktionen henter vandindtag per time for i dag
 async function getWaterPerHourToday(UserID) {
-        await sql.connect(config);
-        const result = await sql.query`
+    await sql.connect(config); // Opretter forbindelse til databasen
+    // SQL-query, der henter vandindtag per time for i dag, og giver dem tilbage i et array af objekter med `Hour` og `TotalWater`
+    // Den logger også timer hvor der ikke er indtaget vand, og sætter TotalWater til 0
+    const result = await sql.query`
         WITH HourlySeries AS (
             SELECT TOP (24)
                 DATEADD(HOUR, -ROW_NUMBER() OVER (ORDER BY object_id) + 1, GETDATE()) AS Hour
@@ -101,17 +110,18 @@ async function getWaterPerHourToday(UserID) {
         GROUP BY hs.Hour
         ORDER BY hs.Hour DESC;
         `;
-        return result.recordset;
+    return result.recordset;
 
 }
 
-
-
+// Funktionen henter kalorier forbrændt for de sidste 30 dage
 async function getCaloriesBurnedLast30Days(UserID) {
 
-        await sql.connect(config);
-        const request = new sql.Request();
-        const query = `
+    await sql.connect(config); // Opretter forbindelse til databasen
+    const request = new sql.Request();
+    // SQL-query, der henter kalorier forbrændt for de sidste 30 dage, og giver dem tilbage i et array af objekter med `Date` og `DailyCaloriesBurned`
+    // Den logger også dage hvor der ikke er forbrændt kalorier, og sætter DailyCaloriesBurned til 0
+    const query = `
             WITH DateRange AS (
                 SELECT
                     CAST(GETDATE() AS DATE) AS DateValue
@@ -146,17 +156,20 @@ async function getCaloriesBurnedLast30Days(UserID) {
                 CaloriesBurned cb ON d.DateValue = cb.Date
             OPTION (MAXRECURSION 31);
         `;
-        request.input('UserID', sql.Int, UserID);
-        const result = await request.query(query);
-        return result.recordset;
+    // Vi udfører vores query, og returnerer resultatet
+    request.input('UserID', sql.Int, UserID);
+    const result = await request.query(query);
+    return result.recordset;
 
 }
 
-
+// Funktionen henter kalorier indtaget per time for i dag
 const getCaloriesIntakePerHourToday = async (UserID) => {
-    const today = new Date();
-    const dateStr = today.toISOString().slice(0, 10);  // Format as "YYYY-MM-DD"
-
+    const today = new Date(); // Opretter et nyt Date-objekt
+    const dateStr = today.toISOString().slice(0, 10);  // Bruger toISOString til at formatere datoen som "YYYY-MM-DD"
+    // SQL-query, der henter kalorier indtaget per time for i dag, og giver dem tilbage i et array af objekter med `Hour` og `Calories`
+    // Den logger også timer hvor der ikke er indtaget kalorier, og sætter Calories til 0
+    // Den bruger UNION ALL til at generere en række af timer fra 0 til 23, og LEFT JOIN til at kombinere data fra CaloriesData og Hours
     const query = `
         WITH Hours AS (
             SELECT 0 AS Hour UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
@@ -179,7 +192,7 @@ const getCaloriesIntakePerHourToday = async (UserID) => {
         LEFT JOIN CaloriesData cd ON h.Hour = cd.Hour
         ORDER BY h.Hour;
     `;
-
+    // Vi udfører vores query, og returnerer resultatet
     const request = new sql.Request();
     request.input('UserID', sql.Int, UserID);
     request.input('dateStr', sql.VarChar, dateStr);
@@ -187,11 +200,12 @@ const getCaloriesIntakePerHourToday = async (UserID) => {
     return result.recordset;
 };
 
-
+// Funktionen henter kalorier forbrændt per time for i dag
 const getCaloriesBurnedPerHourToday = async (userID, BMR) => {
-    const today = new Date();
-    const dateStr = today.toISOString().slice(0, 10);  // Format as "YYYY-MM-DD"
-
+    const today = new Date(); // Opretter et nyt Date-objekt
+    const dateStr = today.toISOString().slice(0, 10);  // Bruger toISOString til at formatere datoen som "YYYY-MM-DD"
+    // SQL-query, der henter kalorier forbrændt per time for i dag, og giver dem tilbage i et array af objekter med `Hour` og `Calories`
+    // Den logger også timer hvor der ikke er forbrændt kalorier, og sætter Calories til BMR/24 så det er fordelt jævnt over dagen
     const query = `
         WITH Hours AS (
             SELECT 0 AS Hour UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
@@ -216,7 +230,7 @@ const getCaloriesBurnedPerHourToday = async (userID, BMR) => {
         LEFT JOIN CaloriesData cd ON h.Hour = cd.Hour
         ORDER BY h.Hour;
     `;
-
+    // Vi udfører vores query, og returnerer resultatet
     const request = new sql.Request();
     request.input('userID', sql.Int, userID);
     request.input('bmr', sql.Float, BMR); // Ensure BMR is passed correctly

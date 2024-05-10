@@ -1,14 +1,16 @@
-const sql = require('mssql');
-const config = require('../config');
-const bcrypt = require('bcrypt')
+const sql = require('mssql'); // Importere mssql
+const config = require('../config'); // Importere config filen
+const bcrypt = require('bcrypt') // Importere bcrypt, som bruges til at hashe passwords
 
+// Funktionen registerUser tager imod parametrene username, password, email, age
 async function registerUser(username, password, email, age, weight, gender, res) {
-    if (!username || !password) {
+    if (!username || !password) { // Hvis username eller password ikke er udfyldt
         return res.status(400).send('Username and password are required.');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await sql.connect(config);
+    const hashedPassword = await bcrypt.hash(password, 10); // Hasher passwordet
+    await sql.connect(config); // Forbinder til databasen
+    // Indsætter brugeren i databasen, med hashed password
     await sql.query`
         INSERT INTO Users (Username, Password, Email, Age, Weight, Gender)
         VALUES (${username}, ${hashedPassword}, ${email}, ${age}, ${weight}, ${gender})`;
@@ -16,10 +18,12 @@ async function registerUser(username, password, email, age, weight, gender, res)
 }
 module.exports.registerUser = registerUser;
 
+// Funktionen getUserByUsername tager imod et username som parameter. Den bruges i login processen
 async function getUserByUsername(username) {
-    await sql.connect(config);
+    await sql.connect(config); // Forbinder til databasen
+    // Henter brugeren fra databasen, hvis brugeren findes
     const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
-    if (result.recordset.length > 0) {
+    if (result.recordset.length > 0) { // Hvis brugeren findes
         const user = result.recordset[0];
         console.log("User found:", user);
         return {
@@ -36,42 +40,44 @@ async function getUserByUsername(username) {
 }
 module.exports.getUserByUsername = getUserByUsername;
 
+// Funktionen validatePassword tager imod et password og et hashed password, og sammenligner dem, bruges også i login processen
 async function validatePassword(userPassword, password) {
-    const match = await bcrypt.compare(password, userPassword);
-    console.log("Password Match:", match);
-    return match;
+    const match = await bcrypt.compare(password, userPassword); // Sammenligner de to passwords
+    return match; // Returnerer om de er ens eller ej
 }
 module.exports.validatePassword = validatePassword;
 
-
-
+// Funktionen deleteUserByUserID tager imod et userID som parameter, og sletter brugeren fra databasen
 async function deleteUserByUserID(userID) {
-    await sql.connect(config);
+    await sql.connect(config); // Forbinder til databasen
+    // Sletter brugeren fra databasen
     const result = await sql.query`DELETE FROM Users WHERE UserID = ${userID}`;
-    if (result.rowsAffected[0] > 0) {
+    if (result.rowsAffected[0] > 0) { // Hvis brugeren er slettet
         return true;
     }
     return false;
 }
 module.exports.deleteUserByUserID = deleteUserByUserID;
 
-
+// Funktionen updateUserDetails tager imod et userID og nye detaljer som parameter, og opdaterer brugerens detaljer i databasen
 async function updateUserDetails(userID, newDetails) {
-    const { Age, Weight, Gender } = newDetails;
-    await sql.connect(config);
+    const { Age, Weight, Gender } = newDetails; // lav en variabel for hver af de nye detaljer
+    await sql.connect(config); // Forbinder til databasen
+    // Opdaterer brugerens detaljer i databasen
     const result = await sql.query`
         UPDATE Users SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
         WHERE UserID = ${userID}`;
-    if (result.rowsAffected[0] > 0) {
+    if (result.rowsAffected[0] > 0) { // Hvis brugerens detaljer er opdateret
         return true;
     }
     return false;
 }
 module.exports.updateUserDetails = updateUserDetails;
 
-
+// Funktionen BMR tager imod et userID som parameter, og udregner brugerens basalstofskifte (Basal Metabolic Rate), bruges både i profilen og i kalorieberegningerne
 async function BMR(UserID) {
-    await sql.connect(config);
+    await sql.connect(config); // Forbinder til databasen
+    // Henter brugerens detaljer fra databasen, og udregner BMR ud fra disse. Den sørger for at lave den korrekte forme for udregning, baseret på brugerens alder og køn
     const request = new sql.Request();
     request.input('UserID', sql.Int, UserID);
     const query = `SELECT
@@ -104,95 +110,10 @@ FROM
     Users
     WHERE UserID = @UserID
     ;`;
+    // Returnerer BMR
     const result = await request.query(query);
-    const kCal = result.recordset[0].BMR * 238.8458966275;
+    const kCal = result.recordset[0].BMR * 238.8458966275; // Omregner BMR til kCal
     return kCal
-
 }
+
 module.exports.BMR = BMR;
-
-
-/*
-class User {
-    constructor(username, password, email, age, weight, gender) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.age = age;
-        this.weight = weight;
-        this.gender = gender;
-    }
-
-    async registerUser(res) {
-        if (!this.username || !this.password) {
-        return res.status(400).send('Username and password are required.');
-        }
-
-        const hashedPassword = await bcrypt.hash(this.password, 10);
-        await sql.connect(config);
-        const result = await sql.query`
-        INSERT INTO 
-            Users (Username, Password, Email, Age, Weight, Gender)
-        VALUES 
-                (${this.username}, ${hashedPassword}, ${this.email}, ${this.age}, ${this.weight}, ${this.gender})`;
-        return 'User registered successfully!';
-    };
-
-    static async getUserByUsername(username) {
-        await sql.connect(config);
-        const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
-        console.log("User found:", result.recordset);
-        if (result.recordset.length > 0) {
-            console.log("User found:", result.recordset[0]);
-            return new User(
-                result.recordset[0].Username,
-                result.recordset[0].Password,  
-                result.recordset[0].Email,
-                result.recordset[0].Age,
-                result.recordset[0].Weight,
-                result.recordset[0].Gender
-            );
-        }
-        return null;
-    }
-    
-
-    async validatePassword(password) {
-        const match = await bcrypt.compare(password, this.password);
-        console.log("Password Match:", match); // Log the result of the comparison
-        return match;
-    }
-
-    static async deleteUserByUsername(username) {
-        await sql.connect(config);
-        const result = await sql.query`DELETE FROM Users WHERE Username = ${username}`;
-        if (result.rowsAffected[0] > 0) {
-            return true; // User deleted successfully
-        }
-        return false; // No user found with that username
-    }
-    
-
-    static async updateUserDetails(username, newDetails) {
-        const { Age, Weight, Gender } = newDetails;
-        await sql.connect(config);
-        
-        console.log("SQL Query:", `UPDATE Users SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender} WHERE Username = ${username}`);
-
-
-        const result = await sql.query`
-            UPDATE Users 
-            SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
-            WHERE Username = ${username}`;
-        console.log("Update result:", result);
-        if (result.rowsAffected[0] > 0) {
-            return true; // User details updated successfully
-        }
-        return false; // No user found with that username
-    }
-    
-
-}
-//         const validPassword = await bcrypt.compare(password, user.password);
-module.exports = User;
-*/

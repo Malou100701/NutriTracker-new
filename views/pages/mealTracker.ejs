@@ -1,127 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head'); %>
-  </head>
-  <body>
-    <header><%- include('../partials/headerLoggedin'); %></header>
-    <div class="container">
-      <div class="content">
-        <div class="box">
-          <h1>Meal Tracker</h1>
-          <p>Log dine yndlings måltider!</p>
-          <form action="/mealtracker/trackMeal" method="POST">
-            <div class="labelPair">
-              <select name="MealID" id="MealID">
-                <% meals.forEach(function(meal) { %>
-                <option value="<%= meal.ID %>"><%= meal.Name %></option>
+
+<head>
+  <!-- Denne inkluderer head.ejs filen, som indeholder metadata og links til stylesheets -->
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <!-- Inkluderer headeren, som er forskellig afhængig af om brugeren er logget ind eller ej -->
+  <header><%- include('../partials/headerLoggedin'); %></header>
+  <div class="container">
+    <div class="content">
+      <div class="box">
+        <h1>Meal Tracker</h1>
+        <p>Log dine yndlings måltider!</p>
+        <form action="/mealtracker/trackMeal" method="POST"> <!-- Laver en form der poster inholdet til stien -->
+          <div class="labelPair">
+            <select name="MealID" id="MealID">
+              <% meals.forEach(function(meal) { %> <!-- For hver aktivitet i meals arrayet dannes en option -->
+
+                <option value="<%= meal.ID %>">
+                  <%= meal.Name %>
+                </option>
                 <% }); %>
-              </select>
-            </div>
-            <div class="labelPair">
-              <label for="Amount"
-                >Hvor meget af dette måltid spiste du? (Gram)</label
-              >
-              <input type="number" name="Amount" id="Amount" />
-            </div>
-            <div class="labelPair">
-              <label for="DateTime">Tidspunkt</label>
-              <input type="datetime-local" name="DateTime" id="DateTime" />
-            </div>
+            </select>
+          </div>
+          <div class="labelPair">
+            <label for="Amount">Hvor meget af dette måltid spiste du? (Gram)</label>
+            <input type="number" name="Amount" id="Amount" />
+          </div>
+          <div class="labelPair">
+            <label for="DateTime">Tidspunkt</label>
+            <input type="datetime-local" name="DateTime" id="DateTime" />
+          </div>
 
-            <!-- hidden fields for geolocation -->
-            <input type="hidden" name="latitude" id="latitude" />
-            <input type="hidden" name="longitude" id="longitude" />
+          <!-- gemte fields for geolocation -->
+          <input type="hidden" name="latitude" id="latitude" />
+          <input type="hidden" name="longitude" id="longitude" />
 
-            <button type="submit">Log Meal</button>
-          </form>
-        </div>
-        <div class="box">
-          <h2>Log en enkelt ingrediens</h2>
+          <button type="submit">Log Meal</button>
+        </form>
+      </div>
+      <div class="box">
+        <h2>Log en enkelt ingrediens</h2>
 
-          <form action="/mealtracker/ingredient" method="POST">
-            <label for="ingredient">Choose Ingredient:</label>
-            <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Enter Ingredient" />
-            <div id="search_result"></div>
-            <input type="hidden" name="IngredientID" id="IngredientID">
-            <input type="datetime-local" name="DateTime" required>
-            <input type="number" name="Amount" placeholder="Amount consumed">
-            <input type="hidden" name="latitude" id="latitude">
-            <input type="hidden" name="longitude" id="longitude">
-            <button type="submit">Log Ingredient</button>
+        <form action="/mealtracker/ingredient" method="POST">
+          <!-- Laver en form der poster inholdet til stien, denne bruges til at tracke en enkelt ingrediens -->
+          <label for="ingredient">Choose Ingredient:</label>
+          <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg"
+            placeholder="Enter Ingredient" />
+          <div id="search_result"></div>
+          <input type="hidden" name="IngredientID" id="IngredientID">
+          <input type="datetime-local" name="DateTime" required>
+          <input type="number" name="Amount" placeholder="Amount consumed">
+          <input type="hidden" name="latitude" id="latitude">
+          <input type="hidden" name="longitude" id="longitude">
+          <button type="submit">Log Ingredient</button>
         </form>
 
-        </div>
-
-
-
-        
       </div>
 
-      <div class="content">
-        <div class="box">
-          <h2>Registrér vand</h2>
-          <p>Log din vand!</p>
-          <form action="/mealtracker/water" method="POST">
-            <div class="labelPair"></div>
-            <div class="labelPair">
-              <label for="Amount">Hvor meget vand drak du?</label>
-              <input type="number" name="Amount" id="Amount" />
-            </div>
-            <div class="labelPair">
-              <label for="DateTime">Tidspunkt</label>
-              <input type="datetime-local" name="DateTime" id="DateTime" />
-            </div>
 
-            <!-- hidden fields for geolocation -->
-            <input type="hidden" name="latitude" id="latitude" />
-            <input type="hidden" name="longitude" id="longitude" />
 
-            <button type="submit">Log Vand</button>
-          </form>
-        </div>
+
+    </div>
+
+    <div class="content">
+      <div class="box">
+        <h2>Registrér vand</h2>
+        <p>Log din vand!</p>
+        <form action="/mealtracker/water" method="POST">
+          <!-- Laver en form der poster inholdet til stien, denne bruges til at logge vand -->
+          <div class="labelPair"></div>
+          <div class="labelPair">
+            <label for="Amount">Hvor meget vand drak du?</label>
+            <input type="number" name="Amount" id="Amount" />
+          </div>
+          <div class="labelPair">
+            <label for="DateTime">Tidspunkt</label>
+            <input type="datetime-local" name="DateTime" id="DateTime" />
+          </div>
+
+          <!-- gemte fields for geolocation -->
+          <input type="hidden" name="latitude" id="latitude" />
+          <input type="hidden" name="longitude" id="longitude" />
+
+          <button type="submit">Log Vand</button>
+        </form>
       </div>
+    </div>
 
-      <div class="content">
-        <div class="box">
-          <h2>List of Meals</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Meal Name</th>
-                <th>Date and Time</th>
-                <th>Amount Consumed</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% intakes.forEach(intake => { %>
+    <div class="content">
+      <div class="box">
+        <h2>List of Meals</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Meal Name</th>
+              <th>Date and Time</th>
+              <th>Amount Consumed</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% intakes.forEach(intake=> { %>
               <tr>
                 <form method="POST" action="/mealtracker/update">
-                  <input
-                    type="hidden"
-                    name="IntakeID"
-                    value="<%= intake.IntakeID %>"
-                  />
-                  <td><%= intake.MealName || intake.IngredientName %></td>
+                  <!-- Laver en form der poster inholdet til stien. Bliver omdannet til put med _methodoverride -->
+                  <input type="hidden" name="IntakeID" value="<%= intake.IntakeID %>" />
                   <td>
-                    <input
-                      type="datetime-local"
-                      name="DateTime"
-                      value="<%= new Date(intake.DateTime).toISOString().slice(0,16) %>"
-                    />
+                    <%= intake.MealName || intake.IngredientName %>
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      name="Amount"
-                      value="<%= intake.Amount %>"
-                    />
+                    <input type="datetime-local" name="DateTime"
+                      value="<%= new Date(intake.DateTime).toISOString().slice(0,16) %>" />
+                  </td>
+                  <td>
+                    <input type="number" name="Amount" value="<%= intake.Amount %>" />
                   </td>
                   <td><button type="submit">Update</button></td>
                 </form>
                 <form method="POST" action="/mealtracker/delete">
+                  <!-- Laver en form der poster inholdet til stien. Bliver omdannet til DELETE med _methodoverride -->
                   <input type="hidden" name="_method" value="DELETE" />
                   <input type="hidden" name="IntakeID" value="<%= intake.IntakeID %>" />
                   <td><button type="submit" class="delete">Delete</button></td>
@@ -129,72 +130,73 @@
 
               </tr>
               <% }) %>
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
 
-    <footer><%- include('../partials/footer'); %></footer>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            function (position) {
-              document.getElementById("latitude").value =
-                position.coords.latitude;
-              document.getElementById("longitude").value =
-                position.coords.longitude;
-            },
-            function (error) {
-              console.error("Geolocation error: " + error.message);
-            }
-          );
-        } else {
-          console.error("Geolocation is not supported by this browser.");
-        }
-      });
-
-
-
-
-//trackingredient halløj
-function load_data(query = '') {
-    fetch('/inspector/search?name=' + query)
-    .then(response => response.json())
-    .then(responseData => {
-        var html = '<ul>';
-        if (responseData.length > 0) {
-            responseData.forEach(item => {
-                html += `<li onclick="selectIngredient(${item.IngredientID}, '${item.Name.replace("'", "\\'")}')">${item.Name}</li>`;
-            });
-        } else {
-            html += '<li>No Data Found</li>';
-        }
-        html += '</ul>';
-        document.getElementById('search_result').innerHTML = html;
-    })
-    .catch(error => {
-        console.error('Error fetching search results:', error);
+  <footer><%- include('../partials/footer'); %></footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            document.getElementById("latitude").value =
+              position.coords.latitude;
+            document.getElementById("longitude").value =
+              position.coords.longitude;
+          },
+          function (error) {
+            console.error("Geolocation error: " + error.message);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
     });
-}
 
 
-  function selectIngredient(id, name) {
+
+
+    //trackingredient
+    function load_data(query = '') {
+      fetch('/inspector/search?name=' + query)
+        .then(response => response.json())
+        .then(responseData => {
+          var html = '<ul>';
+          if (responseData.length > 0) {
+            responseData.forEach(item => {
+              html += `<li onclick="selectIngredient(${item.IngredientID}, '${item.Name.replace("'", "\\'")}')">${item.Name}</li>`;
+            });
+          } else {
+            html += '<li>No Data Found</li>';
+          }
+          html += '</ul>';
+          document.getElementById('search_result').innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error fetching search results:', error);
+        });
+    }
+
+
+    function selectIngredient(id, name) {
       document.getElementById('autocomplete_search').value = name;
       document.getElementById('IngredientID').value = id;
       document.getElementById('search_result').innerHTML = '';
-  }
+    }
 
-  var search_element = document.getElementById("autocomplete_search");
-  search_element.onkeyup = function() {
+    var search_element = document.getElementById("autocomplete_search");
+    search_element.onkeyup = function () {
       var query = search_element.value;
       load_data(query);
-  };
-  search_element.onfocus = function() {
+    };
+    search_element.onfocus = function () {
       var query = search_element.value;
       load_data(query);
-  };
-    </script>
-  </body>
+    };
+  </script>
+</body>
+
 </html>

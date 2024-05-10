@@ -1,79 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head'); %>
-  </head>
-  <body>
-    <header><%- include('../partials/headerMain'); %></header>
-    <div class="container">
-      <div class="content">
-        <div class="box">
-          <h1>Opret dig i dag!</h1>
-          <form action="/user/register" method="POST">
-            <div class="labelPair">
-              <label for="Username">Brugernavn</label>
-              <input
-                type="text"
-                name="Username"
-                id="username"
-                placeholder="Brugernavn"
-                required
-              />
-            </div>
-            <div class="labelPair">
-              <label for="Password">Adgangskode</label>
-              <input
-                type="text"
-                name="Password"
-                id="password"
-                placeholder="Adgangskode"
-                required
-              />
-            </div>
-            <div class="labelPair">
-              <label for="Email">Email</label>
-              <input
-                type="email"
-                name="Email"
-                id="email"
-                placeholder="Email"
-                required
-              />
-            </div>
-            <div class="labelPair">
-              <label for="Age">Alder</label>
-              <input type="number" name="Age" id="age" placeholder="Alder" />
-            </div>
-            <div class="labelPair">
-              <label for="Weight">Vægt</label>
-              <input
-                type="number"
-                name="Weight"
-                id="weight"
-                placeholder="Vægt"
-              />
-            </div>
-            <div class="labelPair">
-              <label for="Gender">Køn</label>
-              <select
-                class="select"
-                name="Gender"
-                id="gender"
-                placeholder="Køn"
-              >
-                <option value="Kvinde">Kvinde</option>
-                <option value="Mand">Mand</option>
-              </select>
-            </div>
-            <button type="submit">Opret profil</button>
-          </form>
-        </div>
 
-        <div class="box">
-          <img src="/images/start.png" alt="start image" />
-        </div>
+<head>
+  <!-- Denne inkluderer head.ejs filen, som indeholder metadata og links til stylesheets -->
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <!-- Inkluderer headeren, som er forskellig afhængig af om brugeren er logget ind eller ej -->
+  <header><%- include('../partials/headerMain'); %></header>
+  <div class="container">
+    <div class="content">
+      <div class="box">
+        <h1>Opret dig i dag!</h1>
+        <!-- Laver en form der poster inholdet til stien -->
+        <form action="/user/register" method="POST">
+          <div class="labelPair">
+            <label for="Username">Brugernavn</label>
+            <input type="text" name="Username" id="username" placeholder="Brugernavn" required />
+          </div>
+          <div class="labelPair">
+            <label for="Password">Adgangskode</label>
+            <input type="text" name="Password" id="password" placeholder="Adgangskode" required />
+          </div>
+          <div class="labelPair">
+            <label for="Email">Email</label>
+            <input type="email" name="Email" id="email" placeholder="Email" required />
+          </div>
+          <div class="labelPair">
+            <label for="Age">Alder</label>
+            <input type="number" name="Age" id="age" placeholder="Alder" />
+          </div>
+          <div class="labelPair">
+            <label for="Weight">Vægt</label>
+            <input type="number" name="Weight" id="weight" placeholder="Vægt" />
+          </div>
+          <div class="labelPair">
+            <label for="Gender">Køn</label>
+            <select class="select" name="Gender" id="gender" placeholder="Køn">
+              <option value="Kvinde">Kvinde</option>
+              <option value="Mand">Mand</option>
+            </select>
+          </div>
+          <button type="submit">Opret profil</button>
+        </form>
+      </div>
+
+      <div class="box">
+        <img src="/images/start.png" alt="start image" />
       </div>
     </div>
-    <footer><%- include('../partials/footer'); %></footer>
-  </body>
+  </div>
+  <footer><%- include('../partials/footer'); %></footer>
+</body>
+
 </html>

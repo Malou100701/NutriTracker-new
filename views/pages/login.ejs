@@ -1,45 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head'); %>
-  </head>
-  <body>
-    <header><%- include('../partials/headerMain'); %></header>
-    <div class="container">
-      <div class="content">
-        <div class="box">
-          <h1>Log ind!</h1>
-          <form action="/user/login" method="POST">
-            <div class="labelPair">
-              <label for="Username">Brugernavn</label>
-              <input
-                type="text"
-                name="Username"
-                id="username"
-                placeholder="Brugernavn"
-                required
-              />
-            </div>
-            <div class="labelPair">
-              <label for="Password">Adgangskode</label>
-              <input
-                type="text"
-                name="Password"
-                id="password"
-                placeholder="Adgangskode"
-                required
-              />
-            </div>
 
-            <button class="login" type="submit">Log ind</button>
-          </form>
-        </div>
+<head>
+  <!-- Denne inkluderer head.ejs filen, som indeholder metadata og links til stylesheets -->
+  <%- include('../partials/head'); %>
+</head>
 
-        <div class="box">
-          <img src="/images/start.png" alt="start image" />
-        </div>
+<body>
+  <!-- Inkluderer headeren, som er forskellig afhængig af om brugeren er logget ind eller ej -->
+  <header><%- include('../partials/headerMain'); %></header>
+  <div class="container">
+    <div class="content">
+      <div class="box">
+        <h1>Log ind!</h1>
+        <form action="/user/login" method="POST"> <!-- Laver en form der poster inholdet til stien -->
+          <div class="labelPair">
+            <label for="Username">Brugernavn</label>
+            <input type="text" name="Username" id="username" placeholder="Brugernavn" required />
+          </div>
+          <div class="labelPair">
+            <label for="Password">Adgangskode</label>
+            <input type="text" name="Password" id="password" placeholder="Adgangskode" required />
+          </div>
+
+          <button class="login" type="submit">Log ind</button>
+        </form>
+      </div>
+
+      <div class="box">
+        <img src="/images/start.png" alt="start image" />
       </div>
     </div>
-    <footer><%- include('../partials/footer'); %></footer>
-  </body>
+  </div>
+  <footer><%- include('../partials/footer'); %></footer>
+</body>
+
 </html>
