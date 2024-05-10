@@ -1,258 +1,263 @@
 const sql = require('mssql');
 const config = require('../config');
 
-//den skal have et bedre navn, så det er nemmere at ændre i fremtiden.
+
+// Dunktion til at indsætte et måltid i databasen
 async function insertMealIntoDatabase(name, userID) { 
-            try {
-            // Connect SQL Server Database
-                await sql.connect(config);
+    try {
+
+        await sql.connect(config);
     
-            // Create SQL request object
-                const request = new sql.Request();
+        const request = new sql.Request();
     
-            //Query to insert meal into database
-                const query = `
-                INSERT INTO Meal (Name, UserID)
-                VALUES ('${name}', '${userID}');
-                SELECT SCOPE_IDENTITY() AS id;
+        // SQL-foresørgsel til at indsætte måltid i databasen
+        const query = `
+            INSERT INTO Meal (Name, UserID)
+            VALUES ('${name}', '${userID}');
+            SELECT SCOPE_IDENTITY() AS id;
             `;
 
-            let queryResult = await request.query(query);
-            mealID = queryResult.recordset[0].id;
+        let queryResult = await request.query(query);
+        mealID = queryResult.recordset[0].id;
     
-            //console.dir(queryResult)
-            console.log(`Meal with name "${name}" inserted into database with id: ${mealID}, under the user with id: ${userID}`);
-            } catch (error) {
-                console.error('Error inserting meal into database.', error);
+        // Bruges til at kontrollere om tingene indsættes korrekt
+        console.log(`Meal with name "${name}" inserted into database with id: ${mealID}, under the user with id: ${userID}`);
+    } catch (error) {
+        console.error('Error inserting meal into database.', error);
                 throw error;
-            }
-        }
-        module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
+    }
+}
+module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
 
-    async function addAllMealsIntoTable(userID) {
-            try {
-                await sql.connect(config);
-                const request = new sql.Request();
-                const query = `SELECT 
-                    Name AS Name, 
-                    ID AS ID,
-                    Calories AS Calories,
-                    Protein AS Protein,
-                    Fat AS Fat,
-                    Fiber AS Fiber
-                    FROM Meal WHERE UserID = '${userID}';`;
-                const result = await request.query(query);                
-                return result.recordset;
+// Funktion til at hente alle måltider for en bestemt bruger fra databasen
+async function addAllMealsIntoTable(userID) {
+    try {
+        await sql.connect(config);
+        const request = new sql.Request();
+
+        // SQL forespørgsel til at hente navn, ID og næringsindhold for måltider tilhørende en bestemt bruger
+        const query = `
+            SELECT 
+            Name AS Name, 
+            ID AS ID,
+            Calories AS Calories,
+            Protein AS Protein,
+            Fat AS Fat,
+            Fiber AS Fiber
+            FROM Meal WHERE UserID = '${userID}';`;
+        const result = await request.query(query);                
+        return result.recordset;
                 
-            } catch (error) {
-                console.error('Error fetching meals:', error);
-                throw error;
-            }
-        }
-        module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
+    } catch (error) {
+        console.error('Error fetching meals:', error);
+        throw error;
+    }
+}
+module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
 
 
-    async function getMealIngredients(ID) {
-            try {
-                // Connect to SQL Server database
-                await sql.connect(config);
+// Funktion til at hente ingredienser for et bestemt måltid fra databasen
+async function getMealIngredients(ID) {
+    try {
+        await sql.connect(config);
     
-                // Create SQL request object
-                const request = new sql.Request();
-                
+        const request = new sql.Request();     
     
-                // Query to get meal ingredients from database
-                const query = `
-                SELECT 
-                    i.Name AS IngredientName,
-                    mi.Amount AS Amount,
-                    mi.Calories AS Calories,
-                    mi.Protein AS Protein,
-                    mi.Fat AS Fat,
-                    mi.Fiber AS Fiber
-                FROM
-                    MealIngredient mi
-                JOIN
-                    Ingredient i ON mi.IngredientID = i.IngredientID
-                WHERE
-                    mi.MealID = ${ID};
-                `;
+        const query = `
+            SELECT 
+                i.Name AS IngredientName,
+                mi.Amount AS Amount,
+                mi.Calories AS Calories,
+                mi.Protein AS Protein,
+                mi.Fat AS Fat,
+                mi.Fiber AS Fiber
+            FROM
+                MealIngredient mi
+            JOIN
+                Ingredient i ON mi.IngredientID = i.IngredientID
+            WHERE
+                mi.MealID = ${ID};
+            `;
     
-                const result = await request.query(query);
+        const result = await request.query(query);
     
-                //console.log(result.recordset);
-                // Return meal ingredients
-                return result.recordset;
-            } catch (error) {
-                console.error('Error fetching meal ingredients.', error);
-                throw error;
-            }
+        return result.recordset;
 
+    } catch (error) {
+        console.error('Error fetching meal ingredients.', error);
+            throw error;
     }
 
-    module.exports.getMealIngredients = getMealIngredients;
+}
 
+module.exports.getMealIngredients = getMealIngredients;
+
+
+// Funktion til at hente et måltid ud fra dets ID
 async function getMealByID(ID) {
-        try {
-            // Connect to SQL Server database
-            await sql.connect(config);
+    try {
+        await sql.connect(config);
 
-            // Create SQL request object
-            const request = new sql.Request();
+        const request = new sql.Request();
 
-            // Query to get meal by ID
-            const query = `SELECT Name, ID FROM Meal WHERE ID = ${ID};`;
+        const query = `SELECT Name, ID FROM Meal WHERE ID = ${ID};`;
 
-            const result = await request.query(query);
+        const result = await request.query(query);
 
-            console.log(result.recordset[0]);
-            // Return meal
-            return result.recordset[0];
-        } catch (error) {
-            console.error('Error fetching meal by ID.', error);
-            throw error;
-        }
-    
+        //console.log(result.recordset[0]); - Brugt til testing
+            
+        return result.recordset[0];
+
+    } catch (error) {
+        console.error('Error fetching meal by ID.', error);
+        throw error;
     }
-    module.exports.getMealByID = getMealByID;
+    
+}
+module.exports.getMealByID = getMealByID;
 
-//nyt navn, så det er nemmere at ændre i fremtiden.
+
+// Funktion til at slette et måltid fra databasen baseret på dets ID
 async function deleteMealFromDatabase(ID) {
-        try {
-            // Connect SQL Server Database
-            await sql.connect(config);
+    try {
+
+        await sql.connect(config);
     
-            // Create SQL request object
-            const request = new sql.Request();
+        const request = new sql.Request();
+
+        // SQL-forespørgsel til at slette måltidsingredienser fra "MealIngredient" tabellen
+        // og måltider fra "Meal" tabellen, begge baseret på måltids-ID'et
+        const query = `
+            DELETE FROM MealIngredient WHERE MealID = ${ID};
+            DELETE FROM Meal WHERE ID = ${ID};`
     
-            // Query to delete meal from database using the primary key column named "ID"
-            const query = `DELETE FROM MealIngredient WHERE MealID = ${ID};
-                            DELETE FROM Meal WHERE ID = ${ID};`
     
-    
-            // Execute the query with the ID parameter
-            await request.input('id', ID).query(query);
-    
-            console.log(`Meal with ID "${ID}" deleted from database.`);
-        } catch (error) {
-            console.error('Error deleting meal from database.', error);
-            throw error;
-        }
+        await request.input('id', ID).query(query);
+            
+        console.log(`Meal with ID "${ID}" deleted from database.`); // Bruges til at sikre at tingene bliver slettet korrekt
+    } catch (error) {
+        console.error('Error deleting meal from database.', error);
+        throw error;
     }
+}
     
-    module.exports.deleteMealFromDatabase = deleteMealFromDatabase;
+module.exports.deleteMealFromDatabase = deleteMealFromDatabase;
 
-// Denne virker for kalorier
+// Funktion til at beregne kcal per tilføjede ingrediens
 async function getTotalEnergy(mealID, name) {
-//Connect to SQL Server database
- await sql.connect(config);
+    await sql.connect(config);
 
-//Create SQL request object
-const request = new sql.Request();
-const query1 = `
-    SELECT IngredientID
-    FROM Ingredient 
-    WHERE Name = '${name}';`;
+    const request = new sql.Request();
 
-let result1 = await request.query(query1);
-//console.log(result1);
-let ingredientID = result1.recordset[0].IngredientID;
+    // ID'et hentes for en ingrediens baseret på dens navn
+    const query1 = `
+        SELECT IngredientID
+        FROM Ingredient 
+        WHERE Name = '${name}';`;
+
+    let result1 = await request.query(query1);
+    //console.log(result1); - Brugt til testing
+    // Definere at ingredientID er resultatet fra tidligere SQL forespørgsel.
+    let ingredientID = result1.recordset[0].IngredientID;
 
 
-const query2 = `SELECT (i.Calories/100 * mi.Amount) AS TotalCalories
-FROM MealIngredient mi
-JOIN Ingredient i ON mi.IngredientID = i.IngredientID
-WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
-let result2 = await request.query(query2);
+    // Beregner de samlede kalorier for ingrediensen baseret på dens mængde i måltidet
+    const query2 = `
+        SELECT (i.Calories/100 * mi.Amount) AS TotalCalories
+        FROM MealIngredient mi
+        JOIN Ingredient i ON mi.IngredientID = i.IngredientID
+        WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
+    
+    let result2 = await request.query(query2);
+    let totalCalories = result2.recordset[0].TotalCalories;
+    //console.log(totalCalories); - Brugt til testing
 
-let totalCalories = result2.recordset[0].TotalCalories;
-console.log(totalCalories);
+    // Den beregnede værdi indsættes i 'Calories' kolonnen i MealIngredient tabellen i databasen.
+    const insertQuery = `
+        UPDATE MealIngredient 
+        SET calories = '${totalCalories}'
+        WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';`;
 
-// Insert TotalCalories into MealIngredient table
-const insertQuery = `
-    UPDATE MealIngredient 
-    SET calories = '${totalCalories}'
-    WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';`;
+    await request.query(insertQuery);
 
-await request.query(insertQuery);
-
-// Return the calculated TotalCalories value
-return totalCalories;
+    // Returnere den beregnedde værdi for samlede kalorier
+    return totalCalories;
 }
 
 module.exports.getTotalEnergy = getTotalEnergy;
 
 
-// Denne virker for kalorier
+// Denne benytter samme logik getTotalEnergy
 async function getTotalProtein(mealID, name) {
-    //Connect to SQL Server database
-     await sql.connect(config);
+
+    await sql.connect(config);
     
-    //Create SQL request object
     const request = new sql.Request();
+
     const query1 = `
         SELECT IngredientID
         FROM Ingredient 
         WHERE Name = '${name}';`
     
     let result1 = await request.query(query1);
-    //console.log(result1);
+    //console.log(result1); - Brugt til testing
     
     let ingredientID = result1.recordset[0].IngredientID;
-    //console.log(ingredientID);
-    //console.log(mealID);
+    //console.log(ingredientID); - Brugt til testing
     
-    const query2 = `SELECT (i.Protein/100 * mi.Amount) AS TotalProtein
-    FROM MealIngredient mi
-    JOIN Ingredient i ON mi.IngredientID = i.IngredientID
-    WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
+    const query2 = `
+        SELECT (i.Protein/100 * mi.Amount) AS TotalProtein
+        FROM MealIngredient mi
+        JOIN Ingredient i ON mi.IngredientID = i.IngredientID
+        WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
+    
     const result2 = await request.query(query2);
     
     let totalProtein = result2.recordset[0].TotalProtein;
 
 
-// Insert TotalCalories into MealIngredient table
-const insertQuery = `
-    UPDATE MealIngredient 
-    SET Protein = '${totalProtein}'
-    WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';`;
+    const insertQuery = `
+        UPDATE MealIngredient 
+        SET Protein = '${totalProtein}'
+        WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';`;
 
-await request.query(insertQuery);
+    await request.query(insertQuery);
 
-// Return the calculated TotalProtein value
-return totalProtein;
-    };
+    return totalProtein;
+};
     
 module.exports.getTotalProtein = getTotalProtein;
 
+
+
+// Denne benytter samme logik getTotalEnergy
 async function getTotalFat(mealID, name) {
-        //Connect to SQL Server database
-         await sql.connect(config);
+
+    await sql.connect(config);
         
-        //Create SQL request object
-        const request = new sql.Request();
-        const query1 = `
-            SELECT IngredientID
-            FROM Ingredient 
-            WHERE Name = '${name}';`
+    const request = new sql.Request();
+
+    const query1 = `
+        SELECT IngredientID
+        FROM Ingredient 
+        WHERE Name = '${name}';`
+            
+    let result1 = await request.query(query1);
+    //console.log(result1); - Brugt til testing
         
-        let result1 = await request.query(query1);
-        //console.log(result1);
-        
-        let ingredientID = result1.recordset[0].IngredientID;
-        //console.log(ingredientID);
-        //console.log(mealID);
-        
-        const query2 = `SELECT (i.Fat/100 * mi.Amount) AS TotalFat
+    let ingredientID = result1.recordset[0].IngredientID;
+    //console.log(ingredientID); - Brugt til testing
+
+    const query2 = `
+        SELECT (i.Fat/100 * mi.Amount) AS TotalFat
         FROM MealIngredient mi
         JOIN Ingredient i ON mi.IngredientID = i.IngredientID
         WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
-        const result2 = await request.query(query2);
     
-        let totalFat = result2.recordset[0].TotalFat;
+    const result2 = await request.query(query2);
+    
+    let totalFat = result2.recordset[0].TotalFat;
 
-
-// Insert TotalFat into MealIngredient table
     const insertQuery = `
         UPDATE MealIngredient 
         SET Fat = '${totalFat}'
@@ -260,41 +265,41 @@ async function getTotalFat(mealID, name) {
 
     await request.query(insertQuery);
 
-// Return the calculated TotalFat value
     return totalFat;
 };
         
 module.exports.getTotalFat = getTotalFat;
 
 
+
+// Denne benytter samme logik getTotalEnergy
 async function getTotalFiber(mealID, name) {
-    //Connect to SQL Server database
-     await sql.connect(config);
+
+    await sql.connect(config);
     
-    //Create SQL request object
     const request = new sql.Request();
+
     const query1 = `
         SELECT IngredientID
         FROM Ingredient 
         WHERE Name = '${name}';`
     
     let result1 = await request.query(query1);
-    //console.log(result1);
+    //console.log(result1); - Brugt til testing
     
     let ingredientID = result1.recordset[0].IngredientID;
-    //console.log(ingredientID);
-    //console.log(mealID);
-    
-    const query2 = 
-        `SELECT (i.Fiber/100 * mi.Amount) AS TotalFiber
+    //console.log(ingredientID); - Brugt til testing
+
+    const query2 = `
+        SELECT (i.Fiber/100 * mi.Amount) AS TotalFiber
         FROM MealIngredient mi
         JOIN Ingredient i ON mi.IngredientID = i.IngredientID
         WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
+    
     let result2 = await request.query(query2);
 
     let totalFiber = result2.recordset[0].TotalFiber;
 
-// Insert TotalCalories into MealIngredient table
     const insertQuery = `
         UPDATE MealIngredient 
         SET Fiber = '${totalFiber}'
@@ -302,7 +307,6 @@ async function getTotalFiber(mealID, name) {
 
     await request.query(insertQuery);
 
-// Return the calculated TotalCalories value
     return totalFiber;
 };
     
@@ -310,27 +314,31 @@ module.exports.getTotalFiber = getTotalFiber;
 
 
 
+// Funktion til at slette en måltidsingrediens fra databasen baseret på måltids ID og ingrediens ID
 async function deleteMealIngredientFromDatabase(mealID) {
     try {
-        // Connect SQL Server Database
+
         await sql.connect(config);
 
-        // Create SQL request object
         const request = new sql.Request();
 
+        // Forespørgsel til at hente ingrediens ID baseret på måltids ID
         const query1 = `
             SELECT IngredientID FROM MealIngredient WHERE MealID = '${mealID}';`;
 
         let result = await request.query(query1);
         let ingredientID = result.recordset[0].IngredientID;
 
-
-        // Query to delete meal ingredient from database
+        // Forespørgsel til at slette måltidsingrediensen fra databasen 
+        // baseret på både ingrediens ID og måltids ID
         const query2= `
-            DELETE FROM MealIngredient WHERE MealID = '${mealID}' AND IngredientID = '${ingredientID}';
-        `;
+            DELETE FROM MealIngredient WHERE MealID = '${mealID}' 
+            AND IngredientID = '${ingredientID}';
+            `;
+        
         await sql.query(query2);
-        console.log(`Meal ingredient with ID "${mealID}" deleted from database "${ingredientID}".`);
+
+        console.log(`Meal ingredient with ID "${mealID}" deleted from database "${ingredientID}".`); // Bruges til at sikre sletning foregår korrekt
 
     } catch (error) {
         console.error('Error deleting meal ingredient from database.', error);
@@ -340,68 +348,26 @@ async function deleteMealIngredientFromDatabase(mealID) {
 module.exports.deleteMealIngredientFromDatabase = deleteMealIngredientFromDatabase;
 
 
-//  const result = await sql.query`
-// UPDATE Users 
-// SET Age = ${Age}, Weight = ${Weight}, Gender = ${Gender}
-// WHERE Username = ${username}`;
-
-
-
-
-
-
-
-/*
-
-// For hele måltidet
-async function getTotalEnergyForMeal(mealID) {
-    //Connect to SQL Server database
-     await sql.connect(config);
-    
-    //Create SQL request object
-    const request = new sql.Request();
-    const query1 = `
-        SELECT SUM(Calories) AS TotalCalories
-        FROM MealIngredient
-        WHERE MealID = '${mealID}';`;
-    
-    let result = await request.query(query1);
-    
-    let totalCalories = result.recordset[0].TotalCalories;
-    console.log(totalCalories);
-
-// Insert TotalCalories into MealIngredient table
-    const insertQuery = `
-        UPDATE Meal 
-        SET Calories = '${totalCalories}'
-        WHERE ID = '${mealID}';`;
-    
-    let result2 = await request.query(insertQuery);
-    // Return the calculated TotalCalories value
-    console.log(result2)
-
-    console.log(`Total calories for meal with ID ${mealID} is ${totalCalories}`);
-};
-    
-module.exports.getTotalEnergyForMeal = getTotalEnergyForMeal;*/
-
-
+// Funktion til at beregne den samlede kalorier for et måltid og opdatere tabellen
+// baseret på informationer fra mealIngredeint tabellen
 async function getTotalEnergyPerMeal(mealID) {
     await sql.connect(config);
 
     const request = new sql.Request();
     
+    // Forespørgsel for at beregne samlede kalorier for et måltid
     const query = `
-    SELECT SUM (Calories) AS TotalCalories
-    FROM MealIngredient
-    WHERE MealID = ${mealID};`;
+        SELECT SUM (Calories) AS TotalCalories
+        FROM MealIngredient
+        WHERE MealID = ${mealID};`;
 
     let result = await request.query(query);
     
+    // Den samlede kalorieværdi hentes fra resultatet af forespørgslen
     let totalCalories = result.recordset[0].TotalCalories;
     //console.log(totalCalories); - Brugt til fejlsøgning
     
-    // Insert TotalCalories into MealIngredient table
+    // SQL-forespørgsel til at opdatere måltabellen med den beregnede samlede kalorieværdi
     const insertQuery = `
         UPDATE Meal
         SET Calories = '${totalCalories}'
@@ -409,26 +375,26 @@ async function getTotalEnergyPerMeal(mealID) {
     
     await request.query(insertQuery);
     
-    // Return the calculated TotalCalories value
     return totalCalories;
 }
 module.exports.getTotalEnergyPerMeal = getTotalEnergyPerMeal;
 
 
+// Bruger samme logik som getTotalEnergyPerMeal
 async function getTotalProteinPerMeal(mealID) {
     await sql.connect(config);
 
     const request = new sql.Request();
     
     const query = `
-    SELECT SUM (Protein) AS TotalProtein
-    FROM MealIngredient
-    WHERE MealID = ${mealID};`;
+        SELECT SUM (Protein) AS TotalProtein
+        FROM MealIngredient
+        WHERE MealID = ${mealID};`;
 
     let result = await request.query(query);
     
     let totalProtein = result.recordset[0].TotalProtein;
-    console.log(totalProtein);
+    //console.log(totalProtein); - brugt til testing
     
     const insertQuery = `
         UPDATE Meal
@@ -441,20 +407,22 @@ async function getTotalProteinPerMeal(mealID) {
 }
 module.exports.getTotalProteinPerMeal = getTotalProteinPerMeal;
 
+
+// Bruger samme logik som getTotalEnergyPerMeal
 async function getTotalFatPerMeal(mealID) {
     await sql.connect(config);
 
     const request = new sql.Request();
     
     const query = `
-    SELECT SUM (Fat) AS TotalFat
-    FROM MealIngredient
-    WHERE MealID = ${mealID};`;
+        SELECT SUM (Fat) AS TotalFat
+        FROM MealIngredient
+        WHERE MealID = ${mealID};`;
 
     let result = await request.query(query);
     
     let totalFat = result.recordset[0].TotalFat;
-    console.log(totalFat);
+    // console.log(totalFat); - Brugt til testing
     
     const insertQuery = `
         UPDATE Meal
@@ -467,15 +435,17 @@ async function getTotalFatPerMeal(mealID) {
 }
 module.exports.getTotalFatPerMeal = getTotalFatPerMeal;
 
+
+// Bruger samme logik som getTotalEnergyPerMeal
 async function getTotalFiberPerMeal(mealID) {
     await sql.connect(config);
 
     const request = new sql.Request();
     
     const query = `
-    SELECT SUM (Fiber) AS TotalFiber
-    FROM MealIngredient
-    WHERE MealID = ${mealID};`;
+        SELECT SUM (Fiber) AS TotalFiber
+        FROM MealIngredient
+        WHERE MealID = ${mealID};`;
 
     let result = await request.query(query);
     

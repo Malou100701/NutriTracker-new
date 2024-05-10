@@ -1,11 +1,9 @@
 const MealIngredient = require("../models/MealIngredient");
 const asyncHandler = require("../middlewares/asyncHandler");
 const { VarChar } = require("mssql");
- 
-// Denne er ikke implementeret da vi ikke fandt den essentiel.
-// Kan implementeres senere i forløbet hvis nødvendigt
 
-
+// Denne er ikke implementeret endnu
+//Kan implementeres senere i forløbet hvis dette findes nødvendigt
 /*
 const updateMealIngredient = asyncHandler(async (req, res, next) => {
     let {ID, amount} = req.body; // Assuming the request body contains both id and amount

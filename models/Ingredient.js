@@ -1,51 +1,35 @@
+// Ompirterer mssql-modulet
 const sql = require('mssql');
+
+// Omporterer databasekonfigurationen
 const config = require('../config');
 
+//Funktion til at søge efter ingredienser baseret på navn i databasen
 async function searchByName (name) {
     try {
+        // Opretter forbindelse til databasen ved hjælp af konfigurationen
         await sql.connect(config);
+
+        // Opretter en ny forespørgsel til databasen
         const request = new sql.Request();
+
+        // SQL-forespørgsel til at søge efter ingredienser med et lignende navn
         const query = `
             SELECT Name FROM Ingredient WHERE Name LIKE '%${name}%';`;
+
+        // Udfører forespørgslen til databasen
         const result = await request.query(query);
-        //console.log(result);
+        //console.log(result); - Brugt til testing
+
+        //Returnerer resultatet af forespørgslen
         return result.recordset;
     } catch (error) {
+        //Håndterer fejl ved forespørgslen og logger fejlmeddelelsen
         console.error('Error fetching ingredients:', error);
         throw error;
     }
 };
 
+//Eksporterer søgefunktionen for brug i andre dele af applikationen
 module.exports.searchByName = searchByName;
 
-/*async function getNutrition(mealID, ingredient){
-    try {
-        await sql.connect(config);
-        const request = new sql.Request();
-        const query = `
-            SELECT 
-                SUM(Ingredient.Calories * MealIngredient.Amount / 100) AS IngredientCalories,
-                SUM(Ingredient.Protein * MealIngredient.Amount / 100) AS IngredientProtein,
-                SUM(Ingredient.Fat * MealIngredient.Amount / 100) AS IngredientFat,
-                SUM(Ingredient.Fiber * MealIngredient.Amount / 100) AS IngredientFiber
-            FROM
-                Ingredient
-            JOIN
-                MealIngredient ON Ingredient.IngredientID = MealIngredient.IngredientID
-            WHERE
-            MealIngredient.MealID = ${mealID}
-            AND Ingredient.IngredientID = ${ingredient};`;
-
-    
-    let result = await request.query(query);
-
-    console.log(result.recordset[0]);
-        //console.log(result);
-        return result.recordset[0];
-    } catch (error) {
-        console.error('Error fetching nutrition:', error);
-        throw error;
-    }
-
-};
-module.exports.getNutrition = getNutrition;*/
