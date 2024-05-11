@@ -11,6 +11,9 @@ router.get('/:ID/edit', editMeal);
 // Rute til at tilføje en ingrediens til et måltid
 router.get('/:ID/addIngredient', addIngredient);
 
+router.get('/mealIngredient', (req, res) => {res.render('pages/mealEditor');
+});
+
 // Rute til sletning af et måltid
 router.post('/:ID/deleteMeal', deleteMeal); 
 

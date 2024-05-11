@@ -8,11 +8,8 @@ router.use("/allMeals", mealRoutes); // Bruger mealRoutes til at håndtere alle 
 router.get("/mealCreator", function (req, res) { // Opretter en get route til /meal/mealCreator
     res.redirect("/meal/mealCreator"); // Redirecter til /meal/mealCreator
 });
+router.use("/mealIngredient", mealRoutes); // Bruger mealRoutes til at håndtere alle routes der starter med /mealIngredient
 
-
-const mealIngredientRoutes = require("./mealIngredientRoutes"); // Importere mealIngredientRoutes
-router.use("/mealIngredient", mealIngredientRoutes); // Bruger mealIngredientRoutes til at håndtere alle routes der starter med /mealIngredient
-router.use("/allMeals", mealIngredientRoutes); // Bruger mealIngredientRoutes til at håndtere alle routes der starter med /allMeals
 
 //INSPECTOR ROUTES
 const inspectorRoutes = require("./inspectorRoutes"); // Importere inspectorRoutes

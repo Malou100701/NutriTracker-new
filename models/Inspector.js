@@ -1,41 +1,36 @@
-// Importerer mssql-modulet
+// Importerer mssql-modulet så vi kan tilgå vores Microsoft SQL Server.
 const sql = require('mssql');
 
 //Importerer databasekonfigurationen
 const config = require('../config');
 
-
-
-//Funktion til at inspicere en ingrediens ved at søge efter dens navn i databasen
+//Her søges efter ingredienser baseret på et delvist navn for funktioner som autofuldførelse.
+//denne bruges til selve søgeknappen på siden
 async function inspectIngredient(name) {
 
-    // Opretter forbindelse til SQL Server Databasen ved hjælp af konfigurationen
     await sql.connect(config);
 
-    // Opretter en SQL-forespørgsel til databasen
     const request = new sql.Request();
 
-    // SQL-forespørgsel til at hente Ingrediens ID og navn fra Ingrediens tabel,
-    // hvor navnet delvist matcher det, der er angivet i 'name'-variablen
     const query = `
         SELECT IngredientID, Name FROM Ingredient WHERE Name LIKE '%${name}%'`;
     
-    // Udfører forespørgslen og returnere resultatet
     const result = await request.query(query);
     return result.recordset; 
 }
-// Eksporterer funktionen til inspektion af ingredienser for brug i andre dele af applikationen
+
 module.exports.inspectIngredient = inspectIngredient;
 
 
-// Funktion til at vise detaljer om en ingrediens ved at søge efter dens navn i databasen
+
+
+// Bruges til at vise ernæringsdetaljer om en fødevare/ingrediens ved at søge efter dens navn i databasen
 async function showIngredient(name) {
 
     await sql.connect(config);
 
     const request = new sql.Request();
 
-    // SQL-forespørgsel for at hente detaljer og ingrediensen baseret på dens navn
     const query = `
         SELECT Name AS Name, 
         Calories, Protein, Fat, Fiber
@@ -43,8 +38,12 @@ async function showIngredient(name) {
         WHERE Name = '${name}';`;
     
     
-    // Udfører forespørgslen og returnerer resultatet
     const result = await request.query(query);
-    return result.recordset[0]; // Returnerer det første resultat (forventet kun én ingrediens med det navn)
+    return result.recordset[0]; // Antager kun ét resultat pga. unikt navn.
 }
 module.exports.showIngredient = showIngredient;
+
+
+//Overordnet kommentarer: 
+//Der bruges async for at kunne bruge await, som venter på at databasen svarer. Dette bruges for at undgå at databasen svarer for sent, og at programmet derfor ikke kan fortsætte.
+//Module.exports = gør at andre filer i applikationen kan bruge funktionerne.

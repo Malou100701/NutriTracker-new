@@ -29,6 +29,8 @@ async function insertMealIntoDatabase(name, userID) {
 }
 module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
 
+
+
 // Funktion til at hente alle måltider for en bestemt bruger fra databasen
 async function addAllMealsIntoTable(userID) {
     try {
@@ -54,6 +56,8 @@ async function addAllMealsIntoTable(userID) {
     }
 }
 module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
+
+
 
 
 // Funktion til at hente ingredienser for et bestemt måltid fra databasen
@@ -93,6 +97,8 @@ async function getMealIngredients(ID) {
 module.exports.getMealIngredients = getMealIngredients;
 
 
+
+
 // Funktion til at hente et måltid ud fra dets ID
 async function getMealByID(ID) {
     try {
@@ -115,6 +121,67 @@ async function getMealByID(ID) {
     
 }
 module.exports.getMealByID = getMealByID;
+
+
+// Funktion til at tilføje ingredienser til et måltid
+async function addIngredientToMeal(mealID, ingredientName, amount) {
+    
+    // Starter en try-blok, hvor al kode inden for blokken vil blive forsøgt udført.
+    try {
+
+        await sql.connect(config);
+
+        const request = new sql.Request();
+
+        // Forespørgsel for at finde IngredientID baseret på navn
+        const query1 = `
+            SELECT IngredientID
+            FROM Ingredient 
+            WHERE Name = '${ingredientName}';`
+        
+        let result1 = await request.query(query1);
+        //console.log(result1); - Brugt til fejlsøgning
+
+        //Denne udtrækker IngredientID fra resultatet af den foregående forespørgsel.
+        let ingredientID = result1.recordset[0].IngredientID;
+        //console.log(ingredientID); - Brugt til fejlsøgning
+
+
+        // SQL-forespørgsel til at indsætte en ny række i MealIngredient-tabellen med det angivne måltids ID, ingrediens ID og mængde.
+        // Det inkluderer også en forespørgsel til at få det nyindsatte id ved hjælp af SCOPE_IDENTITY() funktionen.
+        const query2 = `
+            INSERT INTO MealIngredient (MealID, IngredientID, Amount)
+            VALUES ('${mealID}', '${ingredientID}', '${amount}');
+            SELECT SCOPE_IDENTITY() AS id;
+        `;
+        
+        // Denne linje udfører og venter på resultatet fra vores query 2
+        let result2 = await request.query(query2);
+        //console.log(result2); - Brugt til fejlsøgning
+
+        // Dette udtrækker det nyindsatte 'id' fra resultatet af 'query2'
+        let mealIngredientID = result2.recordset[0].id;
+
+        // Dette logger en besked der angiver, at ingrediensen er blevet tilføjet til måltidet.
+        console.log(`Ingredient "${ingredientName}" added to meal ${mealID}`);
+
+        // Dette returnere 'mealIngredientID' fra funktionen, hvilket angiver, at funktionen er lykkes
+        return mealIngredientID;
+
+    // Dette starter en catch-blok til at håndtere eventuelle fejl, det opstår inden for try-blokken.
+    } catch (error) {
+
+        // Hvis en fejl opstår, logger dette en fejlmeddelelse, der angiver, at det mislykkedes at tilføje ingrediensen til måltidet.
+        console.error('Error adding ingredient to meal.', error);
+        throw error;
+    }
+
+}
+module.exports.addIngredientToMeal = addIngredientToMeal;
+ 
+
+
+
 
 
 // Funktion til at slette et måltid fra databasen baseret på dets ID

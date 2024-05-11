@@ -1,6 +1,5 @@
 // Impot af modeller og middleware
 const Meal = require("../models/Meal");
-const MealIngredient = require("../models/MealIngredient");
 const Ingredient = require("../models/Ingredient");
 const asyncHandler = require("../middlewares/asyncHandler");
 const { VarChar } = require("mssql");
@@ -65,7 +64,7 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   //console.log(amount); - Brugt til testing
 
   // Tilføjet ingrediensen til måltidet, samt mængden i databasen
-  await MealIngredient.addIngredientToMeal(mealID, ingredient, amount);
+  await Meal.addIngredientToMeal(mealID, ingredient, amount);
 
   // Tilføjer næringsindtag per ingrediens ud fra mængde angivet i frontend. 
   await Meal.getTotalEnergy(mealID, ingredient);
