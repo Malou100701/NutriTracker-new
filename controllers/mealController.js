@@ -1,69 +1,47 @@
-// Impot af modeller og middleware
 const Meal = require("../models/Meal");
-const Ingredient = require("../models/Ingredient");
 const asyncHandler = require("../middlewares/asyncHandler");
-const { VarChar } = require("mssql");
 
-
-// Controller for oprettelse af et nyt måltid
-const createMeal = asyncHandler(async (req, res, next) => {
-  //Henter navn og brugerens ID fra request body og session
+//Oprettelse af et nyt måltid
+const createMeal = asyncHandler(async (req, res) => {
   let name = req.body.name;
   let userID = req.session.user.userID;
-  
-  //console.log(req.session.user); - Brugt til test
-  
-  //Insætter et nyt måltid i databasen
+  // Opretter et nyt måltid i databasen og omdirigerer til oversigt over måltider
   await Meal.insertMealIntoDatabase(name, userID);
-
-  // Omdirigerer til siden med alle måltider efter oprettelse
   res.redirect('/allMeals'); 
 });
 
 
+// Tilføjer alle måltider til tabellen
+const addAllMeals = asyncHandler(async (req, res) => {
+  let userID = req.session.user.userID; 
 
-// Controller til at tilføje alle måltider til tabel
-const addAllMeals = asyncHandler(async (req, res, next) => {
-  //Henter brugerens ID fra session
-  const userID = req.session.user.userID; 
-  
-  //Henter alle måltider for brugeren
-  const meals = await Meal.addAllMealsIntoTable(userID);
-
-  // Sender måltiderne til visningssiden
+  // Henter og viser alle måltider tilhørende brugeren
+  let meals = await Meal.addAllMealsIntoTable(userID);
   res.render('pages/allMeals', { meals: meals });
 });
 
 
-//Controller til redigering af et måltid
+//Redigering af et måltid
 const editMeal = asyncHandler(async (req, res, next) => {
-  // Henter måltids ID fra URL'en
   let mealID = req.params.ID;
 
-  // Henter måltidet og ingredienserne fra databasen
+  //Henter specifikke detaljer for måltidet og dets ingredienser
   let meal = await Meal.getMealByID(mealID);
   let ingredients = await Meal.getMealIngredients(mealID);
-  //console.log(ingredients); - Brugt til testing
-
-  // Sender måltidet og ingredienserne til redigeringssiden
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients });
 });
 
 
-// Controller til at tilføje en ingredient til et måltid
+// Tilføjer en ingrediens til et måltid, samt dens mængde og næringsindhold
 const addIngredient = asyncHandler(async (req, res, next) => {
-  // Henter måltids ID og ingrediens navn fra forespørgslen. 
   let mealID = req.params.ID;
   let ingredient = req.query.ingredient;
+  let amount = req.query.amount;
 
-  // Henter måltidet fra databasen
+
   let meal = await Meal.getMealByID(mealID);
 
-  // Henter mængde fra forespørgslen
-  let amount = req.query.amount;
-  //console.log(amount); - Brugt til testing
-
-  // Tilføjet ingrediensen til måltidet, samt mængden i databasen
+  // Tilføjer ingrediensen til måltidet i databasen
   await Meal.addIngredientToMeal(mealID, ingredient, amount);
 
   // Tilføjer næringsindtag per ingrediens ud fra mængde angivet i frontend. 
@@ -72,15 +50,14 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   await Meal.getTotalFat(mealID, ingredient);
   await Meal.getTotalFiber(mealID, ingredient);
 
-  // Henter alle ingredienser til det pågældende måltid fra databasen
+  // Henter en opdateret liste over alle ingredienser og deres næringsindhold for det valgte måltid.
   let ingredients = await Meal.getMealIngredients(mealID);
 
-  // Summere næringsindtaget per måltid, ud fra tidligere kalkuleret næring per ingrediens
+  // Opdaterer måltidets samlede næringsværdier
   await Meal.getTotalEnergyPerMeal(mealID);
   await Meal.getTotalProteinPerMeal(mealID);
   await Meal.getTotalFatPerMeal(mealID);
   await Meal.getTotalFiberPerMeal(mealID);
-
   //console.log(ingredients); - Brugt til testing
 
   // Sender måltidet og ingredienserne til redigeringssiden
@@ -88,12 +65,11 @@ const addIngredient = asyncHandler(async (req, res, next) => {
 });
 
 
-// Controller til at slette et måltid
+// Slette et måltid
 const deleteMeal = asyncHandler(async (req, res, next) => {
-  // Henter måltids ID fra URL'en
   let mealID = req.params.ID;
 
-  // Sletter måltidet fra database
+  // Sletter måltidet fra databasen
   await Meal.deleteMealFromDatabase(mealID);
 
   // Omdirigerer til siden med alle måltider efter sletning
@@ -101,26 +77,32 @@ const deleteMeal = asyncHandler(async (req, res, next) => {
 });
 
 
-// Controller til at slette en ingrediens fra et måltid
+// Slette en ingrediens fra et måltid
 const deleteMealIngredient = asyncHandler(async (req, res, next) => {
-  // Henter måltids ID fra URL'en
   let mealID = req.params.ID;
-  //console.log(mealID); - brugt til testing
 
   // Sletter ingredienserne fra måltidet i databasen
   await Meal.deleteMealIngredientFromDatabase(mealID);
 
-  // Omdirigerer til redigeringssiden for det pågældende måltid.
+  // Omdirigerer til redigeringssiden for måltidet
   res.redirect('/meal/' + mealID + '/edit');
 });
 
-// Eksporterer controllerne til brug i andre dele af applikationen
+
 module.exports = {
+  createMeal,
+  addAllMeals,
   editMeal,
   addIngredient,
-  createMeal,
   deleteMeal,
-  addAllMeals,
   deleteMealIngredient
  };
   
+//Overordnet kommentarer: 
+//Der bruges async for at kunne bruge await, som venter på at databasen svarer. Dette bruges for at undgå at databasen svarer for sent, og at programmet derfor ikke kan fortsætte.
+//Module.exports = gør at andre filer i applikationen kan bruge funktionerne.
+//req.params = bruges til at hente parametre fra URL'en
+//req.query = bruges til at hente parametre fra forespørgslen
+//req.body = bruges til at hente parametre fra forespørgslen
+//req.session = bruges til at hente sessionen fra forespørgslen
+//session = En måde at opbevare information om en brugers interaktion med en webapplikation på tværs af flere HTTP-anmodninger

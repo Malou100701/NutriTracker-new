@@ -1,8 +1,6 @@
 // Import af Ingredient model og asyncHandler middleware
 const Ingredient = require("../models/Ingredient");
 const asyncHandler = require("../middlewares/asyncHandler");
-// Import af VarChar fra mssql-modulet
-const { VarChar } = require("mssql");
 
 // Funktion til at søge efter ingredienser baseret på navn
 const searchIngredient = asyncHandler(async (req, res, next) => {  

@@ -34,3 +34,4 @@ module.exports.ingredientView = ingredientView;
 //Overordnet kommentarer: 
 //Der bruges async for at kunne bruge await, som venter på at databasen svarer. Dette bruges for at undgå at databasen svarer for sent, og at programmet derfor ikke kan fortsætte.
 //Module.exports = gør at andre filer i applikationen kan bruge funktionerne.
+// req.query = bruges til at hente parametre fra forespørgslen

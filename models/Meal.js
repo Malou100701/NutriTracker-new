@@ -2,25 +2,19 @@ const sql = require('mssql');
 const config = require('../config');
 
 
-// Dunktion til at indsætte et måltid i databasen
+// Indsætte et måltid i databasen
 async function insertMealIntoDatabase(name, userID) { 
     try {
-
         await sql.connect(config);
-    
         const request = new sql.Request();
-    
-        // SQL-foresørgsel til at indsætte måltid i databasen
-        const query = `
+            const query = `
             INSERT INTO Meal (Name, UserID)
             VALUES ('${name}', '${userID}');
             SELECT SCOPE_IDENTITY() AS id;
             `;
-
         let queryResult = await request.query(query);
         mealID = queryResult.recordset[0].id;
     
-        // Bruges til at kontrollere om tingene indsættes korrekt
         console.log(`Meal with name "${name}" inserted into database with id: ${mealID}, under the user with id: ${userID}`);
     } catch (error) {
         console.error('Error inserting meal into database.', error);
@@ -30,14 +24,11 @@ async function insertMealIntoDatabase(name, userID) {
 module.exports.insertMealIntoDatabase = insertMealIntoDatabase;
 
 
-
-// Funktion til at hente alle måltider for en bestemt bruger fra databasen
+// Henter alle måltider for en bestemt bruger fra databasen
 async function addAllMealsIntoTable(userID) {
     try {
         await sql.connect(config);
         const request = new sql.Request();
-
-        // SQL forespørgsel til at hente navn, ID og næringsindhold for måltider tilhørende en bestemt bruger
         const query = `
             SELECT 
             Name AS Name, 
@@ -58,15 +49,11 @@ async function addAllMealsIntoTable(userID) {
 module.exports.addAllMealsIntoTable = addAllMealsIntoTable;
 
 
-
-
-// Funktion til at hente ingredienser for et bestemt måltid fra databasen
+// Henter ingredienser for et bestemt måltid fra databasen
 async function getMealIngredients(ID) {
     try {
         await sql.connect(config);
-    
         const request = new sql.Request();     
-    
         const query = `
             SELECT 
                 i.Name AS IngredientName,
@@ -84,7 +71,6 @@ async function getMealIngredients(ID) {
             `;
     
         const result = await request.query(query);
-    
         return result.recordset;
 
     } catch (error) {
@@ -93,25 +79,16 @@ async function getMealIngredients(ID) {
     }
 
 }
-
 module.exports.getMealIngredients = getMealIngredients;
 
 
-
-
-// Funktion til at hente et måltid ud fra dets ID
+// Henter et måltid ud fra dets ID
 async function getMealByID(ID) {
     try {
         await sql.connect(config);
-
         const request = new sql.Request();
-
         const query = `SELECT Name, ID FROM Meal WHERE ID = ${ID};`;
-
-        const result = await request.query(query);
-
-        //console.log(result.recordset[0]); - Brugt til testing
-            
+        const result = await request.query(query); 
         return result.recordset[0];
 
     } catch (error) {
@@ -123,55 +100,33 @@ async function getMealByID(ID) {
 module.exports.getMealByID = getMealByID;
 
 
-// Funktion til at tilføje ingredienser til et måltid
+// Tilføje ingredienser til et måltid
 async function addIngredientToMeal(mealID, ingredientName, amount) {
-    
-    // Starter en try-blok, hvor al kode inden for blokken vil blive forsøgt udført.
     try {
-
         await sql.connect(config);
-
         const request = new sql.Request();
-
-        // Forespørgsel for at finde IngredientID baseret på navn
         const query1 = `
             SELECT IngredientID
             FROM Ingredient 
-            WHERE Name = '${ingredientName}';`
-        
+            WHERE Name = '${ingredientName}';`   
         let result1 = await request.query(query1);
-        //console.log(result1); - Brugt til fejlsøgning
-
-        //Denne udtrækker IngredientID fra resultatet af den foregående forespørgsel.
         let ingredientID = result1.recordset[0].IngredientID;
         //console.log(ingredientID); - Brugt til fejlsøgning
 
-
-        // SQL-forespørgsel til at indsætte en ny række i MealIngredient-tabellen med det angivne måltids ID, ingrediens ID og mængde.
-        // Det inkluderer også en forespørgsel til at få det nyindsatte id ved hjælp af SCOPE_IDENTITY() funktionen.
         const query2 = `
             INSERT INTO MealIngredient (MealID, IngredientID, Amount)
             VALUES ('${mealID}', '${ingredientID}', '${amount}');
             SELECT SCOPE_IDENTITY() AS id;
         `;
+        // SELECT SCOPE_IDENTITY() AS id; - Denne linje returnerer det nyindsatte 'id' fra vores query 2
         
-        // Denne linje udfører og venter på resultatet fra vores query 2
         let result2 = await request.query(query2);
-        //console.log(result2); - Brugt til fejlsøgning
-
-        // Dette udtrækker det nyindsatte 'id' fra resultatet af 'query2'
         let mealIngredientID = result2.recordset[0].id;
 
-        // Dette logger en besked der angiver, at ingrediensen er blevet tilføjet til måltidet.
         console.log(`Ingredient "${ingredientName}" added to meal ${mealID}`);
-
-        // Dette returnere 'mealIngredientID' fra funktionen, hvilket angiver, at funktionen er lykkes
         return mealIngredientID;
 
-    // Dette starter en catch-blok til at håndtere eventuelle fejl, det opstår inden for try-blokken.
     } catch (error) {
-
-        // Hvis en fejl opstår, logger dette en fejlmeddelelse, der angiver, at det mislykkedes at tilføje ingrediensen til måltidet.
         console.error('Error adding ingredient to meal.', error);
         throw error;
     }
@@ -179,9 +134,6 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
 }
 module.exports.addIngredientToMeal = addIngredientToMeal;
  
-
-
-
 
 
 // Funktion til at slette et måltid fra databasen baseret på dets ID
