@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<<<<<<< HEAD
 
 <head>
   <!-- Denne inkluderer head.ejs filen, som indeholder metadata og links til stylesheets -->
@@ -23,23 +22,6 @@
                 <option value="<%= meal.ID %>">
                   <%= meal.Name %>
                 </option>
-=======
-  <head>
-    <%- include('../partials/head'); %>
-  </head>
-  <body>
-    <header><%- include('../partials/headerLoggedin'); %></header>
-    <div class="container">
-      <div class="content">
-        <div class="box">
-          <h1>Måltids Tracker</h1>
-          <p>Log dine yndlings måltider!</p>
-          <form action="/mealtracker/trackMeal" method="POST">
-            <div class="labelPair">
-              <select name="MealID" id="MealID">
-                <% meals.forEach(function(meal) { %>
-                <option value="<%= meal.ID %>"><%= meal.Name %></option>
->>>>>>> 481f718 (ændret alt til dansk)
                 <% }); %>
             </select>
           </div>
@@ -56,16 +38,16 @@
           <input type="hidden" name="latitude" id="latitude" />
           <input type="hidden" name="longitude" id="longitude" />
 
-<<<<<<< HEAD
           <button type="submit">Log Meal</button>
         </form>
       </div>
       <div class="box">
-        <h2>Log en enkelt ingrediens</h2>
+        
+        <h2>Vælg en enkelt Ingrediens</h2>
 
         <form action="/mealtracker/ingredient" method="POST">
           <!-- Laver en form der poster inholdet til stien, denne bruges til at tracke en enkelt ingrediens -->
-          <label for="ingredient">Choose Ingredient:</label>
+          <label for="ingredient">Vælg en Ingrediens:</label>
           <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg"
             placeholder="Enter Ingredient" />
           <div id="search_result"></div>
@@ -74,57 +56,22 @@
           <input type="number" name="Amount" placeholder="Amount consumed">
           <input type="hidden" name="latitude" id="latitude">
           <input type="hidden" name="longitude" id="longitude">
-          <button type="submit">Log Ingredient</button>
+          <button type="submit">Vælg Ingrediensen</button>
         </form>
 
       </div>
-
-=======
-            <button type="submit">Angiv indtag af et måltid</button>
-          </form>
-        </div>
-        <div class="box">
-          <h2>Angiv indtag af en enkelt ingrediens</h2>
-
-          <form action= "/inspector/ingredientView?ingredient" method="GET"> <!--query parameter efter URL -->
-            <label for="ingredient">Vælg ingrediens</label>
-            <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Indtast ingrediens" />
-            <span id="search_result"> </span>
-            <button type="submit">Angiv indtag af en enkelt ingrediens </button>
-        </form>
-        </div>        
-      </div>
-
-      <div class="content">
-        <div class="box">
-          <h2>Registrér vandindtag</h2>
-          <p>Angiv dit indtag af vand!</p>
-          <form action="/mealtracker/water" method="POST">
-            <div class="labelPair"></div>
-            <div class="labelPair">
-              <label for="Amount">Hvor meget vand har du drukket?</label>
-              <input type="number" name="Amount" id="Amount" />
-            </div>
-            <div class="labelPair">
-              <label for="DateTime">Tidspunkt</label>
-              <input type="datetime-local" name="DateTime" id="DateTime" />
-            </div>
->>>>>>> 481f718 (ændret alt til dansk)
-
-
-<<<<<<< HEAD
 
     </div>
 
     <div class="content">
       <div class="box">
         <h2>Registrér vand</h2>
-        <p>Log din vand!</p>
+        <p>Angiv dit vandindtag!</p>
         <form action="/mealtracker/water" method="POST">
           <!-- Laver en form der poster inholdet til stien, denne bruges til at logge vand -->
           <div class="labelPair"></div>
           <div class="labelPair">
-            <label for="Amount">Hvor meget vand drak du?</label>
+            <label for="Amount">Hvor meget vand har du drukket?</label>
             <input type="number" name="Amount" id="Amount" />
           </div>
           <div class="labelPair">
@@ -136,49 +83,26 @@
           <input type="hidden" name="latitude" id="latitude" />
           <input type="hidden" name="longitude" id="longitude" />
 
-          <button type="submit">Log Vand</button>
+          <button type="submit">Angiv indtag af vand</button>
         </form>
-=======
-            <button type="submit">Angiv indtag af Vand</button>
-          </form>
-        </div>
->>>>>>> 481f718 (ændret alt til dansk)
       </div>
     </div>
 
-<<<<<<< HEAD
     <div class="content">
       <div class="box">
-        <h2>List of Meals</h2>
+        <h2>Oversigt af indtaget måltider </h2>
         <table>
           <thead>
             <tr>
-              <th>Meal Name</th>
-              <th>Date and Time</th>
-              <th>Amount Consumed</th>
+              <th>Måltidets navn</th>
+              <th>Dato & Tid</th>
+              <th>Mængde af Indtaget</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <% intakes.forEach(intake=> { %>
-=======
-      <div class="content">
-        <div class="box">
-          <h2>Oversigt af indtaget måltider</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Måltidets Navn</th>
-                <th>Dato & Tid</th>
-                <th>Mængde Indtaget</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% intakes.forEach(intake => { %>
->>>>>>> 481f718 (ændret alt til dansk)
               <tr>
                 <form method="POST" action="/mealtracker/update">
                   <!-- Laver en form der poster inholdet til stien. Bliver omdannet til put med _methodoverride -->

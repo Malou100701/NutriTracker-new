@@ -111,6 +111,8 @@ async function trackWater(UserID, DateTime, Amount, latitude, longitude) {
 }
 module.exports.trackWater = trackWater;
 
+
+
 // Denne funktion tracker ingrediensindtag i databasen
 async function trackIngredient(UserID, IngredientID, DateTime, Amount, latitude, longitude) {
     const adjustedDatetime = moment.utc(DateTime).add(0, 'hours').format('YYYY-MM-DD HH:mm:ss'); // Fungere som en konvertering af 'DateTime' parameteren til et format, som SQL serveren kan forstå.

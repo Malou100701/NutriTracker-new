@@ -2,14 +2,8 @@ const express = require("express"); // Importere express
 const router = express.Router(); // Opretter en router
 const mealTrackerController = require("../controllers/mealTrackerController"); // Importere controlleren
 
-<<<<<<< HEAD
 router.post('/trackMeal', mealTrackerController.trackMeal); // Opretter en post route til at logge en aktivitet
 router.get('/', mealTrackerController.handleMeals); // Opretter en get route til at hente alle aktiviteter, med henblik på at vise dem i en dropdown menu, når siden loades
-=======
-router.post('/trackMeal', mealTrackerController.trackMeal);
-router.get('/', mealTrackerController.handleMeals);
->>>>>>> 481f718 (ændret alt til dansk)
-
 
 router.post('/water', mealTrackerController.trackWater); // Opretter en post route til at logge en aktivitet
 router.post('/ingredient', mealTrackerController.trackIngredient); // Opretter en post route til at logge en aktivitet

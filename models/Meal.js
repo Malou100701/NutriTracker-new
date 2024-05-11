@@ -266,8 +266,7 @@ async function getTotalFat(mealID, name) {
     await request.query(insertQuery);
 
     return totalFat;
-};
-        
+};    
 module.exports.getTotalFat = getTotalFat;
 
 
