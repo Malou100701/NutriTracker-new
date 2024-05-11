@@ -2,29 +2,29 @@ const express = require("express");
 const router = express.Router();
 const {editMeal, addIngredient, createMeal, addAllMeals, deleteMealIngredient, deleteMeal} = require("../controllers/mealController");
 
-// Rute til visning af 'mealCreator'-siden
+// Visning af 'mealCreator'-siden
 router.get('/mealCreator', (req, res) => res.render('pages/mealCreator'));
 
-// Opretter en POST-rute til oprettelse af et nyt måltid
+// Oprettelse af et nyt måltid
 router.post('/', createMeal); 
 
-// Rute til visning af et måltid
+// Visning af et måltid
 router.get('/:ID/edit', editMeal);
 
-// Rute til at tilføje en ingrediens til et måltid
+// Tilføje en ingrediens til et måltid
 router.get('/:ID/addIngredient', addIngredient);
 
-// Rute til visning af 'mealIngredient'-siden
+// Visning af 'mealIngredient'-siden
 router.get('/mealIngredient', (req, res) => {res.render('pages/mealEditor');
 });
 
-// Rute til at tilføje alle måltider på siden
+// Tilføje alle måltider på siden
 router.get('/', addAllMeals);
 
-// Rute til sletning af et måltid
+// Sletning af et måltid
 router.post('/:ID/deleteMeal', deleteMeal); 
 
-// Rute til sletning af en ingrediens fra et måltid
+// Sletning af en ingrediens fra et måltid
 router.post('/:ID/delete', deleteMealIngredient);
 
 module.exports = router;

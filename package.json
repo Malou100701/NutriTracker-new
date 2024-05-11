@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon server.js"
   },
   "author": "",
@@ -22,5 +22,10 @@
     "nodemon": "^3.1.0",
     "tedious": "^18.2.0",
     "typeahead-standalone": "^4.26.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0"
   }
+
+  
 }

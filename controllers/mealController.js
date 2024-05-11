@@ -38,7 +38,6 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   let ingredient = req.query.ingredient;
   let amount = req.query.amount;
 
-
   let meal = await Meal.getMealByID(mealID);
 
   // Tilføjer ingrediensen til måltidet i databasen

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../partials/head'); %> <!-- This line includes the head.ejs file from the partials folder -->
+    <%- include('../partials/head'); %>
 </head>
 <body>
     <header><%- include('../partials/headerLoggedin'); %></header>
@@ -40,7 +40,7 @@
                     <% }); %>
                 </tbody>
             </table>
-             <!-- Add a form for adding ingredients -->
+
              <form action= "/meal/<%= meal.ID %>/addIngredient?ingredient&amount" method="GET"> <!--query parameter efter URL -->
                 <label for="ingredient">Vælg ingrediens</label>
                 <input type="text" id="autocomplete_search" name="ingredient" class="form-control form-control-lg" placeholder="Indtast ingrediens" />
@@ -59,7 +59,7 @@
 </html>
 <script>
 // Hentet fra: https://www.webslesson.info/2022/07/nodejs-autocomplete-search-with-mysql-database.html?m=1
-
+//den nedenstående bruges til at lave en auto-complete søgefunktion. Vi har rettet nedenstående kode fra linket til at passe til vores projekt.
 function load_data(query = '')
     {
         fetch('/ingredient/search?name='+query+'').then(function(response){
