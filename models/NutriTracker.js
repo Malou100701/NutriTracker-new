@@ -24,15 +24,11 @@ async function getCalorieIntakeLast30Days(UserID) {
         Calories AS (
             SELECT
                 CONVERT(date, intk.DateTime) AS Date,
-                SUM(i.Calories * mi.Amount) AS DailyCalorieIntake
+                SUM(m.Calories/250 * intk.Amount) AS DailyCalorieIntake
             FROM
-                Meal m
+                Intake intk
             JOIN
-                MealIngredient mi ON m.ID = mi.MealID
-            JOIN
-                Ingredient i ON mi.IngredientID = i.IngredientID
-            JOIN
-                Intake intk ON m.ID = intk.MealID
+                Meal m ON intk.MealID = m.ID
             WHERE
                 intk.UserID = @UserID
                 AND intk.MealID IS NOT NULL
@@ -170,6 +166,7 @@ const getCaloriesIntakePerHourToday = async (UserID) => {
     // SQL-query, der henter kalorier indtaget per time for i dag, og giver dem tilbage i et array af objekter med `Hour` og `Calories`
     // Den logger også timer hvor der ikke er indtaget kalorier, og sætter Calories til 0
     // Den bruger UNION ALL til at generere en række af timer fra 0 til 23, og LEFT JOIN til at kombinere data fra CaloriesData og Hours
+    //vi antager at en normal portion er 250gram, og at kalorierne er fordelt jævnt over hele portionen
     const query = `
         WITH Hours AS (
             SELECT 0 AS Hour UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
@@ -179,11 +176,9 @@ const getCaloriesIntakePerHourToday = async (UserID) => {
             SELECT 23
         ),
         CaloriesData AS (
-            SELECT DATEPART(hour, intk.DateTime) AS Hour, SUM(i.Calories * mi.Amount) AS Calories
-            FROM Meal m
-            JOIN MealIngredient mi ON m.ID = mi.MealID
-            JOIN Ingredient i ON mi.IngredientID = i.IngredientID
-            JOIN Intake intk ON m.ID = intk.MealID
+            SELECT DATEPART(hour, intk.DateTime) AS Hour, SUM(m.Calories/250 *intk.Amount) AS Calories 
+            FROM Intake intk
+            JOIN Meal m ON intk.MealID = m.ID
             WHERE intk.UserID = @UserID AND CONVERT(date, intk.DateTime) = @dateStr
             GROUP BY DATEPART(hour, intk.DateTime)
         )
