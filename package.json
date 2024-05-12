@@ -12,7 +12,6 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
-    "chai": "^5.1.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
@@ -25,6 +24,7 @@
     "typeahead-standalone": "^4.26.0"
   },
   "devDependencies": {
-    "mocha": "^10.4.0"
+    "chai": "^5.1.1", // npm install --save-dev chai
+    "mocha": "^10.4.0" // npm install --save-dev mocha
   }
 }
