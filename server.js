@@ -66,3 +66,5 @@ const port = 3000; // Portnummeret
 app.listen(port, () => { // Lytter på porten
   console.log(`Listening on port ${port}`);
 });
+
+module.exports = app; // Eksporterer appen, så den kan bruges i test filerne

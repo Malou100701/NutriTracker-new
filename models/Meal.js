@@ -12,8 +12,8 @@ async function insertMealIntoDatabase(name, userID) {
             VALUES ('${name}', '${userID}');
             SELECT SCOPE_IDENTITY() AS id;
             `;
-        let queryResult = await request.query(query);
-        mealID = queryResult.recordset[0].id;
+        const queryResult = await request.query(query);
+        const mealID = queryResult.recordset[0].id;
     
         console.log(`Meal with name "${name}" inserted into database with id: ${mealID}, under the user with id: ${userID}`);
     } catch (error) {
@@ -108,8 +108,8 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
             SELECT IngredientID
             FROM Ingredient 
             WHERE Name = '${ingredientName}';`   
-        let result1 = await request.query(query1);
-        let ingredientID = result1.recordset[0].IngredientID;
+        const result1 = await request.query(query1);
+        const ingredientID = result1.recordset[0].IngredientID;
         //console.log(ingredientID); - Brugt til fejlsøgning
 
         const query2 = `
@@ -120,8 +120,8 @@ async function addIngredientToMeal(mealID, ingredientName, amount) {
         // SELECT SCOPE_IDENTITY() AS id; - bruges til at hente ID'et for den ingredients der lige er blevet tilføjet til MealIngredient databasen
 
         
-        let result2 = await request.query(query2);
-        let mealIngredientID = result2.recordset[0].id;
+        const result2 = await request.query(query2);
+        const mealIngredientID = result2.recordset[0].id;
 
         console.log(`Ingredient "${ingredientName}" added to meal ${mealID}`);
         return mealIngredientID;
@@ -162,8 +162,8 @@ async function deleteMealIngredientFromDatabase(mealID) {
 
         const query1 = `
             SELECT IngredientID FROM MealIngredient WHERE MealID = '${mealID}';`;
-        let result = await request.query(query1);
-        let ingredientID = result.recordset[0].IngredientID;
+        const result = await request.query(query1);
+        const ingredientID = result.recordset[0].IngredientID;
 
         const query2= `
             DELETE FROM MealIngredient WHERE MealID = '${mealID}' 
@@ -191,9 +191,9 @@ async function getTotalEnergy(mealID, name) {
         SELECT IngredientID
         FROM Ingredient 
         WHERE Name = '${name}';`;
-    let result1 = await request.query(query1);
+    const result1 = await request.query(query1);
     //console.log(result1); - Brugt til testing 
-    let ingredientID = result1.recordset[0].IngredientID; // Gemmer IngredientID fra resultat1
+    const ingredientID = result1.recordset[0].IngredientID; // Gemmer IngredientID fra resultat1
 
     // Beregner de samlede kalorier for ingrediensen baseret på dens mængde i måltidet
     const query2 = `
@@ -201,8 +201,8 @@ async function getTotalEnergy(mealID, name) {
         FROM MealIngredient mi
         JOIN Ingredient i ON mi.IngredientID = i.IngredientID
         WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
-    let result2 = await request.query(query2);
-    let totalCalories = result2.recordset[0].TotalCalories; //antager kun ét resultat pga. unikt navn
+    const result2 = await request.query(query2);
+    const totalCalories = result2.recordset[0].TotalCalories; //antager kun ét resultat pga. unikt navn
     //console.log(totalCalories); - Brugt til testing
 
     // Den beregnede værdi indsættes i 'Calories' kolonnen i MealIngredient tabellen i databasen.
@@ -224,9 +224,9 @@ async function getTotalProtein(mealID, name) {
         SELECT IngredientID
         FROM Ingredient 
         WHERE Name = '${name}';`
-    let result1 = await request.query(query1);
+    const result1 = await request.query(query1);
     //console.log(result1); - Brugt til testing
-    let ingredientID = result1.recordset[0].IngredientID;
+    const ingredientID = result1.recordset[0].IngredientID;
     //console.log(ingredientID); - Brugt til testing
     
     const query2 = `
@@ -235,7 +235,7 @@ async function getTotalProtein(mealID, name) {
         JOIN Ingredient i ON mi.IngredientID = i.IngredientID
         WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
     const result2 = await request.query(query2);
-    let totalProtein = result2.recordset[0].TotalProtein;
+    const totalProtein = result2.recordset[0].TotalProtein;
 
     const insertQuery = `
         UPDATE MealIngredient 
@@ -256,9 +256,9 @@ async function getTotalFat(mealID, name) {
         FROM Ingredient 
         WHERE Name = '${name}';`
             
-    let result1 = await request.query(query1);
+    const result1 = await request.query(query1);
     //console.log(result1); - Brugt til testing
-    let ingredientID = result1.recordset[0].IngredientID;
+    const ingredientID = result1.recordset[0].IngredientID;
     //console.log(ingredientID); - Brugt til testing
 
     const query2 = `
@@ -268,7 +268,7 @@ async function getTotalFat(mealID, name) {
         WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
     
     const result2 = await request.query(query2);
-    let totalFat = result2.recordset[0].TotalFat;
+    const totalFat = result2.recordset[0].TotalFat;
 
     const insertQuery = `
         UPDATE MealIngredient 
@@ -288,9 +288,9 @@ async function getTotalFiber(mealID, name) {
         SELECT IngredientID
         FROM Ingredient 
         WHERE Name = '${name}';`
-    let result1 = await request.query(query1);
+    const result1 = await request.query(query1);
     //console.log(result1); - Brugt til testing
-    let ingredientID = result1.recordset[0].IngredientID;
+    const ingredientID = result1.recordset[0].IngredientID;
     //console.log(ingredientID); - Brugt til testing
 
     const query2 = `
@@ -298,8 +298,8 @@ async function getTotalFiber(mealID, name) {
         FROM MealIngredient mi
         JOIN Ingredient i ON mi.IngredientID = i.IngredientID
         WHERE mi.MealID = '${mealID}' AND i.IngredientID = '${ingredientID}';`;
-    let result2 = await request.query(query2);
-    let totalFiber = result2.recordset[0].TotalFiber;
+    const result2 = await request.query(query2);
+    const totalFiber = result2.recordset[0].TotalFiber;
 
     const insertQuery = `
         UPDATE MealIngredient 
@@ -321,8 +321,8 @@ async function getTotalEnergyPerMeal(mealID) {
         SELECT SUM (Calories) AS TotalCalories
         FROM MealIngredient
         WHERE MealID = ${mealID};`;
-    let result = await request.query(query);    
-    let totalCalories = result.recordset[0].TotalCalories;
+    const result = await request.query(query);    
+    const totalCalories = result.recordset[0].TotalCalories;
     //console.log(totalCalories); - Brugt til fejlsøgning
     
     const insertQuery = `
@@ -343,8 +343,8 @@ async function getTotalProteinPerMeal(mealID) {
         SELECT SUM (Protein) AS TotalProtein
         FROM MealIngredient
         WHERE MealID = ${mealID};`;
-    let result = await request.query(query);
-    let totalProtein = result.recordset[0].TotalProtein;
+    const result = await request.query(query);
+    const totalProtein = result.recordset[0].TotalProtein;
     //console.log(totalProtein); - brugt til testing
     
     const insertQuery = `
@@ -365,8 +365,8 @@ async function getTotalFatPerMeal(mealID) {
         SELECT SUM (Fat) AS TotalFat
         FROM MealIngredient
         WHERE MealID = ${mealID};`;
-    let result = await request.query(query); 
-    let totalFat = result.recordset[0].TotalFat;
+    const result = await request.query(query); 
+    const totalFat = result.recordset[0].TotalFat;
     // console.log(totalFat); - Brugt til testing
     
     const insertQuery = `
@@ -386,8 +386,8 @@ async function getTotalFiberPerMeal(mealID) {
         SELECT SUM (Fiber) AS TotalFiber
         FROM MealIngredient
         WHERE MealID = ${mealID};`;
-    let result = await request.query(query); 
-    let totalFiber = result.recordset[0].TotalFiber;
+    const result = await request.query(query); 
+    const totalFiber = result.recordset[0].TotalFiber;
     //console.log(totalFiber); - Brugt til testing
     
     const insertQuery = `

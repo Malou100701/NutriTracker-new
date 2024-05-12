@@ -114,5 +114,4 @@ FROM
     const kCal = result.recordset[0].BMR * 238.8458966275; // Omregner BMR til kCal
     return kCal
 }
-
 module.exports.BMR = BMR;

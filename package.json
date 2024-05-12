@@ -4,7 +4,7 @@
   "description": " ",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --timeout 10000",
     "start": "nodemon server.js"
   },
   "author": "",
@@ -12,10 +12,12 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "chai-http": "^4.4.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "joi": "^17.13.1",
     "method-override": "^3.0.0",
     "moment-timezone": "^0.5.45",
     "mssql": "^10.0.2",
@@ -24,7 +26,8 @@
     "typeahead-standalone": "^4.26.0"
   },
   "devDependencies": {
-    "chai": "^5.1.1", 
-    "mocha": "^10.4.0" 
-}
+    "chai": "^4.3.7",
+    "mocha": "^10.4.0",
+    "should": "^13.2.3"
+  }
 }

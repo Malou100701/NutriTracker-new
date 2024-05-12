@@ -3,9 +3,9 @@ const Ingredient = require("../models/Ingredient");
 const asyncHandler = require("../middlewares/asyncHandler");
 
 // Funktion til at søge efter ingredienser baseret på navn
-const searchIngredient = asyncHandler(async (req, res, next) => {  
+const searchIngredient = asyncHandler(async (req, res) => {  
     // Henter ingrediensnavnet fra forespørgslen
-    let name = req.query.name;
+    const name = req.query.name;
 
     // Søger efter ingredienser baseret på navnet
     const result = await Ingredient.searchByName(name);

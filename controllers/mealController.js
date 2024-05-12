@@ -3,8 +3,9 @@ const asyncHandler = require("../middlewares/asyncHandler");
 
 //Oprettelse af et nyt måltid
 const createMeal = asyncHandler(async (req, res) => {
-  let name = req.body.name;
-  let userID = req.session.user.userID;
+  const name = req.body.name;
+  const userID = req.session.user.userID;
+
   // Opretter et nyt måltid i databasen og omdirigerer til oversigt over måltider
   await Meal.insertMealIntoDatabase(name, userID);
   res.redirect('/allMeals'); 
@@ -13,32 +14,32 @@ const createMeal = asyncHandler(async (req, res) => {
 
 // Tilføjer alle måltider til tabellen
 const addAllMeals = asyncHandler(async (req, res) => {
-  let userID = req.session.user.userID; 
+  const userID = req.session.user.userID; 
 
   // Henter og viser alle måltider tilhørende brugeren
-  let meals = await Meal.addAllMealsIntoTable(userID);
+  const meals = await Meal.addAllMealsIntoTable(userID);
   res.render('pages/allMeals', { meals: meals });
 });
 
 
 //Redigering af et måltid
-const editMeal = asyncHandler(async (req, res, next) => {
-  let mealID = req.params.ID;
+const editMeal = asyncHandler(async (req, res) => {
+  const mealID = req.params.ID;
 
   //Henter specifikke detaljer for måltidet og dets ingredienser
-  let meal = await Meal.getMealByID(mealID);
-  let ingredients = await Meal.getMealIngredients(mealID);
+  const meal = await Meal.getMealByID(mealID);
+  const ingredients = await Meal.getMealIngredients(mealID);
   res.render('pages/mealEditor', { meal: meal, ingredients: ingredients });
 });
 
 
 // Tilføjer en ingrediens til et måltid, samt dens mængde og næringsindhold
-const addIngredient = asyncHandler(async (req, res, next) => {
-  let mealID = req.params.ID;
-  let ingredient = req.query.ingredient;
-  let amount = req.query.amount;
+const addIngredient = asyncHandler(async (req, res) => {
+  const mealID = req.params.ID;
+  const ingredient = req.query.ingredient;
+  const amount = req.query.amount;
 
-  let meal = await Meal.getMealByID(mealID);
+  const meal = await Meal.getMealByID(mealID);
 
   // Tilføjer ingrediensen til måltidet i databasen
   await Meal.addIngredientToMeal(mealID, ingredient, amount);
@@ -50,7 +51,7 @@ const addIngredient = asyncHandler(async (req, res, next) => {
   await Meal.getTotalFiber(mealID, ingredient);
 
   // Henter en opdateret liste over alle ingredienser og deres næringsindhold for det valgte måltid.
-  let ingredients = await Meal.getMealIngredients(mealID);
+  const ingredients = await Meal.getMealIngredients(mealID);
 
   // Opdaterer måltidets samlede næringsværdier
   await Meal.getTotalEnergyPerMeal(mealID);
@@ -65,8 +66,8 @@ const addIngredient = asyncHandler(async (req, res, next) => {
 
 
 // Slette et måltid
-const deleteMeal = asyncHandler(async (req, res, next) => {
-  let mealID = req.params.ID;
+const deleteMeal = asyncHandler(async (req, res) => {
+  const mealID = req.params.ID;
 
   // Sletter måltidet fra databasen
   await Meal.deleteMealFromDatabase(mealID);
@@ -77,8 +78,8 @@ const deleteMeal = asyncHandler(async (req, res, next) => {
 
 
 // Slette en ingrediens fra et måltid
-const deleteMealIngredient = asyncHandler(async (req, res, next) => {
-  let mealID = req.params.ID;
+const deleteMealIngredient = asyncHandler(async (req, res) => {
+  const mealID = req.params.ID;
 
   // Sletter ingredienserne fra måltidet i databasen
   await Meal.deleteMealIngredientFromDatabase(mealID);

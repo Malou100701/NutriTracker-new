@@ -64,7 +64,7 @@ async function updateMeal(UserID, IntakeID, DateTime, Amount, MealID = null, Ing
 
     // console.log('Updating meal with:', { UserID, IntakeID, adjustedDatetime, Amount, MealID, IngredientID });  // Brugt til fejlsøgning, da det var en udfordring at finde ud af, hvorfor vores updateMeal ikke virkede.
     // Dette er en SQL-forespørgsel, der opdaterer et måltid i databasen baseret på brugerens ID, måltidets ID og ingrediensens ID, hvis de er blevet sendt med.
-    let updateQuery = `
+    const updateQuery = `
         UPDATE Intake
         SET DateTime = @DateTime, Amount = @Amount
         WHERE IntakeID = @IntakeID AND UserID = @UserID`;
