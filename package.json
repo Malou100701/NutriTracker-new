@@ -1,7 +1,7 @@
 {
   "name": "nutritracker-new-main",
   "version": "1.0.0",
-  "description": "",
+  "description": " ",
   "main": "server.js",
   "scripts": {
     "test": "mocha",
@@ -24,7 +24,7 @@
     "typeahead-standalone": "^4.26.0"
   },
   "devDependencies": {
-    "chai": "^5.1.1", // npm install --save-dev chai
-    "mocha": "^10.4.0" // npm install --save-dev mocha
-  }
+    "chai": "^5.1.1", 
+    "mocha": "^10.4.0" 
+}
 }

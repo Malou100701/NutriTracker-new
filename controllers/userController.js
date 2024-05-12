@@ -4,6 +4,7 @@ const asyncHandler = require("../middlewares/asyncHandler"); // Importerer middl
 // Controller til at registrere en bruger
 const registerUser = asyncHandler(async (req, res) => {
     const { Username, Password, Email, Age, Weight, Gender } = req.body; // Henter data fra request body
+    
     if (await User.registerUser(Username, Password, Email, Age, Weight, Gender)) { // Kalder funktionen registerUser fra modellen
         res.redirect('/login'); // Redirect til login siden, hvis alt lykkedes
     } else { // Hvad der skal ske, hvis det ikke lykkedes

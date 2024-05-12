@@ -7,7 +7,6 @@ async function registerUser(username, password, email, age, weight, gender, res)
     if (!username || !password) { // Hvis username eller password ikke er udfyldt
         return res.status(400).send('Username and password are required.');
     }
-
     const hashedPassword = await bcrypt.hash(password, 10); // Hasher passwordet
     await sql.connect(config); // Forbinder til databasen
     // Indsætter brugeren i databasen, med hashed password
