@@ -1,0 +1,107 @@
+create table ActivityType
+(
+    ActivityTypeID    int identity
+        primary key,
+    ActivityName      varchar(255)   not null,
+    CaloriesPerMinute decimal(10, 2) not null
+)
+go
+
+create table Ingredient
+(
+    IngredientID int identity
+        primary key,
+    Name         varchar(255)   not null,
+    Calories     decimal(10, 2) not null,
+    Protein      decimal(10, 2) not null,
+    Fat          decimal(10, 2) not null,
+    Fiber        decimal(10, 2) not null
+)
+go
+
+create table Users
+(
+    UserID   int identity
+        primary key,
+    Username varchar(255) not null
+        unique,
+    Password varchar(255) not null,
+    Email    varchar(255)
+        unique,
+    Age      int,
+    Weight   decimal(10, 2),
+    Gender   varchar(50)
+)
+go
+
+create table Meal
+(
+    ID           int identity
+        primary key,
+    UserID       int
+        constraint FK_Meal_Users
+            references Users
+            on delete cascade
+        references Users,
+    Name         varchar(255) not null,
+    CreationDate datetime default getdate(),
+    Calories     decimal,
+    Protein      decimal,
+    Fat          decimal,
+    Fiber        decimal
+)
+go
+
+create table Intake
+(
+    IntakeID     int identity
+        primary key,
+    UserID       int
+        constraint FK_Intake_Users
+            references Users
+            on delete cascade
+        references Users,
+    MealID       int
+        references Meal,
+    IngredientID int
+        references Ingredient,
+    DateTime     datetime,
+    Amount       decimal(10, 2),
+    Location     varchar(255)
+)
+go
+
+create table MealIngredient
+(
+    MealID       int not null
+        constraint MealIngredient_Meal_ID_fk
+            references Meal,
+    IngredientID int
+        constraint MealIngredient_Ingredients_IngredientID_fk
+            references Ingredient,
+    Amount       decimal,
+    ID           int identity
+        primary key,
+    Calories     decimal,
+    Protein      decimal,
+    Fat          decimal,
+    Fiber        decimal
+)
+go
+
+create table UserActivity
+(
+    UserActivityID int identity
+        primary key,
+    UserID         int
+        constraint FK_UserActivity_Users
+            references Users
+            on delete cascade
+        references Users,
+    ActivityTypeID int
+        references ActivityType,
+    Duration       decimal(10, 2) not null,
+    DateTime       datetime
+)
+go
+
