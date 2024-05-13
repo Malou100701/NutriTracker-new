@@ -228,7 +228,7 @@ const getCaloriesBurnedPerHourToday = async (userID, BMR) => {
     // Vi udfører vores query, og returnerer resultatet
     const request = new sql.Request();
     request.input('userID', sql.Int, userID);
-    request.input('bmr', sql.Float, BMR); // Ensure BMR is passed correctly
+    request.input('bmr', sql.Float, BMR); // Vi bruger BMR som en parameter, så vi kan bruge denne funktion til at hente kalorier forbrændt per time for en anden bruger end den aktuelle bruger
     request.input('dateStr', sql.VarChar, dateStr);
     const result = await request.query(query);
     return result.recordset;
